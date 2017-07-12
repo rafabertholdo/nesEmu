@@ -1,5 +1,6 @@
 #include "PPU.h"
 #include <iostream>
+#include <memory>
 
 /* Memory mapping: Convert PPU memory address into a reference to relevant data */
 u8& PPU::mmap(int i) {

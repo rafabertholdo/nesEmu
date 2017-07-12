@@ -6,7 +6,8 @@
 #include <map>
 #include <bitset>
 #include "Rom.h"
-#include "Instruction.h"
+#include "Instructions/Instruction.h"
+#include "Instructions/SeiInstruction.h"
 #include "RegBit.h"
 #include "PPU.h"
 

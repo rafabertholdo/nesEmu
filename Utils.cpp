@@ -22,7 +22,7 @@ void Utils<T>::printHex(const T &hexValue) {
 template<typename T>
 uint_least16_t Utils<T>::getLittleEndianValue(const std::vector<T> &data) {
     uint_least16_t value = 0;
-    for (int i = 0; i <= data.size(); i++) {
+    for (int i = 0; i < data.size(); i++) {
         value |= data[i] << (i * 8);
     }
     return value;

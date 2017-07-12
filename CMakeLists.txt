@@ -9,7 +9,8 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/Rom.cpp   
    ${CMAKE_CURRENT_SOURCE_DIR}/CPU.cpp    
-   ${CMAKE_CURRENT_SOURCE_DIR}/Instruction.cpp    
+   ${CMAKE_CURRENT_SOURCE_DIR}/Instructions/Instruction.cpp    
+   ${CMAKE_CURRENT_SOURCE_DIR}/Instructions/SeiInstruction.cpp    
    ${CMAKE_CURRENT_SOURCE_DIR}/PPU.cpp
 )
 
@@ -18,7 +19,8 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/Utils.h   
    ${CMAKE_CURRENT_SOURCE_DIR}/Rom.h   
    ${CMAKE_CURRENT_SOURCE_DIR}/CPU.h      
-   ${CMAKE_CURRENT_SOURCE_DIR}/Instruction.h      
+   ${CMAKE_CURRENT_SOURCE_DIR}/Instructions/Instruction.h      
+   ${CMAKE_CURRENT_SOURCE_DIR}/Instructions/SeiInstruction.h      
    ${CMAKE_CURRENT_SOURCE_DIR}/PPU.h   
    ${CMAKE_CURRENT_SOURCE_DIR}/RegBit.h   
 )
