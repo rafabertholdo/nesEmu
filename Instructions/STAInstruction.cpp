@@ -13,7 +13,7 @@ vector<shared_ptr<Instruction>> STAInstruction::createInstructions() {
     vector<uint_least8_t> opcodeList{             0x85,      0x95,     0x8D,      0x9D,      0x99,      0x81,      0x91};
     vector<uint_least8_t> lengthList{                2,         2,        3,         3,         3,         2,         2};
 
-    for(int i=0;i<opcodeList.size();i++) {
+    for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<STAInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "STA");
         instructions.push_back(instruction);
     }

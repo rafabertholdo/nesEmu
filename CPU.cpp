@@ -42,10 +42,13 @@ void CPU::run() {
         uint_least8_t instructionCode = rom->load(PC);
         if ( instructionsMapping.find(instructionCode) != instructionsMapping.end() ) {
             shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
+
+            //TODO:addressing
             vector<uint_least8_t> instructionData;
             if (instruction->length > 1) {
                 instructionData = rom->load(PC+1, instruction->length - 1);
             }
+            
             instruction->execute(*this, instructionData); //execute instruction      
             PC += instruction->length; 
         } else {            

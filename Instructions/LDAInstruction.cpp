@@ -12,7 +12,7 @@ vector<shared_ptr<Instruction>> LDAInstruction::createInstructions() {
     vector<uint_least8_t> opcodeList{              0xA9,     0xA5,      0xB5,     0xAD,      0xBD,      0xB9,      0xA1,      0xB1};
     vector<uint_least8_t> lengthList{                 2,        2,         2,        3,         3,         3,         2,         2};
 
-    for(int i=0;i<opcodeList.size();i++) {
+    for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<LDAInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "LDA");
         instructions.push_back(instruction);
     }
