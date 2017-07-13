@@ -11,7 +11,82 @@
 
 using namespace std;
 
-CPU::CPU(): RAM(0x800) { //2k of ram    
+CPU::CPU(): RAM(0x800), //2k of ram    
+            addressingModes {
+                {
+                    implict, [](auto) {
+                        return 0;
+                    }            
+                },
+                {
+                    accumulator, [&](auto) {
+                        return A;
+                    }            
+                },
+                {
+                    immediate, [&](auto instructionData) {                
+                        return instructionData[0];
+                    }            
+                },
+                {
+                    zeroPage, [&](auto instructionData) {                
+                        return read(instructionData[0]);            
+                    },
+                },
+                {
+                    zeroPageX, [&](auto instructionData) {
+                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+                        return read(((rawAdrress + X) % 256));
+                    },
+                },
+                {
+                    zeroPageY, [&](auto instructionData) {
+                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+                        return read(((rawAdrress + Y) % 256));
+                    },
+                },
+                {
+                    absolute, [&](auto instructionData) {
+                        return Utils<u8>::getLittleEndianValue(instructionData);                        
+                    },
+                },
+                {
+                    absoluteX, [&](auto instructionData) {
+                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+                        return rawAdrress + X;
+                    },
+                },
+                {
+                    absoluteY, [&](auto instructionData) {
+                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+                        return rawAdrress + Y;
+                    },
+                },
+                {
+                    relative, [&](auto instructionData) {                
+                        s8 address = instructionData[0];
+                        return PC + address;                
+                    },
+                },
+                {
+                    indirect, [&](auto instructionData) {                
+                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+                        return read(read(rawAdrress) + read(rawAdrress + 1));
+                    },
+                },
+                {
+                    indirectX, [&](auto instructionData) {
+                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);                
+                        return read(read((rawAdrress + X) % 256) + read((rawAdrress + X + 1) % 256) * 256);
+                    },
+                },
+                {
+                    indirectY, [&](auto instructionData) {
+                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);                
+                        return read(read(rawAdrress) + read((rawAdrress + 1) % 256) * 256 + Y);
+                    },
+                }
+            } { 
     PC = HEADER_SIZE;    
     Utils<shared_ptr<Instruction>>::appendVector(instructionVector, SEIInstruction::createInstructions());
     Utils<shared_ptr<Instruction>>::appendVector(instructionVector, LDAInstruction::createInstructions());
@@ -37,19 +112,21 @@ void CPU::loadRom(const Rom &rom) {
     CPU::rom = &rom;
 }
 
-void CPU::run() {
+void CPU::run() {   
+
     while (true) {
         uint_least8_t instructionCode = rom->load(PC);
         if ( instructionsMapping.find(instructionCode) != instructionsMapping.end() ) {
             shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
 
-            //TODO:addressing
+            //TODO:addressing            
             vector<uint_least8_t> instructionData;
             if (instruction->length > 1) {
                 instructionData = rom->load(PC+1, instruction->length - 1);
             }
+            u16 instructionValue = addressingModes[instruction->addressingMode](instructionData);
             
-            instruction->execute(*this, instructionData); //execute instruction      
+            instruction->execute(*this, instructionValue); //execute instruction      
             PC += instruction->length; 
         } else {            
             std::cout << "Instruction " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(instructionCode) << " not implemented" << std::endl;
@@ -95,12 +172,12 @@ uint_least8_t CPU::memAccess(uint_least16_t address, uint_least8_t value, bool w
     return 0;
 }
 
-uint_least8_t CPU::read(uint_least8_t address) {
+u8 CPU::read(u16 address) {
     return memAccess(address, 0, false);
 }
 
-vector<uint_least8_t> CPU::read(uint_least16_t address, uint_least8_t length) {
-    vector<uint_least8_t> sub(&RAM[address],&RAM[address + length]);    
+vector<u8> CPU::read(u16 address, u8 length) {
+    vector<u8> sub(&RAM[address],&RAM[address + length]);    
     return sub;
 }
 

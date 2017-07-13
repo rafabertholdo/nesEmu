@@ -6,7 +6,7 @@
 class CLDInstruction : public Instruction {    
 public:
     using Instruction::Instruction;
-    void execute(CPU& cpu, const vector<uint_least8_t> &instructionData) override;
+    void execute(CPU& cpu, const uint_least16_t &value) override;
     static vector<shared_ptr<Instruction>> createInstructions();
 };
 

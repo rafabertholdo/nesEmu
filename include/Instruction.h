@@ -16,7 +16,7 @@ public:
     Instruction(const AddressingMode &addressingMode, const uint_least8_t &opcode, const uint_least8_t &length, const string &menmonic);
     virtual ~Instruction();
     
-    virtual void execute(CPU& cpu, const vector<uint_least8_t> &instructionData) = 0;
+    virtual void execute(CPU& cpu,  const uint_least16_t &value) = 0;
 };
 
 #endif

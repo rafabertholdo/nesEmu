@@ -3,8 +3,7 @@
 
 #include "Utils.h"
 
-enum AddressingMode { 
-    noAddressing,
+enum AddressingMode {     
     immediate,
     absolute, 
     absoluteX,
@@ -16,7 +15,8 @@ enum AddressingMode {
     implict,
     indirect,
     indirectX,
-    indirectY
+    indirectY,
+    accumulator
 };
 
 #endif

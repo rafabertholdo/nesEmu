@@ -5,13 +5,13 @@
 using namespace std;
 
 vector<shared_ptr<Instruction>> CLDInstruction::createInstructions() {
-    auto instruction = make_shared<CLDInstruction>(noAddressing,0xD8,1,"CLD");
+    auto instruction = make_shared<CLDInstruction>(implict,0xD8,1,"CLD");
     vector<shared_ptr<Instruction>> result{instruction};
     return result;
 }
 
-void CLDInstruction::execute(CPU& cpu, const vector<uint_least8_t> &instructionData) {
-    Instruction::execute(cpu, instructionData);
+void CLDInstruction::execute(CPU& cpu, const uint_least16_t &value) {
+    Instruction::execute(cpu, value);
     cpu.Flags.DecimalMode = 0;
     cout << std::endl;
 }

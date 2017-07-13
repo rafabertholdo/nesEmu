@@ -20,15 +20,8 @@ vector<shared_ptr<Instruction>> STAInstruction::createInstructions() {
     return instructions;
 }
 
-void STAInstruction::execute(CPU& cpu, const vector<uint_least8_t> &instructionData) {
-    Instruction::execute(cpu, instructionData);
-    
-    uint_least16_t address = Utils<uint_least8_t>::getLittleEndianValue(instructionData);
-    cpu.write(address, cpu.A);
-
-    cout << " ";   
-    
-    Utils<uint_least8_t>::printVector(instructionData);
-    
-    cout << std::endl;
+void STAInstruction::execute(CPU& cpu, const uint_least16_t &value) {
+    Instruction::execute(cpu, value);    
+    cpu.write(value, cpu.A);
+    cout << " " << static_cast<int>(value) << std::endl;
 }

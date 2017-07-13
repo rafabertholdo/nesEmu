@@ -16,7 +16,7 @@ Instruction::~Instruction() {
 
 }
 
-void Instruction::execute(CPU& cpu, const vector<uint_least8_t> &instructionData) {
+void Instruction::execute(CPU& cpu, const uint_least16_t &value) {
     Utils<uint_least8_t>::printHex(cpu.PC);    
     std::cout << " " << menmonic;     
 }
