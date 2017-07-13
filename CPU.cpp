@@ -27,7 +27,7 @@ CPU::CPU(): RAM(0x800), //2k of ram
                 {indirectX, make_shared<IndirectXAddressing>()},
                 {indirectY, make_shared<IndirectYAddressing>()}
             } { 
-    PC = HEADER_SIZE;    
+    
     Utils<shared_ptr<Instruction>>::appendVector(instructionVector, SEIInstruction::createInstructions());
     Utils<shared_ptr<Instruction>>::appendVector(instructionVector, LDAInstruction::createInstructions());
     Utils<shared_ptr<Instruction>>::appendVector(instructionVector, CLDInstruction::createInstructions());
@@ -37,6 +37,7 @@ CPU::CPU(): RAM(0x800), //2k of ram
         instructionsMapping[instruction->opcode] = instruction;
     }
     
+    PC = 0xC000;    
     Flags.raw = 0x34;
     SP = 0xFD;
     reset = true;
@@ -48,19 +49,19 @@ CPU::~CPU() {
 
 }
 
-void CPU::loadRom(const Rom &rom) {
+void CPU::loadRom(Rom &rom) {
     CPU::rom = &rom;
 }
 
 void CPU::run() {   
     while (true) {
-        uint_least8_t instructionCode = rom->load(PC);
+        uint_least8_t instructionCode = read(PC);
         if (instructionsMapping.find(instructionCode) != instructionsMapping.end()) {
             shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
             
             vector<uint_least8_t> instructionData;
             if (instruction->length > 1) {
-                instructionData = rom->load(PC+1, instruction->length - 1);
+                instructionData = read(PC+1, instruction->length - 1);
             }
             u16 instructionValue = addressingModes[instruction->addressingMode]->getAddress(*this, instructionData);
             
@@ -106,7 +107,7 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
             default: if(!write) break;
                      APU::Write(address&0x1F, value);
         }*/
-    //else return GamePak::Access(address, value, write);
+    else return rom->access(address, value, write);
     return 0;
 }
 
@@ -115,8 +116,13 @@ u8 CPU::read(const u16 &address) {
 }
 
 vector<u8> CPU::read(const u16 &address, const u8 &length) {
-    vector<u8> sub(&RAM[address],&RAM[address + length]);    
-    return sub;
+    std::vector<u8> buffer;
+    buffer.reserve(length);
+    for (u8 i = 0; i < length; i++) {
+        buffer.push_back(read(address+i));
+    }
+    
+    return buffer;
 }
 
 void CPU::write(const uint_least16_t &address, const uint_least8_t &value) {

@@ -17,8 +17,7 @@ class Rom {
 public:  
     Rom(const char* filePath);
     ~Rom();
-    uint_least8_t load(uint_least8_t address) const;
-    vector<uint_least8_t> load(uint_least8_t address, uint_least8_t length) const;
+    uint_least8_t access(const uint_least16_t &address, const uint_least8_t &value, const bool &write);
 };
 
 #endif

@@ -16,7 +16,7 @@ class Instruction; //forward declaration
 
 class CPU {
     vector<uint_least8_t> RAM;
-    const Rom *rom;
+    Rom *rom;
     PPU ppu;
     bool reset;
     bool running;       
@@ -46,7 +46,7 @@ public:
 
     CPU();
     ~CPU();
-    void loadRom(const Rom &rom);
+    void loadRom(Rom &rom);
     uint_least8_t read(const uint_least16_t &address);
     vector<uint_least8_t> read(const uint_least16_t &address, const uint_least8_t &length);
     void write(const uint_least16_t &address, const uint_least8_t &value);
