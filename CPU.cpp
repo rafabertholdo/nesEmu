@@ -13,79 +13,19 @@ using namespace std;
 
 CPU::CPU(): RAM(0x800), //2k of ram    
             addressingModes {
-                {
-                    implict, [](auto) {
-                        return 0;
-                    }            
-                },
-                {
-                    accumulator, [&](auto) {
-                        return A;
-                    }            
-                },
-                {
-                    immediate, [&](auto instructionData) {                
-                        return instructionData[0];
-                    }            
-                },
-                {
-                    zeroPage, [&](auto instructionData) {                
-                        return read(instructionData[0]);            
-                    },
-                },
-                {
-                    zeroPageX, [&](auto instructionData) {
-                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
-                        return read(((rawAdrress + X) % 256));
-                    },
-                },
-                {
-                    zeroPageY, [&](auto instructionData) {
-                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
-                        return read(((rawAdrress + Y) % 256));
-                    },
-                },
-                {
-                    absolute, [&](auto instructionData) {
-                        return Utils<u8>::getLittleEndianValue(instructionData);                        
-                    },
-                },
-                {
-                    absoluteX, [&](auto instructionData) {
-                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
-                        return rawAdrress + X;
-                    },
-                },
-                {
-                    absoluteY, [&](auto instructionData) {
-                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
-                        return rawAdrress + Y;
-                    },
-                },
-                {
-                    relative, [&](auto instructionData) {                
-                        s8 address = instructionData[0];
-                        return PC + address;                
-                    },
-                },
-                {
-                    indirect, [&](auto instructionData) {                
-                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
-                        return read(read(rawAdrress) + read(rawAdrress + 1));
-                    },
-                },
-                {
-                    indirectX, [&](auto instructionData) {
-                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);                
-                        return read(read((rawAdrress + X) % 256) + read((rawAdrress + X + 1) % 256) * 256);
-                    },
-                },
-                {
-                    indirectY, [&](auto instructionData) {
-                        u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);                
-                        return read(read(rawAdrress) + read((rawAdrress + 1) % 256) * 256 + Y);
-                    },
-                }
+                {implict, make_shared<ImplictAddressing>()},
+                {accumulator, make_shared<AccumulatorAddressing>()},                                
+                {immediate, make_shared<ImmediateAddressing>()},
+                {zeroPage, make_shared<ZeroPageAddressing>()},
+                {zeroPageX, make_shared<ZeroPageXAddressing>()},
+                {zeroPageY, make_shared<ZeroPageYAddressing>()},
+                {absolute, make_shared<AbsoluteAddressing>()},
+                {absoluteX, make_shared<AbsoluteXAddressing>()},
+                {absoluteY, make_shared<AbsoluteYAddressing>()},
+                {relative, make_shared<RelativeAddressing>()},
+                {indirect, make_shared<IndirectAddressing>()},
+                {indirectX, make_shared<IndirectXAddressing>()},
+                {indirectY, make_shared<IndirectYAddressing>()}
             } { 
     PC = HEADER_SIZE;    
     Utils<shared_ptr<Instruction>>::appendVector(instructionVector, SEIInstruction::createInstructions());
@@ -113,20 +53,18 @@ void CPU::loadRom(const Rom &rom) {
 }
 
 void CPU::run() {   
-
     while (true) {
         uint_least8_t instructionCode = rom->load(PC);
-        if ( instructionsMapping.find(instructionCode) != instructionsMapping.end() ) {
+        if (instructionsMapping.find(instructionCode) != instructionsMapping.end()) {
             shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
-
-            //TODO:addressing            
+            
             vector<uint_least8_t> instructionData;
             if (instruction->length > 1) {
                 instructionData = rom->load(PC+1, instruction->length - 1);
             }
-            u16 instructionValue = addressingModes[instruction->addressingMode](instructionData);
+            u16 instructionValue = addressingModes[instruction->addressingMode]->getAddress(*this, instructionData);
             
-            instruction->execute(*this, instructionValue); //execute instruction      
+            instruction->execute(*this, instructionValue); //execute instruction
             PC += instruction->length; 
         } else {            
             std::cout << "Instruction " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(instructionCode) << " not implemented" << std::endl;
@@ -137,7 +75,7 @@ void CPU::run() {
 }
 
 
-uint_least8_t CPU::memAccess(uint_least16_t address, uint_least8_t value, bool write)
+uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write)
 {
     // Memory writes are turned into reads while reset is being signalled
     if(reset && write) return memAccess(address, 0, false);
@@ -172,16 +110,16 @@ uint_least8_t CPU::memAccess(uint_least16_t address, uint_least8_t value, bool w
     return 0;
 }
 
-u8 CPU::read(u16 address) {
+u8 CPU::read(const u16 &address) {
     return memAccess(address, 0, false);
 }
 
-vector<u8> CPU::read(u16 address, u8 length) {
+vector<u8> CPU::read(const u16 &address, const u8 &length) {
     vector<u8> sub(&RAM[address],&RAM[address + length]);    
     return sub;
 }
 
-void CPU::write(uint_least16_t address, uint_least8_t value) {
+void CPU::write(const uint_least16_t &address, const uint_least8_t &value) {
     memAccess(address, value, true);
 }
 

@@ -23,8 +23,8 @@ class CPU {
 
     vector<shared_ptr<Instruction>> instructionVector;    
     map<uint_least8_t, shared_ptr<Instruction>> instructionsMapping;  
-    uint_least8_t memAccess(uint_least16_t address, uint_least8_t value, bool write);
-    std::map<AddressingMode, function<u16(vector<u8>)>> addressingModes;
+    uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);
+    std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;
 public:
     
     //registers
@@ -42,14 +42,14 @@ public:
         RegBit<7> Negative; // negative
     } Flags;
 
-    uint_least8_t PC; //program counter
+    uint_least16_t PC; //program counter
 
     CPU();
     ~CPU();
     void loadRom(const Rom &rom);
-    uint_least8_t read(uint_least16_t address);
-    vector<uint_least8_t> read(uint_least16_t address, uint_least8_t length);
-    void write(uint_least16_t address, uint_least8_t value);
+    uint_least8_t read(const uint_least16_t &address);
+    vector<uint_least8_t> read(const uint_least16_t &address, const uint_least8_t &length);
+    void write(const uint_least16_t &address, const uint_least8_t &value);
     void run();
     void dumpRegs();
 };
