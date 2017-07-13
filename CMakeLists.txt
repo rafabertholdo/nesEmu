@@ -3,26 +3,9 @@ cmake_minimum_required(VERSION 3.0)
 project(nesEmu)
 set (CMAKE_CXX_STANDARD 14)
 
-set(SOURCE
-   ${SOURCE}
-   ${CMAKE_CURRENT_SOURCE_DIR}/Utils.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/Rom.cpp   
-   ${CMAKE_CURRENT_SOURCE_DIR}/CPU.cpp    
-   ${CMAKE_CURRENT_SOURCE_DIR}/Instructions/Instruction.cpp    
-   ${CMAKE_CURRENT_SOURCE_DIR}/Instructions/SeiInstruction.cpp    
-   ${CMAKE_CURRENT_SOURCE_DIR}/PPU.cpp
-)
+file(GLOB SOURCES *.cpp include/*.h instructions/*.cpp)
 
-set(HEADERS
-   ${HEADERS}
-   ${CMAKE_CURRENT_SOURCE_DIR}/Utils.h   
-   ${CMAKE_CURRENT_SOURCE_DIR}/Rom.h   
-   ${CMAKE_CURRENT_SOURCE_DIR}/CPU.h      
-   ${CMAKE_CURRENT_SOURCE_DIR}/Instructions/Instruction.h      
-   ${CMAKE_CURRENT_SOURCE_DIR}/Instructions/SeiInstruction.h      
-   ${CMAKE_CURRENT_SOURCE_DIR}/PPU.h   
-   ${CMAKE_CURRENT_SOURCE_DIR}/RegBit.h   
-)
+# Include header files
+include_directories ("${PROJECT_SOURCE_DIR}/include")
 
-add_executable(${PROJECT_NAME} ${SOURCE})
+add_executable(${PROJECT_NAME} ${SOURCES})

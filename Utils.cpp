@@ -28,3 +28,8 @@ uint_least16_t Utils<T>::getLittleEndianValue(const std::vector<T> &data) {
     return value;
 }
 
+template<typename T>
+void Utils<T>::appendVector(std::vector<T> &destination, const std::vector<T> &source) {
+    destination.reserve(destination.size()+source.size()); // Reserve space first
+    destination.insert(destination.end(),source.begin(),source.end());
+}

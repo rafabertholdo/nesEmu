@@ -14,6 +14,7 @@ struct Utils {
     static void printVector(const std::vector<T> &v);
     static void printHex(const T &hexValue);
     static uint_least16_t getLittleEndianValue(const std::vector<T> &data);
+    static void appendVector(std::vector<T> &destination, const std::vector<T> &source);
 };
 
 

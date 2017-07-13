@@ -20,35 +20,40 @@ public:
         programData = vector<BYTE>(&data[0], &data[programLength]);
     }
 
-    void readFile(const char* filename) {
+    bool readFile(const char* filename) {
         // open the file:
         std::ifstream file(filename, std::ios::binary);
+        if (file) {
+            // Stop eating new lines in binary mode!!!
+            file.unsetf(std::ios::skipws);
 
-        // Stop eating new lines in binary mode!!!
-        file.unsetf(std::ios::skipws);
+            // get its size:
+            std::streampos fileSize;
 
-        // get its size:
-        std::streampos fileSize;
+            file.seekg(0, std::ios::end);
+            fileSize = file.tellg();
+            file.seekg(0, std::ios::beg);
 
-        file.seekg(0, std::ios::end);
-        fileSize = file.tellg();
-        file.seekg(0, std::ios::beg);
+            // reserve capacity
+            data.reserve(fileSize);
 
-        // reserve capacity
-        data.reserve(fileSize);
-
-        // read the data:
-        data.insert(data.begin(),
-                std::istream_iterator<BYTE>(file),
-                std::istream_iterator<BYTE>());
+            // read the data:
+            data.insert(data.begin(),
+                    std::istream_iterator<BYTE>(file),
+                    std::istream_iterator<BYTE>());
+            return true;
+        }
+        return false;
     }
 };
 
 Rom::Rom(const char* filePath): pimpl{std::make_unique<impl>()} {
     std::cout << "Reading file: " << filePath << std::endl;
-    pimpl->readFile(filePath);
-    pimpl->numberOfProgramBlocks = pimpl->data[4];
-    pimpl->loadProgramData();
+    if (pimpl->readFile(filePath)) {
+        pimpl->numberOfProgramBlocks = pimpl->data[4];
+        pimpl->loadProgramData();
+    }
+    
     std::cout << "numberOfProgramBlocks: " << pimpl->numberOfProgramBlocks << std::endl;
 }
 

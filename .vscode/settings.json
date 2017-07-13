@@ -30,6 +30,8 @@
         "functional": "cpp",
         "locale": "cpp",
         "system_error": "cpp",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "ios": "cpp",
+        "__locale": "cpp"
     }
 }

@@ -1,4 +1,9 @@
 #include "CPU.h" 
+#include "SEIInstruction.h"
+#include "LDAInstruction.h"
+#include "CLDInstruction.h"
+#include "STAInstruction.h"
+#include "Utils.cpp"
 
 #include <string>
 #include <iostream>
@@ -8,10 +13,10 @@ using namespace std;
 
 CPU::CPU(): RAM(0x800) { //2k of ram    
     PC = HEADER_SIZE;    
-    instructionVector.push_back(make_shared<SEIInstruction>());
-    instructionVector.push_back(make_shared<LDAInstruction>());
-    instructionVector.push_back(make_shared<CLDInstruction>());
-    instructionVector.push_back(make_shared<STAInstruction>());    
+    Utils<shared_ptr<Instruction>>::appendVector(instructionVector, SEIInstruction::createInstructions());
+    Utils<shared_ptr<Instruction>>::appendVector(instructionVector, LDAInstruction::createInstructions());
+    Utils<shared_ptr<Instruction>>::appendVector(instructionVector, CLDInstruction::createInstructions());
+    Utils<shared_ptr<Instruction>>::appendVector(instructionVector, STAInstruction::createInstructions());
 
     for(auto&& instruction : instructionVector) {
         instructionsMapping[instruction->opcode] = instruction;

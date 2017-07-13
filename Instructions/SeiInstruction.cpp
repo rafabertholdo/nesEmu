@@ -1,13 +1,13 @@
-#include "SeiInstruction.h"
+#include "SEIInstruction.h"
 #include <iostream>
 #include <iomanip>
 
 using namespace std;
 
-SEIInstruction::SEIInstruction() {
-    opcode = 0x78;
-    length = 1;   
-    menmonic = "SEI";
+vector<shared_ptr<Instruction>> SEIInstruction::createInstructions() {
+    auto instruction = make_shared<SEIInstruction>(noAddressing,0x78,1,"SEI");
+    vector<shared_ptr<Instruction>> result{instruction};
+    return result;
 }
 
 void SEIInstruction::execute(CPU& cpu, const vector<uint_least8_t> &instructionData) {    

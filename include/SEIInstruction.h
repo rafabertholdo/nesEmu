@@ -5,8 +5,9 @@
 
 class SEIInstruction : public Instruction {    
 public:
-    SEIInstruction();    
+    using Instruction::Instruction;
     void execute(CPU& cpu, const vector<uint_least8_t> &instructionData) override;
+    static vector<shared_ptr<Instruction>> createInstructions();
 };
 
 #endif
