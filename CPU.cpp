@@ -52,18 +52,41 @@ void CPU::loadRom(Rom &rom) {
 
 void CPU::run() {   
     while (true) {
+        uint_least16_t pcStash = PC;
         uint_least8_t instructionCode = read(PC);
+
+        Utils<uint_least16_t>::printHex(PC);
+        cout << "  ";
+        Utils<uint_least8_t>::printHex(instructionCode);        
+        cout << " ";
+
         if (instructionsMapping.find(instructionCode) != instructionsMapping.end()) {
             shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
             
+            int verboseData = 7;
             vector<uint_least8_t> instructionData;
             if (instruction->length > 1) {
                 instructionData = read(PC+1, instruction->length - 1);
+
+                for (auto data : instructionData) {
+                    Utils<uint_least8_t>::printHex(data);
+                    cout << " ";
+                    verboseData -= 3;
+                }                
             }
-            u16 instructionValue = addressingModes[instruction->addressingMode]->getAddress(*this, instructionData);
+            cout << std::setw(verboseData) << std::setfill(' ') << " ";
+            auto addressing = addressingModes[instruction->addressingMode];
+            u16 instructionValue = addressing->getAddress(*this, instructionData);
             
             instruction->execute(*this, instructionValue); //execute instruction
-            PC += instruction->length; 
+            
+            addressing->printAddress(instructionValue);
+            dumpRegs();
+            //increment program counter if instruction did't change it, aka jumps and branches
+            if (PC == pcStash) {
+                PC += instruction->length; 
+            }
+            
         } else {            
             std::cout << "Instruction " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(instructionCode) << " not implemented" << std::endl;
             dumpRegs();
@@ -127,9 +150,12 @@ void CPU::write(const uint_least16_t &address, const uint_least8_t &value) {
 }
 
 void CPU::dumpRegs() {
-    std::cout << "A " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(A) << std::endl;
-    std::cout << "X " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(X) << std::endl;
-    std::cout << "Y " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(Y) << std::endl;
-    std::cout << "Flags " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(Flags.raw) << std::endl; 
-    std::cout << "SP " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(SP) << std::endl; 
+
+    //A:00 X:00 Y:00 P:24 SP:FD CYC:  0
+    std::cout << "A:" << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(A) << " ";
+    std::cout << "X " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(X) << " ";
+    std::cout << "Y " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(Y) << " ";
+    std::cout << "P " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(Flags.raw) << " "; 
+    std::cout << "SP " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(SP) << " "; 
+    std::cout << "CYC: " << std::setw(3) << std::setfill(' ') << static_cast<int>(0) << std::endl; 
 }

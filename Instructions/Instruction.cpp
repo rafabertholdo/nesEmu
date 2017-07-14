@@ -17,7 +17,6 @@ std::unordered_map<std::string, Instruction::create_f *> & Instruction::registry
     return impl;
 }
 
-void Instruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Utils<uint_least8_t>::printHex(cpu.PC);    
-    std::cout << " " << menmonic;     
+void Instruction::execute(CPU& cpu, const uint_least16_t &value) {    
+    std::cout << menmonic << " ";         
 }

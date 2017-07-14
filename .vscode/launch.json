@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/build/nesEmu",
-            "args": ["build/mario.nes"],
+            "args": ["build/nestest.nes"],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],

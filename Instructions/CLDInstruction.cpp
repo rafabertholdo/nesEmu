@@ -18,5 +18,4 @@ vector<shared_ptr<Instruction>> CLDInstruction::createInstructions() {
 void CLDInstruction::execute(CPU& cpu, const uint_least16_t &value) {
     Instruction::execute(cpu, value);
     cpu.Flags.DecimalMode = 0;
-    cout << std::endl;
 }

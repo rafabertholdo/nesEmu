@@ -27,7 +27,4 @@ vector<shared_ptr<Instruction>> LDAInstruction::createInstructions() {
 void LDAInstruction::execute(CPU& cpu, const uint_least16_t &value) {
     Instruction::execute(cpu, value);
     cpu.A = value;
-    cout << " ";
-    Utils<uint_least8_t>::printHex(cpu.A);
-    cout << std::endl;
 }

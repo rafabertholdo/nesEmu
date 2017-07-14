@@ -18,5 +18,4 @@ vector<shared_ptr<Instruction>> SEIInstruction::createInstructions() {
 void SEIInstruction::execute(CPU& cpu, const uint_least16_t &value) {    
     Instruction::execute(cpu, value);        
     cpu.Flags.InterruptEnabled = 0;
-    cout << std::endl;
 }

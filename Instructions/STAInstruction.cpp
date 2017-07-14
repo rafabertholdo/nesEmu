@@ -27,5 +27,4 @@ vector<shared_ptr<Instruction>> STAInstruction::createInstructions() {
 void STAInstruction::execute(CPU& cpu, const uint_least16_t &value) {
     Instruction::execute(cpu, value);    
     cpu.write(value, cpu.A);
-    cout << " " << static_cast<int>(value) << std::endl;
 }
