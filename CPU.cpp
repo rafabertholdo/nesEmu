@@ -28,10 +28,7 @@ CPU::CPU(): RAM(0x800), //2k of ram
                 {indirectY, make_shared<IndirectYAddressing>()}
             } { 
     
-    Utils<shared_ptr<Instruction>>::appendVector(instructionVector, SEIInstruction::createInstructions());
-    Utils<shared_ptr<Instruction>>::appendVector(instructionVector, LDAInstruction::createInstructions());
-    Utils<shared_ptr<Instruction>>::appendVector(instructionVector, CLDInstruction::createInstructions());
-    Utils<shared_ptr<Instruction>>::appendVector(instructionVector, STAInstruction::createInstructions());
+    instructionVector = Instruction::instantiateAll();    
 
     for(auto&& instruction : instructionVector) {
         instructionsMapping[instruction->opcode] = instruction;

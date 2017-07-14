@@ -12,8 +12,9 @@ Instruction::Instruction(const AddressingMode &addressingMode, const uint_least8
     Instruction::menmonic = menmonic;
 }
 
-Instruction::~Instruction() {
-
+std::unordered_map<std::string, Instruction::create_f *> & Instruction::registry() {
+    static std::unordered_map<std::string, Instruction::create_f *> impl;
+    return impl;
 }
 
 void Instruction::execute(CPU& cpu, const uint_least16_t &value) {

@@ -33,6 +33,8 @@
         "type_traits": "cpp",
         "ios": "cpp",
         "__locale": "cpp",
-        "__functional_03": "cpp"
+        "__functional_03": "cpp",
+        "__hash_table": "cpp",
+        "unordered_map": "cpp"
     }
 }

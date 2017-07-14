@@ -5,6 +5,11 @@
 
 using namespace std;
 
+namespace
+{
+    Instruction::Registrar<LDAInstruction> registrar("LDAInstruction");
+}
+
 vector<shared_ptr<Instruction>> LDAInstruction::createInstructions() {
     vector<shared_ptr<Instruction>> instructions;
 

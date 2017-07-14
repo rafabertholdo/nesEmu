@@ -5,6 +5,10 @@
 
 using namespace std;
 
+namespace
+{
+    Instruction::Registrar<STAInstruction> registrar("STAInstruction");
+}
 
 vector<shared_ptr<Instruction>> STAInstruction::createInstructions() {
     vector<shared_ptr<Instruction>> instructions;
