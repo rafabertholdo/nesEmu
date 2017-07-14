@@ -10,12 +10,14 @@
 #include "RegBit.h"
 #include "PPU.h"
 #include "Addressing.h"
+//#include <stack>
 
 using namespace std;
 class Instruction; //forward declaration
 
 class CPU {
     vector<uint_least8_t> RAM;
+    //stack<uint_least8_t> _stack;
     Rom *rom;
     PPU ppu;
     bool reset;
@@ -50,6 +52,10 @@ public:
     uint_least8_t read(const uint_least16_t &address);
     vector<uint_least8_t> read(const uint_least16_t &address, const uint_least8_t &length);
     void write(const uint_least16_t &address, const uint_least8_t &value);
+
+    void push(const uint_least8_t &value);
+    uint_least8_t pop();
+
     void run();
     void dumpRegs();
 };

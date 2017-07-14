@@ -159,3 +159,16 @@ void CPU::dumpRegs() {
     std::cout << "SP " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(SP) << " "; 
     std::cout << "CYC: " << std::setw(3) << std::setfill(' ') << static_cast<int>(0) << std::endl; 
 }
+
+void CPU::push(const uint_least8_t &value) {
+    write(SP, value);
+    //_stack.push(value);
+    SP+=1;
+}
+
+uint_least8_t CPU::pop() {
+    SP-=1;
+    u8 topElement = read(SP);
+    //_stack.pop();
+    return topElement;
+}
