@@ -14,8 +14,8 @@ enum class AffectFlags : uint_least8_t {
     Zero = 2,
     InterruptEnabled = 4,
     DecimalMode = 8,
-    Overflow = 32,
-    Negative = 64
+    Overflow = 64,
+    Negative = 128
 };
 
 inline AffectFlags operator|(AffectFlags a, AffectFlags b) {

@@ -64,6 +64,7 @@ void CPU::run() {
             dumpRegs();
             return;            
         }
+        reset = false;
     }
 }
 

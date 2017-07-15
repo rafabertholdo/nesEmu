@@ -57,7 +57,8 @@ void Instruction::changeFlags(CPU& cpu,  const uint_least16_t &value) {
         }
         
         if (_affectedFlags.Negative) {
-            cpu.Flags.Negative = static_cast<int_least16_t>(value) < 0;
+            std::bitset<8> set(value);
+            cpu.Flags.Negative = set.test(7);
         }
 
         if (_affectedFlags.Carry) {

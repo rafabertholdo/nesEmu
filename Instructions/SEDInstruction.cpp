@@ -10,7 +10,7 @@ namespace
 }
 
 vector<shared_ptr<Instruction>> SEDInstruction::createInstructions() {
-    auto instruction = make_shared<SEDInstruction>(implict,0x38,1,"SED", AffectFlags::DecimalMode);
+    auto instruction = make_shared<SEDInstruction>(implict,0xF8,1,"SED", AffectFlags::DecimalMode);
     vector<shared_ptr<Instruction>> result{instruction};
     return result;
 }
