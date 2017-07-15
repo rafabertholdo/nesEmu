@@ -18,7 +18,7 @@ vector<shared_ptr<Instruction>> JSRInstruction::createInstructions() {
 void JSRInstruction::execute(CPU& cpu, const uint_least16_t &value) {
     Instruction::execute(cpu, value);
     //store the PC on the stack
-    cpu.push(cpu.Flags.raw);
+    //cpu.push(cpu.Flags.raw);
     u16 addressToPush = cpu.PC + length - 1;    
     cpu.push(addressToPush >> 8);
     cpu.push(addressToPush);

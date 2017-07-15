@@ -28,9 +28,7 @@ CPU::CPU(): RAM(0x800), //2k of ram
                 {indirectY, make_shared<IndirectYAddressing>()}
             } { 
     
-    instructionVector = Instruction::instantiateAll();    
-
-    for(auto&& instruction : instructionVector) {
+    for(auto&& instruction : Instruction::instantiateAll()) {
         instructionsMapping[instruction->opcode] = instruction;
     }
     
@@ -74,6 +72,7 @@ void CPU::run() {
                     verboseData -= 3;
                 }                
             }
+            PC += instruction->length; 
             cout << std::setw(verboseData) << std::setfill(' ') << " ";
             auto addressing = addressingModes[instruction->addressingMode];
             u16 instructionValue = addressing->getAddress(*this, instructionData);
@@ -83,10 +82,6 @@ void CPU::run() {
             addressing->printAddress(instructionValue);
             dumpRegs();
             //increment program counter if instruction did't change it, aka jumps and branches
-            if (PC == pcStash) {
-                PC += instruction->length; 
-            }
-            
         } else {            
             std::cout << "Instruction " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(instructionCode) << " not implemented" << std::endl;
             dumpRegs();
@@ -161,14 +156,12 @@ void CPU::dumpRegs() {
 }
 
 void CPU::push(const uint_least8_t &value) {
-    write(SP, value);
-    //_stack.push(value);
-    SP+=1;
+    write(SP + (1 << 8), value);
+    SP-=1;
 }
 
 uint_least8_t CPU::pop() {
-    SP-=1;
-    u8 topElement = read(SP);
-    //_stack.pop();
+    SP+=1;
+    u8 topElement = read(SP + (1 << 8));
     return topElement;
 }

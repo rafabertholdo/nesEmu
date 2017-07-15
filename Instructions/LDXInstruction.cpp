@@ -25,5 +25,6 @@ vector<shared_ptr<Instruction>> instructions;
 
 void LDXInstruction::execute(CPU& cpu, const uint_least16_t &value) {
     Instruction::execute(cpu, value);
+    cpu.Flags.Zero = value == 0;
     cpu.X = value;
 }

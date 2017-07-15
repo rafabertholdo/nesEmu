@@ -18,5 +18,5 @@ vector<shared_ptr<Instruction>> RTSInstruction::createInstructions() {
 void RTSInstruction::execute(CPU& cpu, const uint_least16_t &value) {
     Instruction::execute(cpu, value);    
     cpu.PC = cpu.pop() + (cpu.pop() << 8) + 1;
-    cpu.Flags.raw = cpu.pop();    
+    //cpu.Flags.raw = cpu.pop();    
 }

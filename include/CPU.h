@@ -10,20 +10,18 @@
 #include "RegBit.h"
 #include "PPU.h"
 #include "Addressing.h"
-//#include <stack>
 
 using namespace std;
 class Instruction; //forward declaration
 
 class CPU {
     vector<uint_least8_t> RAM;
-    //stack<uint_least8_t> _stack;
+    
     Rom *rom;
     PPU ppu;
     bool reset;
     bool running;       
 
-    vector<shared_ptr<Instruction>> instructionVector;    
     map<uint_least8_t, shared_ptr<Instruction>> instructionsMapping;  
     uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);
     std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;
