@@ -1,4 +1,4 @@
-#include "CLVInstruction.h"
+#include "Instructions/CLVInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -10,12 +10,7 @@ namespace
 }
 
 vector<shared_ptr<Instruction>> CLVInstruction::createInstructions() {
-    auto instruction = make_shared<CLVInstruction>(implict,0xB8,1,"CLV");
+    auto instruction = make_shared<CLVInstruction>(implict,0xB8,1,"CLV", AffectFlags::Overflow);
     vector<shared_ptr<Instruction>> result{instruction};
     return result;
-}
-
-void CLVInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
-    cpu.Flags.Overvlow = 0;
 }

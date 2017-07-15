@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 project(nesEmu)
 set (CMAKE_CXX_STANDARD 14)
 
-file(GLOB SOURCES *.cpp include/*.h instructions/*.cpp)
+file(GLOB SOURCES *.cpp include/*.h instructions/*.cpp include/instruction/*.h)
 
 # Include header files
 include_directories ("${PROJECT_SOURCE_DIR}/include")

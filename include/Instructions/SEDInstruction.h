@@ -3,10 +3,9 @@
 
 #include "Instruction.h"
 
-class SEDInstruction : public Instruction {    
+class SEDInstruction : public SetInstruction {    
 public:
-    using Instruction::Instruction;
-    void execute(CPU& cpu, const uint_least16_t &value) override;
+    using SetInstruction::SetInstruction;
     static vector<shared_ptr<Instruction>> createInstructions();
 };
 

@@ -1,8 +1,4 @@
 #include "CPU.h" 
-#include "SEIInstruction.h"
-#include "LDAInstruction.h"
-#include "CLDInstruction.h"
-#include "STAInstruction.h"
 #include "Utils.cpp"
 
 #include <string>
@@ -11,22 +7,7 @@
 
 using namespace std;
 
-CPU::CPU(): RAM(0x800), //2k of ram    
-            addressingModes {
-                {implict, make_shared<ImplictAddressing>()},
-                {accumulator, make_shared<AccumulatorAddressing>()},                                
-                {immediate, make_shared<ImmediateAddressing>()},
-                {zeroPage, make_shared<ZeroPageAddressing>()},
-                {zeroPageX, make_shared<ZeroPageXAddressing>()},
-                {zeroPageY, make_shared<ZeroPageYAddressing>()},
-                {absolute, make_shared<AbsoluteAddressing>()},
-                {absoluteX, make_shared<AbsoluteXAddressing>()},
-                {absoluteY, make_shared<AbsoluteYAddressing>()},
-                {relative, make_shared<RelativeAddressing>()},
-                {indirect, make_shared<IndirectAddressing>()},
-                {indirectX, make_shared<IndirectXAddressing>()},
-                {indirectY, make_shared<IndirectYAddressing>()}
-            } { 
+CPU::CPU(): RAM(0x800) { //2k of ram  
     
     for(auto&& instruction : Instruction::instantiateAll()) {
         instructionsMapping[instruction->opcode] = instruction;
@@ -52,7 +33,7 @@ void CPU::run() {
     while (true) {
         uint_least16_t pcStash = PC;
         uint_least8_t instructionCode = read(PC);
-
+        
         Utils<uint_least16_t>::printHex(PC);
         cout << "  ";
         Utils<uint_least8_t>::printHex(instructionCode);        
@@ -74,12 +55,8 @@ void CPU::run() {
             }
             PC += instruction->length; 
             cout << std::setw(verboseData) << std::setfill(' ') << " ";
-            auto addressing = addressingModes[instruction->addressingMode];
-            u16 instructionValue = addressing->getAddress(*this, instructionData);
             
-            instruction->execute(*this, instructionValue); //execute instruction
-            
-            addressing->printAddress(instructionValue);
+            instruction->execute(*this, instructionData); //execute instruction
             dumpRegs();
             //increment program counter if instruction did't change it, aka jumps and branches
         } else {            

@@ -36,6 +36,7 @@
         "__functional_03": "cpp",
         "__hash_table": "cpp",
         "unordered_map": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "iomanip": "cpp"
     }
 }

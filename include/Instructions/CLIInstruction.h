@@ -3,10 +3,9 @@
 
 #include "Instruction.h"
 
-class CLIInstruction : public Instruction {    
+class CLIInstruction : public ClearInstruction {    
 public:    
-    using Instruction::Instruction;
-    void execute(CPU& cpu, const uint_least16_t &value) override;
+    using ClearInstruction::ClearInstruction;
     static vector<shared_ptr<Instruction>> createInstructions();    
 };
 

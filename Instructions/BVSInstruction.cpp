@@ -1,4 +1,4 @@
-#include "BVSInstruction.h"
+#include "Instructions/BVSInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -15,9 +15,9 @@ vector<shared_ptr<Instruction>> BVSInstruction::createInstructions() {
     return result;
 }
 
-void BVSInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
+uint_least16_t BVSInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (cpu.Flags.Overvlow) {
         cpu.PC = value;
     }
+    return cpu.PC;
 }

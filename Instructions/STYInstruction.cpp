@@ -1,4 +1,4 @@
-#include "STYInstruction.h"
+#include "Instructions/STYInstruction.h"
 #include "../Utils.cpp"
 #include <iostream>
 #include <iomanip>
@@ -24,7 +24,7 @@ vector<shared_ptr<Instruction>> STYInstruction::createInstructions() {
     return instructions;
 }
 
-void STYInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);    
+uint_least16_t STYInstruction::action(CPU& cpu, const uint_least16_t &value) {
     cpu.write(value, cpu.Y);
+    return cpu.Y;
 }

@@ -1,4 +1,4 @@
-#include "LDXInstruction.h"
+#include "Instructions/LDXInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -17,15 +17,12 @@ vector<shared_ptr<Instruction>> instructions;
     vector<uint_least8_t> lengthList{                 2,        2,         2,        3,         3};
 
     for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<LDXInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "LDX");
+        auto instruction = make_shared<LDXInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "LDX", AffectFlags::Negative | AffectFlags::Zero);
         instructions.push_back(instruction);
     }
     return instructions;
 }
 
-void LDXInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
-    cpu.Flags.Zero = value == 0;
-    cpu.Flags.Negative = int_least16_t(value) < 0;
-    cpu.X = value;
+uint_least16_t LDXInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    return cpu.X = value;
 }

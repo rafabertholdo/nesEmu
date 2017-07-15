@@ -24,7 +24,6 @@ class CPU {
 
     map<uint_least8_t, shared_ptr<Instruction>> instructionsMapping;  
     uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);
-    std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;
 public:
     
     //registers

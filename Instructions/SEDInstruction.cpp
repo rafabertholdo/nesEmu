@@ -1,4 +1,4 @@
-#include "SEDInstruction.h"
+#include "Instructions/SEDInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -10,12 +10,7 @@ namespace
 }
 
 vector<shared_ptr<Instruction>> SEDInstruction::createInstructions() {
-    auto instruction = make_shared<SEDInstruction>(implict,0x38,1,"SED");
+    auto instruction = make_shared<SEDInstruction>(implict,0x38,1,"SED", AffectFlags::DecimalMode);
     vector<shared_ptr<Instruction>> result{instruction};
     return result;
-}
-
-void SEDInstruction::execute(CPU& cpu, const uint_least16_t &value) {    
-    Instruction::execute(cpu, value);        
-    cpu.Flags.DecimalMode = 1;
 }

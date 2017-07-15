@@ -1,4 +1,4 @@
-#include "BEQInstruction.h"
+#include "Instructions/BEQInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -15,9 +15,9 @@ vector<shared_ptr<Instruction>> BEQInstruction::createInstructions() {
     return result;
 }
 
-void BEQInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
+uint_least16_t BEQInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (cpu.Flags.Zero) {
         cpu.PC = value;
     }
+    return cpu.PC;
 }

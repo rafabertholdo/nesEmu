@@ -1,4 +1,4 @@
-#include "CLIInstruction.h"
+#include "Instructions/CLIInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -10,12 +10,7 @@ namespace
 }
 
 vector<shared_ptr<Instruction>> CLIInstruction::createInstructions() {
-    auto instruction = make_shared<CLIInstruction>(implict,0x58,1,"CLI");
+    auto instruction = make_shared<CLIInstruction>(implict,0x58,1,"CLI", AffectFlags::InterruptEnabled);
     vector<shared_ptr<Instruction>> result{instruction};
     return result;
-}
-
-void CLIInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
-    cpu.Flags.InterruptEnabled = 0;
 }

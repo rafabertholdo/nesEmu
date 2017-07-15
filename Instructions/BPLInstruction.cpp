@@ -1,4 +1,4 @@
-#include "BPLInstruction.h"
+#include "Instructions/BPLInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -15,9 +15,9 @@ vector<shared_ptr<Instruction>> BPLInstruction::createInstructions() {
     return result;
 }
 
-void BPLInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
+uint_least16_t BPLInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (!cpu.Flags.Negative) {
         cpu.PC = value;
     }
+    return cpu.PC;
 }

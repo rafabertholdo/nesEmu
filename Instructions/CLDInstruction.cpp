@@ -1,4 +1,4 @@
-#include "CLDInstruction.h"
+#include "Instructions/CLDInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -10,12 +10,7 @@ namespace
 }
 
 vector<shared_ptr<Instruction>> CLDInstruction::createInstructions() {
-    auto instruction = make_shared<CLDInstruction>(implict,0xD8,1,"CLD");
+    auto instruction = make_shared<CLDInstruction>(implict,0xD8,1,"CLD", AffectFlags::DecimalMode);
     vector<shared_ptr<Instruction>> result{instruction};
     return result;
-}
-
-void CLDInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
-    cpu.Flags.DecimalMode = 0;
 }

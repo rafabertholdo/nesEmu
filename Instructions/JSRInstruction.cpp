@@ -1,4 +1,4 @@
-#include "JSRInstruction.h"
+#include "Instructions/JSRInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -15,12 +15,11 @@ vector<shared_ptr<Instruction>> JSRInstruction::createInstructions() {
     return result;
 }
 
-void JSRInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
+uint_least16_t JSRInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    
     //store the PC on the stack
-    //cpu.push(cpu.Flags.raw);
     u16 addressToPush = cpu.PC + length - 1;    
     cpu.push(addressToPush >> 8);
     cpu.push(addressToPush);
-    cpu.PC = value;
+    return cpu.PC = value;
 }

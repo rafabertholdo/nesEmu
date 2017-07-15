@@ -1,4 +1,4 @@
-#include "BNEInstruction.h"
+#include "Instructions/BNEInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -15,9 +15,9 @@ vector<shared_ptr<Instruction>> BNEInstruction::createInstructions() {
     return result;
 }
 
-void BNEInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
+uint_least16_t BNEInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (!cpu.Flags.Zero) {
         cpu.PC = value;
     }
+    return cpu.PC;
 }

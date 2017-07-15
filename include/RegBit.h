@@ -18,6 +18,7 @@ struct RegBit
     operator unsigned() const { return (data >> bitno) & mask; }
     RegBit& operator++ ()     { return *this = *this + 1; }
     unsigned operator++ (int) { unsigned r = *this; ++*this; return r; }
+
 };
 
 #endif

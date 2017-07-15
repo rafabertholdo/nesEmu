@@ -1,4 +1,4 @@
-#include "CLCInstruction.h"
+#include "Instructions/CLCInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -10,12 +10,7 @@ namespace
 }
 
 vector<shared_ptr<Instruction>> CLCInstruction::createInstructions() {
-    auto instruction = make_shared<CLCInstruction>(implict,0x18,1,"CLC");
+    auto instruction = make_shared<CLCInstruction>(implict,0x18,1,"CLC", AffectFlags::Carry);
     vector<shared_ptr<Instruction>> result{instruction};
     return result;
-}
-
-void CLCInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
-    cpu.Flags.Carry = 0;
 }

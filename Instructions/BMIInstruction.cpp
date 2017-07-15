@@ -1,4 +1,4 @@
-#include "BMIInstruction.h"
+#include "Instructions/BMIInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -15,9 +15,9 @@ vector<shared_ptr<Instruction>> BMIInstruction::createInstructions() {
     return result;
 }
 
-void BMIInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
+uint_least16_t BMIInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (cpu.Flags.Negative) {
         cpu.PC = value;
     }
+    return cpu.PC;
 }

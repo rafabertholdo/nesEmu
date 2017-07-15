@@ -1,4 +1,4 @@
-#include "NOPInstruction.h"
+#include "Instructions/NOPInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -15,6 +15,6 @@ vector<shared_ptr<Instruction>> NOPInstruction::createInstructions() {
     return result;
 }
 
-void NOPInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);    
+uint_least16_t NOPInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    return 0;
 }

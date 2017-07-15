@@ -1,4 +1,4 @@
-#include "RTSInstruction.h"
+#include "Instructions/RTSInstruction.h"
 #include <iostream>
 #include <iomanip>
 
@@ -15,8 +15,6 @@ vector<shared_ptr<Instruction>> RTSInstruction::createInstructions() {
     return result;
 }
 
-void RTSInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);    
-    cpu.PC = cpu.pop() + (cpu.pop() << 8) + 1;
-    //cpu.Flags.raw = cpu.pop();    
+uint_least16_t RTSInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    return cpu.PC = cpu.pop() + (cpu.pop() << 8) + 1;
 }

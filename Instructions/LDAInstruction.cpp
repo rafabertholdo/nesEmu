@@ -1,4 +1,4 @@
-#include "LDAInstruction.h"
+#include "Instructions/LDAInstruction.h"
 #include "Addressing.h"
 #include <iostream>
 #include <iomanip>
@@ -18,15 +18,13 @@ vector<shared_ptr<Instruction>> LDAInstruction::createInstructions() {
     vector<uint_least8_t> lengthList{                 2,        2,         2,        3,         3,         3,         2,         2};
 
     for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<LDAInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "LDA");
+        auto instruction = make_shared<LDAInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "LDA", AffectFlags::Negative | AffectFlags::Zero);
         instructions.push_back(instruction);
     }
     return instructions;
 }
 
-void LDAInstruction::execute(CPU& cpu, const uint_least16_t &value) {
-    Instruction::execute(cpu, value);
-    cpu.Flags.Zero = value == 0;
+uint_least16_t LDAInstruction::action(CPU& cpu, const uint_least16_t &value) {
     cpu.Flags.Negative = static_cast<int_least16_t>(value) < 0;
-    cpu.A = value;
+    return cpu.A = value;
 }
