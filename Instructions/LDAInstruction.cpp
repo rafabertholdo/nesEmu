@@ -27,5 +27,6 @@ vector<shared_ptr<Instruction>> LDAInstruction::createInstructions() {
 void LDAInstruction::execute(CPU& cpu, const uint_least16_t &value) {
     Instruction::execute(cpu, value);
     cpu.Flags.Zero = value == 0;
+    cpu.Flags.Negative = static_cast<int_least16_t>(value) < 0;
     cpu.A = value;
 }

@@ -12,7 +12,7 @@ namespace
 vector<shared_ptr<Instruction>> LDXInstruction::createInstructions() {
 vector<shared_ptr<Instruction>> instructions;
 
-    vector<AddressingMode> addressingModeList{immediate, zeroPage, zeroPageX, absolute, absoluteY};
+    vector<AddressingMode> addressingModeList{immediate, zeroPage, zeroPageY, absolute, absoluteY};
     vector<uint_least8_t> opcodeList{              0xA2,     0xA6,      0xB6,     0xAE,      0xBE};
     vector<uint_least8_t> lengthList{                 2,        2,         2,        3,         3};
 
@@ -26,5 +26,6 @@ vector<shared_ptr<Instruction>> instructions;
 void LDXInstruction::execute(CPU& cpu, const uint_least16_t &value) {
     Instruction::execute(cpu, value);
     cpu.Flags.Zero = value == 0;
+    cpu.Flags.Negative = int_least16_t(value) < 0;
     cpu.X = value;
 }
