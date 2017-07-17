@@ -64,7 +64,7 @@ void CPU::run() {
             return;            
         }
         reset = false;
-    }
+    }	
 }
 
 
@@ -134,7 +134,8 @@ void CPU::dumpRegs() {
     Utils<uint_least8_t>::printHex(Flags.raw);
     std::cout << " SP:";
     Utils<uint_least8_t>::printHex(SP);
-    std::cout << " CYC:" << std::setw(3) << std::setfill(' ') << static_cast<int>(0) << std::endl; 
+    //std::cout << " CYC:" << std::setw(3) << std::setfill(' ') << static_cast<int>(0) << std::endl; 
+	cout << std::endl;
 }
 
 void CPU::push(const uint_least8_t &value) {

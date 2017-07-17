@@ -68,6 +68,14 @@ void Instruction::changeFlags(CPU& cpu,  const uint_least16_t &value, const uint
         if (_affectedFlags.DecimalMode) {
             updateDecimalMode(cpu, value, actionValue);
         }
+
+		if (_affectedFlags.Overflow) {
+			updateOverflow(cpu, value, actionValue);
+		}
+
+		if (_affectedFlags.InterruptEnabled) {
+			updateInterruptEnabled(cpu, value, actionValue);
+		}
     }
 }
 
@@ -80,15 +88,15 @@ void Instruction::updateZero(CPU& cpu, const uint_least16_t &value, const uint_l
 }
 
 void Instruction::updateInterruptEnabled(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
-
+	cpu.Flags.InterruptEnabled = actionValue > 0;
 }
 
 void Instruction::updateDecimalMode(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
     cpu.Flags.DecimalMode = actionValue > 0;
 }
 
-void Instruction::updateOvervlow(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
-
+void Instruction::updateOverflow(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {	
+	cpu.Flags.Overflow = actionValue > 0;
 }
 
 void Instruction::updateNegative(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {

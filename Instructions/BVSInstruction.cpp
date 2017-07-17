@@ -16,7 +16,7 @@ vector<shared_ptr<Instruction>> BVSInstruction::createInstructions() {
 }
 
 uint_least16_t BVSInstruction::action(CPU& cpu, const uint_least16_t &value) {
-    if (cpu.Flags.Overvlow) {
+    if (cpu.Flags.Overflow) {
         cpu.PC = value;
     }
     return cpu.PC;

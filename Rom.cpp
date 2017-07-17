@@ -31,7 +31,7 @@ public:
         int vramEnd = vramStart + vramLength;
         
         rom = vector<BYTE>(&data[programStart], &data[programEnd]);
-        vram = vector<BYTE>(&data[vramStart], &data[vramEnd]);
+        //vram = vector<BYTE>(&data[vramStart], &data[vramEnd]);
 
         std::cout << "program length: " << programLength << std::endl;
         std::cout << "varam length: " << vramLength << std::endl;

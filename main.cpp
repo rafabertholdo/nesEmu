@@ -13,7 +13,10 @@ int main(int argc, char *argv[]) {
     Rom cartige(argv[1]);
     CPU cpu;
     cpu.loadRom(cartige);
-    cpu.run();    
+    cpu.run(); 
+	cout << "Execution ended! Press anything to terminate.";
+	string aff;
+	cin >> aff;
   }
 }
 

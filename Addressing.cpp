@@ -2,12 +2,13 @@
 #include "CPU.h"
 #include "Utils.cpp"
 
-void printSpaces(const int &length) {
+uint_least16_t printSpaces(const uint_least16_t &length) {
     cout << std::setw(length) << std::setfill(' ') << " ";
+	return length;
 }
 
-void Addressing::printAddress(const uint_least16_t &address){
-    Utils<uint_least16_t>::printHex(address);    
+uint_least16_t Addressing::printAddress(const uint_least16_t &address){
+    return Utils<uint_least16_t>::printHex(address);    
 }
 
 
@@ -15,37 +16,35 @@ uint_least16_t ImplictAddressing::getAddress(CPU &cpu, const std::vector<uint_le
     return 0;
 }
 
-void ImplictAddressing::printAddress(const uint_least16_t &address){
-    printSpaces(28);
+uint_least16_t ImplictAddressing::printAddress(const uint_least16_t &address){
+    return printSpaces(28);
 }
 
 uint_least16_t AccumulatorAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
     return cpu.A;
 };
 
-void AccumulatorAddressing::printAddress(const uint_least16_t &address){
+uint_least16_t AccumulatorAddressing::printAddress(const uint_least16_t &address){
     cout << "A";
-    printSpaces(27);
+	return printSpaces(27);
 }
 
 uint_least16_t ImmediateAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
     return instructionData[0];
 };
 
-void ImmediateAddressing::printAddress(const uint_least16_t &address){
-    cout << "#$";
-    Addressing::printAddress(address);
-    printSpaces(22);
+uint_least16_t ImmediateAddressing::printAddress(const uint_least16_t &address){
+    cout << "#$";    
+	return printSpaces(26 - Addressing::printAddress(address));
 }
 
 uint_least16_t ZeroPageAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
     return instructionData[0];
 };
 
-void ZeroPageAddressing::printAddress(const uint_least16_t &address){
-    cout << "$";
-    Addressing::printAddress(address);
-    printSpaces(23);
+uint_least16_t ZeroPageAddressing::printAddress(const uint_least16_t &address){
+    cout << "$";    
+	return printSpaces(27 - Addressing::printAddress(address));
 }
 
 uint_least16_t ZeroPageXAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
@@ -53,11 +52,11 @@ uint_least16_t ZeroPageXAddressing::getAddress(CPU &cpu, const std::vector<uint_
     return ((rawAdrress + cpu.X) % 256);
 };
 
-void ZeroPageXAddressing::printAddress(const uint_least16_t &address){
+uint_least16_t ZeroPageXAddressing::printAddress(const uint_least16_t &address){
     cout << "$";
-    Addressing::printAddress(address);
+    auto addressSize = Addressing::printAddress(address);
     cout << ",X";
-    printSpaces(21);
+	return printSpaces(25 - addressSize);
 }
 
 uint_least16_t ZeroPageYAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
@@ -65,21 +64,20 @@ uint_least16_t ZeroPageYAddressing::getAddress(CPU &cpu, const std::vector<uint_
     return ((rawAdrress + cpu.Y) % 256);
 };
 
-void ZeroPageYAddressing::printAddress(const uint_least16_t &address){
+uint_least16_t ZeroPageYAddressing::printAddress(const uint_least16_t &address){
     cout << "$";
-    Addressing::printAddress(address);
+    auto addressSize = Addressing::printAddress(address);
     cout << ",Y";
-    printSpaces(21);
+	return printSpaces(25 - addressSize);
 }
 
 uint_least16_t AbsoluteAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
     return Utils<u8>::getLittleEndianValue(instructionData);
 };
 
-void AbsoluteAddressing::printAddress(const uint_least16_t &address){
-    cout << "$";
-    Addressing::printAddress(address);
-    printSpaces(23);
+uint_least16_t AbsoluteAddressing::printAddress(const uint_least16_t &address){
+    cout << "$";    
+	return printSpaces(27 - Addressing::printAddress(address));
 }
 
 uint_least16_t AbsoluteXAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
@@ -87,11 +85,11 @@ uint_least16_t AbsoluteXAddressing::getAddress(CPU &cpu, const std::vector<uint_
     return rawAdrress + cpu.X;
 };
 
-void AbsoluteXAddressing::printAddress(const uint_least16_t &address){
+uint_least16_t AbsoluteXAddressing::printAddress(const uint_least16_t &address){
     cout << "$";
-    Addressing::printAddress(address);
+    auto addressSize = Addressing::printAddress(address);
     cout << ",X";
-    printSpaces(21);
+	return printSpaces(25 - addressSize);
 }
 
 uint_least16_t AbsoluteYAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
@@ -99,11 +97,11 @@ uint_least16_t AbsoluteYAddressing::getAddress(CPU &cpu, const std::vector<uint_
     return rawAdrress + cpu.Y;
 };
 
-void AbsoluteYAddressing::printAddress(const uint_least16_t &address){
+uint_least16_t AbsoluteYAddressing::printAddress(const uint_least16_t &address){
     cout << "$";
-    Addressing::printAddress(address);
+    auto addressSize = Addressing::printAddress(address);
     cout << ",Y";
-    printSpaces(21);
+	return printSpaces(25 - addressSize);
 }
 
 uint_least16_t RelativeAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
@@ -111,10 +109,9 @@ uint_least16_t RelativeAddressing::getAddress(CPU &cpu, const std::vector<uint_l
     return cpu.PC + address;      
 };
 
-void RelativeAddressing::printAddress(const uint_least16_t &address){
-    cout << "$";
-    Addressing::printAddress(address);    
-    printSpaces(23);
+uint_least16_t RelativeAddressing::printAddress(const uint_least16_t &address){
+    cout << "$";    
+	return printSpaces(27 - Addressing::printAddress(address));
 }
 
 uint_least16_t IndirectAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
@@ -124,11 +121,11 @@ uint_least16_t IndirectAddressing::getAddress(CPU &cpu, const std::vector<uint_l
     return Utils<u8>::getLittleEndianValue(vector<u8>{lsb,msb}); 
 };
 
-void IndirectAddressing::printAddress(const uint_least16_t &address){
+uint_least16_t IndirectAddressing::printAddress(const uint_least16_t &address){
     cout << "($";
-    Addressing::printAddress(address);
+	auto addressSize = Addressing::printAddress(address);
     cout << ")";
-    printSpaces(21);
+	return printSpaces(25 - addressSize);
 }
 
 uint_least16_t IndirectXAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
@@ -138,11 +135,11 @@ uint_least16_t IndirectXAddressing::getAddress(CPU &cpu, const std::vector<uint_
     return Utils<u8>::getLittleEndianValue(vector<u8>{lsb,msb}); 
 };
 
-void IndirectXAddressing::printAddress(const uint_least16_t &address){
+uint_least16_t IndirectXAddressing::printAddress(const uint_least16_t &address){
     cout << "($";
-    Addressing::printAddress(address);
+	auto addressSize = Addressing::printAddress(address);
     cout << ",X)";
-    printSpaces(19);
+	return printSpaces(19);
 }
 
 uint_least16_t IndirectYAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
@@ -152,9 +149,9 @@ uint_least16_t IndirectYAddressing::getAddress(CPU &cpu, const std::vector<uint_
     return Utils<u8>::getLittleEndianValue(vector<u8>{lsb,msb}) + cpu.Y;
 };
 
-void IndirectYAddressing::printAddress(const uint_least16_t &address){
+uint_least16_t IndirectYAddressing::printAddress(const uint_least16_t &address){
     cout << "($";
-    Addressing::printAddress(address);
+    auto addressSize = Addressing::printAddress(address);
     cout << ",Y)";
-    printSpaces(21);
+	return printSpaces(25 - addressSize);
 }

@@ -18,16 +18,25 @@ vector<shared_ptr<Instruction>> BITInstruction::createInstructions() {
     vector<uint_least8_t> lengthList{                2,        3};
 
     for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<BITInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "BIT");
+        auto instruction = make_shared<BITInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "BIT", AffectFlags::Negative | AffectFlags::Overflow | AffectFlags::Zero);
         instructions.push_back(instruction);
     }
     return instructions;
 }
 
 uint_least16_t BITInstruction::action(CPU& cpu, const uint_least16_t &value) {
-    uint_least8_t ramValue = cpu.read(value);
-    cpu.Flags.Negative = (ramValue % 128) != 0;
-    cpu.Flags.Overvlow = (ramValue &  64) != 0;
-    cpu.Flags.Zero = (ramValue & cpu.A) == 0;
-    return 0;
+    return cpu.read(value);
 }
+
+void BITInstruction::updateNegative(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+	cpu.Flags.Negative = (actionValue & 128) != 0;
+}
+
+void BITInstruction::updateOverflow(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+	cpu.Flags.Overflow = (actionValue & 64) != 0;
+}
+
+void BITInstruction::updateZero(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+	cpu.Flags.Zero = (actionValue & cpu.A) == 0;
+}
+

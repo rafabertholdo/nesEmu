@@ -15,8 +15,10 @@ void Utils<T>::printVector(const std::vector<T> &v) {
 }
 
 template<typename T>
-void Utils<T>::printHex(const T &hexValue) {
-    std::cout << std::setw(sizeof(T) * 2) << std::setfill('0') << std::uppercase << std::hex << static_cast<int>(hexValue);     
+T Utils<T>::printHex(const T &hexValue) {
+	T numberOfCharacters = hexValue > 0xFF ? sizeof(T) * 2 : 2;
+    std::cout << std::setw(numberOfCharacters) << std::setfill('0') << std::uppercase << std::hex << static_cast<int>(hexValue);
+	return numberOfCharacters;
 }
 
 template<typename T>

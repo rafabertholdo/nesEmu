@@ -37,7 +37,7 @@ public:
         RegBit<2> InterruptEnabled; // interrupt enable/disable
         RegBit<3> DecimalMode; // decimal mode (unsupported on NES, but flag exists)
         // 4,5 (0x10,0x20) don't exist
-        RegBit<6> Overvlow; // overflow
+        RegBit<6> Overflow; // overflow
         RegBit<7> Negative; // negative
     } Flags;
 

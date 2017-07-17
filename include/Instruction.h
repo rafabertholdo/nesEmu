@@ -35,7 +35,7 @@ class Instruction {
         RegBit<2> InterruptEnabled; // interrupt enable/disable
         RegBit<3> DecimalMode; // decimal mode (unsupported on NES, but flag exists)
         // 4,5 (0x10,0x20) don't exist
-        RegBit<6> Overvlow; // overflow
+        RegBit<6> Overflow; // overflow
         RegBit<7> Negative; // negative
     } _affectedFlags;
 
@@ -95,7 +95,7 @@ public:
     virtual void updateZero(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateInterruptEnabled(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateDecimalMode(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
-    virtual void updateOvervlow(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
+    virtual void updateOverflow(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateNegative(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
 };
 
