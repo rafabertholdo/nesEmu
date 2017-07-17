@@ -41,34 +41,59 @@ std::unordered_map<std::string, Instruction::create_f *> & Instruction::registry
 void Instruction::execute(CPU& cpu,  const vector<uint_least8_t> &instructionData) {    
     std::cout << menmonic << " ";
     u16 instructionValue = applyAddressing(cpu, instructionData);        
-    changeFlags(cpu, action(cpu, instructionValue));
+    changeFlags(cpu, instructionValue, action(cpu, instructionValue));
 }
 
 uint_least16_t Instruction::applyAddressing(CPU& cpu,  const vector<uint_least8_t> &instructionData) {
     u16 instructionValue = addressing->getAddress(cpu, instructionData);
-    addressing->printAddress(instructionValue);
+    addressing->printAddress(instructionValue);    
+    cpu.dumpRegs();
     return instructionValue;
 }
 
-void Instruction::changeFlags(CPU& cpu,  const uint_least16_t &value) {
+void Instruction::changeFlags(CPU& cpu,  const uint_least16_t &value, const uint_least16_t &actionValue) {
     if (_affectedFlags.raw) {
         if (_affectedFlags.Zero) {
-            cpu.Flags.Zero = value == 0;
+            updateZero(cpu, value, actionValue);
         }
         
         if (_affectedFlags.Negative) {
-            std::bitset<8> set(value);
-            cpu.Flags.Negative = set.test(7);
+            updateNegative(cpu, value, actionValue);
         }
 
         if (_affectedFlags.Carry) {
-            cpu.Flags.Carry = value;
+            updateCarry(cpu, value, actionValue);
         }
 
         if (_affectedFlags.DecimalMode) {
-            cpu.Flags.DecimalMode = value;
+            updateDecimalMode(cpu, value, actionValue);
         }
     }
+}
+
+void Instruction::updateCarry(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+    cpu.Flags.Carry = actionValue > 0;
+}
+
+void Instruction::updateZero(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+    cpu.Flags.Zero = !actionValue;
+}
+
+void Instruction::updateInterruptEnabled(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+
+}
+
+void Instruction::updateDecimalMode(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+    cpu.Flags.DecimalMode = actionValue > 0;
+}
+
+void Instruction::updateOvervlow(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+
+}
+
+void Instruction::updateNegative(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+    std::bitset<8> set(actionValue);
+    cpu.Flags.Negative = set.test(7);
 }
 
 uint_least16_t ClearInstruction::action(CPU& cpu, const uint_least16_t &value) {

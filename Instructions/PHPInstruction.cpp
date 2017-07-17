@@ -16,6 +16,8 @@ vector<shared_ptr<Instruction>> PHPInstruction::createInstructions() {
 }
 
 uint_least16_t PHPInstruction::action(CPU& cpu, const uint_least16_t &value) {
-    cpu.push(cpu.Flags.raw);
-    return cpu.Flags.raw;
+    uint_least8_t flagsToPush = cpu.Flags.raw;
+    flagsToPush |= 0b110000; //bit 4 and 5 is always set on push
+    cpu.push(flagsToPush);
+    return flagsToPush;
 }

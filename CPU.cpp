@@ -14,7 +14,7 @@ CPU::CPU(): RAM(0x800) { //2k of ram
     }
     
     PC = 0xC000;    
-    Flags.raw = 0x34;
+    Flags.raw = 0x24;
     SP = 0xFD;
     reset = true;
 
@@ -56,8 +56,7 @@ void CPU::run() {
             PC += instruction->length; 
             cout << std::setw(verboseData) << std::setfill(' ') << " ";
             
-            instruction->execute(*this, instructionData); //execute instruction
-            dumpRegs();
+            instruction->execute(*this, instructionData); //execute instruction            
             //increment program counter if instruction did't change it, aka jumps and branches
         } else {            
             std::cout << "Instruction " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(instructionCode) << " not implemented" << std::endl;
@@ -125,12 +124,17 @@ void CPU::write(const uint_least16_t &address, const uint_least8_t &value) {
 void CPU::dumpRegs() {
 
     //A:00 X:00 Y:00 P:24 SP:FD CYC:  0
-    std::cout << "A:" << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(A) << " ";
-    std::cout << "X " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(X) << " ";
-    std::cout << "Y " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(Y) << " ";
-    std::cout << "P " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(Flags.raw) << " "; 
-    std::cout << "SP " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(SP) << " "; 
-    std::cout << "CYC: " << std::setw(3) << std::setfill(' ') << static_cast<int>(0) << std::endl; 
+    std::cout << "A:";
+    Utils<uint_least8_t>::printHex(A);
+    std::cout << " X:";
+    Utils<uint_least8_t>::printHex(X);
+    std::cout << " Y:";
+    Utils<uint_least8_t>::printHex(Y);
+    std::cout << " P:";
+    Utils<uint_least8_t>::printHex(Flags.raw);
+    std::cout << " SP:";
+    Utils<uint_least8_t>::printHex(SP);
+    std::cout << " CYC:" << std::setw(3) << std::setfill(' ') << static_cast<int>(0) << std::endl; 
 }
 
 void CPU::push(const uint_least8_t &value) {

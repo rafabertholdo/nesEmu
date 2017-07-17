@@ -1,9 +1,9 @@
-#ifndef LDA_INSTRUCTION_H
-#define LDA_INSTRUCTION_H
+#ifndef AND_INSTRUCTION_H
+#define AND_INSTRUCTION_H
 
 #include "Instruction.h"
 
-class LDAInstruction : public Instruction {    
+class ANDInstruction : public Instruction {    
 public:
     using Instruction::Instruction;
     uint_least16_t action(CPU& cpu, const uint_least16_t &value) override;

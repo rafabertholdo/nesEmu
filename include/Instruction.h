@@ -41,8 +41,8 @@ class Instruction {
 
     static std::unordered_map<std::string, create_f *> & registry();    
     static std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;
-    uint_least16_t applyAddressing(CPU& cpu,  const vector<uint_least8_t> &instructionData);
-    void changeFlags(CPU& cpu,  const uint_least16_t &value);
+    uint_least16_t applyAddressing(CPU& cpu, const vector<uint_least8_t> &instructionData);
+    void changeFlags(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
 
 public:
     uint_least8_t length;
@@ -90,6 +90,13 @@ public:
             Instruction::registrate(name, &D::createInstructions);
         }        
     };
+
+    virtual void updateCarry(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
+    virtual void updateZero(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
+    virtual void updateInterruptEnabled(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
+    virtual void updateDecimalMode(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
+    virtual void updateOvervlow(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
+    virtual void updateNegative(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
 };
 
 class ClearInstruction : public Instruction {
