@@ -19,6 +19,7 @@ vector<shared_ptr<Instruction>> LDAInstruction::createInstructions() {
 
     for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<LDAInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "LDA", AffectFlags::Negative | AffectFlags::Zero);
+        instruction->readsFromMemory = true;
         instructions.push_back(instruction);
     }
     return instructions;

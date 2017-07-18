@@ -92,7 +92,7 @@ Rom::~Rom(){
 uint_least8_t Rom::access(const uint_least16_t &address, const uint_least8_t &value, const bool &write) {
     //0x8000 - 0xBFFF
     //0xC000 - 0xFFFF
-    return pimpl->rom[static_cast<int>(address) % 0x2000];
+    return pimpl->rom[static_cast<int>(address) - (address < 0xC000 ? 0x8000 : 0xC000)];
 }
 
 

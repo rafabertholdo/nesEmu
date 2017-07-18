@@ -19,6 +19,7 @@ vector<shared_ptr<Instruction>> CMPInstruction::createInstructions() {
 
     for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<CMPInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "CMP", AffectFlags::Negative | AffectFlags::Zero | AffectFlags::Carry);
+        instruction->readsFromMemory = true;
         instructions.push_back(instruction);
     }
     return instructions;

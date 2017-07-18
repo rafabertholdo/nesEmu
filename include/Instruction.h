@@ -47,6 +47,7 @@ class Instruction {
 public:
     uint_least8_t length;
     uint_least8_t opcode;
+    bool readsFromMemory;
     bool printsActionValue;
     
     Instruction(const AddressingMode &addressingMode, 

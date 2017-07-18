@@ -32,6 +32,7 @@ Instruction::Instruction(const AddressingMode &addressingMode,
     Instruction::menmonic = menmonic;
     Instruction::_affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
     Instruction::printsActionValue = false;
+    Instruction::readsFromMemory = false;
 }
 
 std::unordered_map<std::string, Instruction::create_f *> & Instruction::registry() {
@@ -41,15 +42,24 @@ std::unordered_map<std::string, Instruction::create_f *> & Instruction::registry
 
 void Instruction::execute(CPU& cpu,  const vector<uint_least8_t> &instructionData) {    
     std::cout << menmonic << " ";
-    CPU cpuCopy = cpu;
-    u16 instructionValue = applyAddressing(cpu, instructionData);      
-    auto charCount = addressing->printAddress(instructionValue, !printsActionValue);    
-    auto actionValue = action(cpu, instructionValue);    
+    CPU cpuCopy = cpu;   
+    
+    u16 instructionValue = applyAddressing(cpu, instructionData);              
+    //auto charCount = addressing->printAddress(instructionValue, !printsActionValue);   
+    auto charCount = addressing->printAddress(instructionValue, true);   
+    
+    if (readsFromMemory && !dynamic_cast<ImmediateAddressing*>(addressing.get())) {
+        instructionValue = cpu.read(instructionValue);
+    }
+/*
     if (printsActionValue) {
         cout << " = ";
-        auto actionValueSize = Utils<uint_least8_t>::printHex(actionValue);
+        auto valueFromMem = cpu.read(instructionValue);
+        auto actionValueSize = Utils<uint_least8_t>::printHex(valueFromMem);
         cout << std::setw(28 - charCount - 3 - actionValueSize) << std::setfill(' ') << " ";        
     }
+*/
+    auto actionValue = action(cpu, instructionValue);    
     cpuCopy.dumpRegs();
     changeFlags(cpu, instructionValue, actionValue);
 }

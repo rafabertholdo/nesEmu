@@ -20,13 +20,14 @@ vector<shared_ptr<Instruction>> BITInstruction::createInstructions() {
     for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<BITInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "BIT", AffectFlags::Negative | AffectFlags::Overflow | AffectFlags::Zero);
         instruction->printsActionValue = true;
+        instruction->readsFromMemory = true;
         instructions.push_back(instruction);
     }
     return instructions;
 }
 
 uint_least16_t BITInstruction::action(CPU& cpu, const uint_least16_t &value) {
-    return cpu.read(value);
+    return value;
 }
 
 void BITInstruction::updateNegative(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {

@@ -18,6 +18,7 @@ vector<shared_ptr<Instruction>> instructions;
 
     for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<LDXInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "LDX", AffectFlags::Negative | AffectFlags::Zero);
+        instruction->readsFromMemory = true;
         instructions.push_back(instruction);
     }
     return instructions;

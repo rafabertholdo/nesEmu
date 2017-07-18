@@ -17,7 +17,8 @@ vector<shared_ptr<Instruction>> instructions;
     vector<uint_least8_t> lengthList{                 2,        2,         2,        3,         3};
 
     for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<LDYInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "LDX", AffectFlags::Negative | AffectFlags::Zero);
+        auto instruction = make_shared<LDYInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "LDY", AffectFlags::Negative | AffectFlags::Zero);
+        instruction->readsFromMemory = true;
         instructions.push_back(instruction);
     }
     return instructions;
