@@ -37,6 +37,7 @@
         "__hash_table": "cpp",
         "unordered_map": "cpp",
         "stack": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "deque": "cpp"
     }
 }

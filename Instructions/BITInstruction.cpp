@@ -19,6 +19,7 @@ vector<shared_ptr<Instruction>> BITInstruction::createInstructions() {
 
     for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<BITInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "BIT", AffectFlags::Negative | AffectFlags::Overflow | AffectFlags::Zero);
+        instruction->printsActionValue = true;
         instructions.push_back(instruction);
     }
     return instructions;

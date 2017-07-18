@@ -47,7 +47,8 @@ class Instruction {
 public:
     uint_least8_t length;
     uint_least8_t opcode;
-
+    bool printsActionValue;
+    
     Instruction(const AddressingMode &addressingMode, 
                 const uint_least8_t &opcode, 
                 const uint_least8_t &length, 

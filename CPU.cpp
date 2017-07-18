@@ -21,6 +21,15 @@ CPU::CPU(): RAM(0x800) { //2k of ram
     cout << "RAM size: " << RAM.size() << endl;
 }
 
+CPU::CPU(const CPU &cpu) {
+    A = cpu.A;
+    X = cpu.X;
+    Y = cpu.Y;
+    SP = cpu.SP;
+    Flags.raw = cpu.Flags.raw;
+    PC = cpu.PC;
+}
+
 CPU::~CPU() {
 
 }

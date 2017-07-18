@@ -44,6 +44,7 @@ public:
     uint_least16_t PC; //program counter
 
     CPU();
+    CPU( const CPU &cpu);  // copy constructor
     ~CPU();
     void loadRom(Rom &rom);
     uint_least8_t read(const uint_least16_t &address);

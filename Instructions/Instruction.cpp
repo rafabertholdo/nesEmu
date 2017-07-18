@@ -31,6 +31,7 @@ Instruction::Instruction(const AddressingMode &addressingMode,
     Instruction::length = length;
     Instruction::menmonic = menmonic;
     Instruction::_affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
+    Instruction::printsActionValue = false;
 }
 
 std::unordered_map<std::string, Instruction::create_f *> & Instruction::registry() {
@@ -40,14 +41,21 @@ std::unordered_map<std::string, Instruction::create_f *> & Instruction::registry
 
 void Instruction::execute(CPU& cpu,  const vector<uint_least8_t> &instructionData) {    
     std::cout << menmonic << " ";
-    u16 instructionValue = applyAddressing(cpu, instructionData);        
-    changeFlags(cpu, instructionValue, action(cpu, instructionValue));
+    CPU cpuCopy = cpu;
+    u16 instructionValue = applyAddressing(cpu, instructionData);      
+    auto charCount = addressing->printAddress(instructionValue, !printsActionValue);    
+    auto actionValue = action(cpu, instructionValue);    
+    if (printsActionValue) {
+        cout << " = ";
+        auto actionValueSize = Utils<uint_least8_t>::printHex(actionValue);
+        cout << std::setw(28 - charCount - 3 - actionValueSize) << std::setfill(' ') << " ";        
+    }
+    cpuCopy.dumpRegs();
+    changeFlags(cpu, instructionValue, actionValue);
 }
 
 uint_least16_t Instruction::applyAddressing(CPU& cpu,  const vector<uint_least8_t> &instructionData) {
-    u16 instructionValue = addressing->getAddress(cpu, instructionData);
-    addressing->printAddress(instructionValue);    
-    cpu.dumpRegs();
+    u16 instructionValue = addressing->getAddress(cpu, instructionData);    
     return instructionValue;
 }
 
