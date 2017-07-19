@@ -13,12 +13,12 @@ namespace
 vector<shared_ptr<Instruction>> STYInstruction::createInstructions() {
     vector<shared_ptr<Instruction>> instructions;
 
-    vector<AddressingMode> addressingModeList{zeroPage, zeroPageY, absolute};
+    vector<AddressingMode> addressingModeList{zeroPage, zeroPageX, absolute};
     vector<uint_least8_t> opcodeList{             0x84,      0x94,     0x8C};
     vector<uint_least8_t> lengthList{                2,         2,        3};
 
     for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<STYInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "STX");
+        auto instruction = make_shared<STYInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "STY");
         instructions.push_back(instruction);
     }
     return instructions;

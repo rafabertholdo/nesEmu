@@ -3,7 +3,10 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <iomanip>
+#include <regex>
+#include <cassert>
 
 using namespace std;
 
@@ -38,8 +41,47 @@ void CPU::loadRom(Rom &rom) {
     CPU::rom = &rom;
 }
 
+void CPU::test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic) {
+    std::regex rgx("(.{4})\\s*(.{9}).(.{3})\\s(.{28})A:(.{2})\\sX:(.{2})\\sY:(.{2})\\sP:(.{2})\\sSP:(.{2})\\sCYC:(.*)");            
+    std::smatch matches;
+
+    if(std::regex_search(line, matches, rgx)) {       
+
+        u16 expectedPC = stoul(matches[1].str(),nullptr,16);
+        string expectedData =  matches[2].str();
+        
+        string expectedInstruction = matches[3].str();
+        string expectedInstructionData = matches[4].str();                
+        u8 expectedA = stoul(matches[5].str(),nullptr,16);                
+        u8 expectedX = stoul(matches[6].str(),nullptr,16);                
+        u8 expectedY = stoul(matches[7].str(),nullptr,16);                
+        u8 expectedP = stoul(matches[8].str(),nullptr,16);                
+        u8 expectedSP = stoull(matches[9].str(),nullptr,16);   
+
+        assert(PC == expectedPC);
+        assert(A == expectedA);
+        assert(X == expectedX);
+        assert(Y == expectedY);
+        assert(Flags.raw == expectedP);
+        assert(SP == expectedSP);
+        assert(menmonic.compare(expectedInstruction) == 0);
+    } else {
+        std::cout << "Match not found\n";
+    }
+}
+
 void CPU::run() {   
+    std::ifstream testLog("build/nestest.log.txt");
+    
     while (true) {
+        string line;
+        if (testLog.is_open()) {
+            getline (testLog,line);         
+        }
+        else { 
+            cout << "Unable to open file"; 
+        }       
+        
         uint_least16_t pcStash = PC;
         uint_least8_t instructionCode = read(PC);
         
@@ -62,14 +104,15 @@ void CPU::run() {
                     verboseData -= 3;
                 }                
             }
+            test(line, instructionData, instruction->menmonic);
             PC += instruction->length; 
-            cout << std::setw(verboseData) << std::setfill(' ') << " ";
-            
+            cout << std::setw(verboseData) << std::setfill(' ') << " ";            
             instruction->execute(*this, instructionData); //execute instruction            
             //increment program counter if instruction did't change it, aka jumps and branches
         } else {            
             std::cout << "Instruction " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(instructionCode) << " not implemented" << std::endl;
             dumpRegs();
+            testLog.close();
             return;            
         }
         reset = false;

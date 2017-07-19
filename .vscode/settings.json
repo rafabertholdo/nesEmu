@@ -38,6 +38,7 @@
         "unordered_map": "cpp",
         "stack": "cpp",
         "iomanip": "cpp",
-        "deque": "cpp"
+        "deque": "cpp",
+        "regex": "cpp"
     }
 }

@@ -23,8 +23,7 @@ inline AffectFlags operator|(AffectFlags a, AffectFlags b) {
 }
 
 class Instruction {    
-    using create_f = std::vector<std::shared_ptr<Instruction>>();        
-    string menmonic;
+    using create_f = std::vector<std::shared_ptr<Instruction>>();            
 
     union 
     {
@@ -46,6 +45,7 @@ class Instruction {
 public:
     uint_least8_t length;
     uint_least8_t opcode;
+    string menmonic;
     bool readsFromMemory;
     bool printsActionValue;
     shared_ptr<Addressing> addressing;
