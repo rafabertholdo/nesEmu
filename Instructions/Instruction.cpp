@@ -45,21 +45,21 @@ void Instruction::execute(CPU& cpu,  const vector<uint_least8_t> &instructionDat
     CPU cpuCopy = cpu;   
     
     u16 instructionValue = applyAddressing(cpu, instructionData);              
-    //auto charCount = addressing->printAddress(instructionValue, !printsActionValue);   
-    auto charCount = addressing->printAddress(instructionValue, true);   
+    auto charCount = addressing->printAddress(instructionValue, !printsActionValue);   
+    //auto charCount = addressing->printAddress(instructionValue, true);   
     
     if (readsFromMemory && !dynamic_cast<ImmediateAddressing*>(addressing.get())) {
         instructionValue = cpu.read(instructionValue);
     }
-/*
+    auto actionValue = action(cpu, instructionValue);    
+
     if (printsActionValue) {
         cout << " = ";
-        auto valueFromMem = cpu.read(instructionValue);
-        auto actionValueSize = Utils<uint_least8_t>::printHex(valueFromMem);
+        //auto valueFromMem = cpu.read(instructionValue);
+        auto actionValueSize = Utils<uint_least8_t>::printHex(actionValue);
         cout << std::setw(28 - charCount - 3 - actionValueSize) << std::setfill(' ') << " ";        
     }
-*/
-    auto actionValue = action(cpu, instructionValue);    
+   
     cpuCopy.dumpRegs();
     changeFlags(cpu, instructionValue, actionValue);
 }

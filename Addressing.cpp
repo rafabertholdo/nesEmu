@@ -129,9 +129,16 @@ uint_least16_t RelativeAddressing::printAddress(const uint_least16_t &address, c
 
 //IndirectAddressing
 uint_least16_t IndirectAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
-    u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
-    u8 lsb = cpu.read(rawAdrress);
-    u8 msb = cpu.read(rawAdrress + 1);
+    u16 lsbAddress = Utils<u8>::getLittleEndianValue(instructionData);    
+    u8 lsb = cpu.read(lsbAddress);
+
+    //fix page boundaries
+    u16 msbAddress = lsbAddress + 1;
+    if (msbAddress % 0x100 == 0) {
+        msbAddress = lsbAddress - 0xFF;
+    }
+    u8 msb = cpu.read(msbAddress);    
+
     return Utils<u8>::getLittleEndianValue(vector<u8>{lsb,msb}); 
 };
 
@@ -154,7 +161,7 @@ uint_least16_t IndirectXAddressing::printAddress(const uint_least16_t &address, 
     cout << "($";
 	auto addressSize = Addressing::printAddress(address, willPrintSpaces);
     cout << ",X)";
-	return willPrintSpaces ? printSpaces(24 - addressSize) + 4 : 4 + addressSize;
+	return willPrintSpaces ? printSpaces(23 - addressSize) + 4 : 4 + addressSize;
 }
 
 //IndirectYAddressing
@@ -169,5 +176,5 @@ uint_least16_t IndirectYAddressing::printAddress(const uint_least16_t &address, 
     cout << "($";
     auto addressSize = Addressing::printAddress(address, willPrintSpaces);
     cout << ",Y)";
-	return willPrintSpaces ? printSpaces(24 - addressSize) + 4 : 4 + addressSize;
+	return willPrintSpaces ? printSpaces(23 - addressSize) + 4 : 4 + addressSize;
 }
