@@ -25,6 +25,10 @@ vector<shared_ptr<Instruction>> ORAInstruction::createInstructions() {
     return instructions;
 }
 
-uint_least16_t ORAInstruction::action(CPU& cpu, const uint_least16_t &value) {
+uint_least16_t ORAInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
     return cpu.A |= value;
+}
+
+uint_least16_t ORAInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    return ORAInstruction::sharedAction(cpu, value);
 }

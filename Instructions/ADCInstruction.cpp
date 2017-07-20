@@ -25,7 +25,7 @@ vector<shared_ptr<Instruction>> ADCInstruction::createInstructions() {
     return instructions;
 }
 
-uint_least16_t ADCInstruction::action(CPU& cpu, const uint_least16_t &value) {
+uint_least16_t ADCInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
     auto sum = cpu.A + value + cpu.Flags.Carry;    
     //positive + positive = negative
     //negative + negative = positive
@@ -36,4 +36,8 @@ uint_least16_t ADCInstruction::action(CPU& cpu, const uint_least16_t &value) {
     //the carry flag.
     cpu.Flags.Carry = sum > 0xFF;
     return cpu.A = sum % 0x100;
+}
+
+uint_least16_t ADCInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    return ADCInstruction::sharedAction(cpu, value);
 }

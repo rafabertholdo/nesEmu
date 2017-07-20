@@ -25,6 +25,10 @@ vector<shared_ptr<Instruction>> ANDInstruction::createInstructions() {
     return instructions;
 }
 
-uint_least16_t ANDInstruction::action(CPU& cpu, const uint_least16_t &value) {
+uint_least16_t ANDInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) { 
     return cpu.A &= value;
+}
+
+uint_least16_t ANDInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    return ANDInstruction::sharedAction(cpu, value);
 }

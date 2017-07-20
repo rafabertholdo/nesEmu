@@ -25,6 +25,10 @@ vector<shared_ptr<Instruction>> EORInstruction::createInstructions() {
     return instructions;
 }
 
-uint_least16_t EORInstruction::action(CPU& cpu, const uint_least16_t &value) {
+uint_least16_t EORInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
     return cpu.A ^= value;
+}
+
+uint_least16_t EORInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    return EORInstruction::sharedAction(cpu, value);
 }

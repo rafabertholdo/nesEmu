@@ -1,13 +1,12 @@
-#ifndef ORA_INSTRUCTION_H
-#define ORA_INSTRUCTION_H
+#ifndef ISB_INSTRUCTION_H
+#define ISB_INSTRUCTION_H
 
 #include "Instruction.h"
 
-class ORAInstruction : public Instruction {    
+class ISBInstruction : public Instruction {    
 public:
     using Instruction::Instruction;
     uint_least16_t action(CPU& cpu, const uint_least16_t &value) override;
-    static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);
     static vector<shared_ptr<Instruction>> createInstructions();
 };
 

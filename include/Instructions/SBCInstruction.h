@@ -8,6 +8,7 @@ public:
     using Instruction::Instruction;
     uint_least16_t action(CPU& cpu, const uint_least16_t &value) override;
     static vector<shared_ptr<Instruction>> createInstructions();
+    static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);
 };
 
 

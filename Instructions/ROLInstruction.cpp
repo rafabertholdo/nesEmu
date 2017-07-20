@@ -24,16 +24,21 @@ vector<shared_ptr<Instruction>> ROLInstruction::createInstructions() {
     return instructions;
 }
 
+uint_least16_t ROLInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
+    bool carry = cpu.Flags.Carry;
+    auto valueFromMemmory = cpu.read(value);
+    cpu.Flags.Carry = valueFromMemmory & 0b10000000;
+    valueFromMemmory = ((valueFromMemmory << 1)% 0x100) + carry;
+    cpu.write(value, valueFromMemmory);
+    return valueFromMemmory;
+}
+
 uint_least16_t ROLInstruction::action(CPU& cpu, const uint_least16_t &value) {        
     bool carry = cpu.Flags.Carry;
     if (dynamic_cast<AccumulatorAddressing*>(addressing.get())) {        
         cpu.Flags.Carry = value & 0b10000000;    
         return cpu.A = ((value << 1) % 0x100) + carry;
     } else {
-        auto valueFromMemmory = cpu.read(value);
-        cpu.Flags.Carry = valueFromMemmory & 0b10000000;
-        valueFromMemmory = ((valueFromMemmory << 1)% 0x100) + carry;
-        cpu.write(value, valueFromMemmory);
-        return valueFromMemmory;
+        return ROLInstruction::sharedAction(cpu, value);
     }    
 }

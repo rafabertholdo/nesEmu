@@ -24,15 +24,19 @@ vector<shared_ptr<Instruction>> ASLInstruction::createInstructions() {
     return instructions;
 }
 
+uint_least16_t ASLInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
+    auto valueFromMemmory = cpu.read(value);
+    cpu.Flags.Carry = valueFromMemmory & 0b10000000;
+    valueFromMemmory = valueFromMemmory << 1;
+    cpu.write(value, valueFromMemmory);
+    return valueFromMemmory;
+}
+
 uint_least16_t ASLInstruction::action(CPU& cpu, const uint_least16_t &value) {        
     if (dynamic_cast<AccumulatorAddressing*>(addressing.get())) {
         cpu.Flags.Carry = value & 0b10000000;    
         return cpu.A = value << 1;
     } else {
-        auto valueFromMemmory = cpu.read(value);
-        cpu.Flags.Carry = valueFromMemmory & 0b10000000;
-        valueFromMemmory = valueFromMemmory << 1;
-        cpu.write(value, valueFromMemmory);
-        return valueFromMemmory;
-    }    
+        return ASLInstruction::sharedAction(cpu, value);
+    }
 }
