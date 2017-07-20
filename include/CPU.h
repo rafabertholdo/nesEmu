@@ -5,28 +5,30 @@
 #include <vector>
 #include <map>
 #include <bitset>
-#include "Rom.h"
+#include "ROM.h"
 #include "Instruction.h"
 #include "RegBit.h"
-#include "PPU.h"
 #include "Addressing.h"
 
 using namespace std;
 class Instruction; //forward declaration
 
+class PPU;
+
 class CPU {
     vector<uint_least8_t> RAM;
     
-    Rom *rom;
-    PPU ppu;
-    bool reset;
+    shared_ptr<ROM> rom;
+    shared_ptr<PPU> ppu;
+    
     bool running;       
     bool testing;
     
     void test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic);
     map<uint_least8_t, shared_ptr<Instruction>> instructionsMapping;  
-    uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);
+    uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    
     void identify(const vector<uint_least8_t> &instructionData, const shared_ptr<Instruction> &instruction);
+    void tick();
 public:
     
     //registers
@@ -45,11 +47,12 @@ public:
     } Flags;
 
     uint_least16_t PC; //program counter
+    bool reset=true, nmi=false, nmi_edge_detected=false, intr=false;
 
     CPU();
     CPU( const CPU &cpu);  // copy constructor
     ~CPU();
-    void loadRom(Rom &rom);
+    void loadRom(const shared_ptr<ROM> &rom);
     uint_least8_t read(const uint_least16_t &address);
     vector<uint_least8_t> read(const uint_least16_t &address, const uint_least8_t &length);
     void write(const uint_least16_t &address, const uint_least8_t &value);
@@ -63,6 +66,8 @@ public:
     u16 getNmiVectorValue();
     u16 getResetVectorValue();
     u16 getBrkVectorValue();
+
+    void setPPU(const shared_ptr<PPU> &ppu);
 };
 
 #endif

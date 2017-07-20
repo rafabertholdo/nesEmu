@@ -11,7 +11,7 @@
 static const int kPrgBlockSizeInKb = 0x4000; //16kb
 static const int kChrBlockSizeInKb = 0x2000; //8kb
 
-class Rom::impl {
+class ROM::impl {
 public:
     vector<u8> data;
     vector<u8> rom;    
@@ -20,8 +20,8 @@ public:
     u16 prgRAMSize;
     u16 chrROMSize;
     u8 ctrlbyte;
-    u8 mappernum;
-    
+    u8 mappernum;        
+
     void loadProgramData() {
         int prgStart = HEADER_SIZE;
         int prgEnd = prgStart + prgROMSize - 1;
@@ -63,7 +63,8 @@ public:
     }
 };
 
-Rom::Rom(const char* filePath): pimpl{std::make_unique<impl>()} {
+ROM::ROM(const char* filePath): pimpl{std::make_unique<impl>()} {   
+
     std::cout << "Reading file: " << filePath << std::endl;
     if (pimpl->readFile(filePath)) {
         // Read the ROM file header
@@ -79,26 +80,47 @@ Rom::Rom(const char* filePath): pimpl{std::make_unique<impl>()} {
         pimpl->prgRAMSize = pimpl->data[8] * kChrBlockSizeInKb;
 
         pimpl->loadProgramData();
+        init();        
     }
 }
 
-Rom::~Rom(){
+ROM::~ROM(){
     
 }
 
-uint_least8_t Rom::access(const uint_least16_t &address, const uint_least8_t &value, const bool &write) {
+uint_least8_t ROM::prgAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write) {
     //0x8000 - 0xBFFF
     //0xC000 - 0xFFFF
-    return pimpl->rom[static_cast<int>(address) - (address < 0xC000 ? 0x8000 : 0xC000)];
+    if (pimpl->prgROMSize == 1) {
+        return pimpl->rom[static_cast<int>(address) - (address < 0xC000 ? 0x8000 : 0xC000)];
+    } else {
+        return pimpl->rom[static_cast<int>(address) - 0x8000];
+    }
+    
 }
 
+template<unsigned npages,unsigned char*(&b)[npages], std::vector<u8>& r, unsigned granu>
+static void SetPages(unsigned size, unsigned baseaddr, unsigned index)
+{
+    for(unsigned v = r.size() + index * size,
+                 p = baseaddr / granu;
+                 p < (baseaddr + size) / granu && p < npages;
+                 ++p, v += granu)
+        b[p] = &r[v % r.size()];
+} 
 
-/*
-uint_least8_t Rom::load(uint_least8_t address) const {
-    return pimpl->data[address];
+uint_least8_t& ROM::chrAccess(const uint_least16_t &address) {
+    return pimpl->chr.at(address);
 }
 
-vector<uint_least8_t> Rom::load(uint_least8_t address, uint_least8_t length) const {
-    vector<uint_least8_t> sub(&pimpl->data[address],&pimpl->data[address + length]);    
-    return sub;
-}*/
+void ROM::init() {        
+    
+    //auto& SetVROM = SetPages<VROM_Pages,Vbanks,VRAM,VROM_Granularity>;
+    //auto& SetROM  = SetPages< ROM_Pages, banks, ROM, ROM_Granularity>;
+
+    //SetPages<VROM_Pages,Vbanks,pimpl->chr,VROM_Granularity>(0x2000, 0x0000, 0);
+    /*
+    for(unsigned v=0; v<4; ++v) {
+        SetROM(0x4000, v*0x4000, v==3 ? -1 : 0);
+    }*/
+}

@@ -1,4 +1,5 @@
 #include "CPU.h" 
+#include "PPU.h"
 #include "Utils.cpp"
 
 #include <string>
@@ -7,6 +8,8 @@
 #include <iomanip>
 #include <regex>
 #include <cassert>
+#include <SDL2/SDL.h>
+
 
 using namespace std;
 
@@ -16,7 +19,7 @@ CPU::CPU(): RAM(0x800) { //2k of ram
         instructionsMapping[instruction->opcode] = instruction;
     }
     
-    testing = true;
+    testing = false;
     
     Flags.raw = 0x24;
     SP = 0xFD;
@@ -50,8 +53,8 @@ u16 CPU::getBrkVectorValue() {
     return Utils<u8>::getLittleEndianValue(read(0xFFFE,2)); //brk vector
 }
 
-void CPU::loadRom(Rom &rom) {
-    CPU::rom = &rom;
+void CPU::loadRom(const shared_ptr<ROM> &rom) {
+    CPU::rom = rom;
     if (testing) {
         PC = 0xC000;    
     } else {
@@ -107,9 +110,21 @@ void CPU::identify(const vector<uint_least8_t> &instructionData, const shared_pt
 }
 
 void CPU::run() {   
+
     std::ifstream testLog("build/nestest.log.txt");
-    
-    while (true) {
+
+    bool quit = false;
+    //Event handler
+    SDL_Event e;
+    while(!quit) {
+        //Handle events on queue
+        while( SDL_PollEvent( &e ) != 0 ) {
+            //User requests quit
+            if( e.type == SDL_QUIT ) {
+                quit = true;
+            }
+        }  
+
         string line;
         if (testing) {        
             if (testLog.is_open()) {
@@ -122,33 +137,44 @@ void CPU::run() {
             }       
         }               
         
-        uint_least8_t instructionCode = read(PC);
+        /* Check the state of NMI flag */
+        bool nmi_now = nmi;
 
-        if (instructionsMapping.find(instructionCode) != instructionsMapping.end()) {
+        unsigned instructionCode = read(PC);        
+        
+        bool executeInstruction = true;
+        if(reset)  { 
+            PC = getResetVectorValue();
+            executeInstruction = false;            
+        } else if(nmi_now && !nmi_edge_detected) { 
+            PC = getNmiVectorValue();
+            nmi_edge_detected = true; 
+            executeInstruction = false;
+        } else if(intr && !Flags.InterruptEnabled) { 
+            PC = getBrkVectorValue();
+            executeInstruction = false;
+        }
+        
+        if(!nmi_now) { 
+            nmi_edge_detected=false;
+        }
+
+        if (executeInstruction && instructionsMapping.find(instructionCode) != instructionsMapping.end()) {
             shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
             
             vector<uint_least8_t> instructionData;
             if (instruction->length > 1) {
                 instructionData = read(PC+1, instruction->length - 1);            
             }
-            
+                        
             if (testing) {
-                identify(instructionData, instruction);
+                identify(instructionData, instruction);    
                 test(line, instructionData, instruction->menmonic);                
             }
             
             PC += instruction->length;             
             instruction->execute(*this, instructionData); 
-        } else {            
-            std::cout << "Instruction ";
-            Utils<u8>::printHex(instructionCode);
-            cout << " not implemented" << std::endl;
-            dumpRegs();
-            if (testing) {
-                testLog.close();
-            }            
-            return;            
-        }
+        }   
         reset = false;
     }	
 }
@@ -159,14 +185,14 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
     // Memory writes are turned into reads while reset is being signalled
     if(reset && write) return memAccess(address, 0, false);
 
-    //tick();
+    tick();
     if (address < 0x2000) { 
         uint_least8_t& reference = RAM[address & 0x7FF]; 
         if(!write)
             return reference; 
         reference = value; 
     } else if (address < 0x4000) {
-        return ppu.access(address&7, value, write);
+        return ppu->access(address&7, value, write);
     }
     //else if (address < 0x4018)
         /*
@@ -185,7 +211,7 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
             default: if(!write) break;
                      APU::Write(address&0x1F, value);
         }*/
-    else return rom->access(address, value, write);
+    else return rom->prgAccess(address, value, write);
     return 0;
 }
 
@@ -233,4 +259,15 @@ uint_least8_t CPU::pop() {
     SP+=1;
     u8 topElement = read(SP + (1 << 8));
     return topElement;
+}
+
+void CPU::setPPU(const shared_ptr<PPU> &ppu) {
+    CPU::ppu = ppu;
+}
+
+void CPU::tick() {
+    // PPU clock: 3 times the CPU rate
+    for(unsigned n=0; n<3; ++n) ppu->tick();
+    // APU clock: 1 times the CPU rate
+    //for(unsigned n=0; n<1; ++n) APU::tick();
 }

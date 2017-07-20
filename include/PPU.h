@@ -3,10 +3,19 @@
 
 #include "RegBit.h"
 #include "Utils.h"
+#include "IO.h"
 #include <vector>
+#include "CPU.h"
+#include "ROM.h"
+
+class CPU;
+class ROM;
 
 class PPU {
-
+    std::shared_ptr<IO> io;
+    std::shared_ptr<CPU> cpu;
+    std::shared_ptr<ROM> rom;
+    
     union regtype // PPU register file
     {
         u32 value;
@@ -48,8 +57,13 @@ class PPU {
     int read_buffer=0, open_bus=0, open_bus_decay_timer=0;
     bool even_odd_toggle=false, offset_toggle=false;
 
-    u8& mmap(int i);
+    u8& mmap(int i);    
 public:
+    PPU(const std::shared_ptr<IO> &io, const std::shared_ptr<CPU> cpu, const std::shared_ptr<ROM> rom);
+    ~PPU();
+    void rendering_tick();
+    void render_pixel();
+    void tick();    
     // External I/O: read or write
     uint_least8_t access(uint_least16_t index, uint_least8_t v, bool write);       
 };
