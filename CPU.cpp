@@ -16,7 +16,8 @@ CPU::CPU(): RAM(0x800) { //2k of ram
         instructionsMapping[instruction->opcode] = instruction;
     }
     
-    PC = 0xC000;    
+    testing = true;
+    
     Flags.raw = 0x24;
     SP = 0xFD;
     reset = true;
@@ -37,9 +38,26 @@ CPU::~CPU() {
 
 }
 
+u16 CPU::getNmiVectorValue() {
+    return Utils<u8>::getLittleEndianValue(read(0xFFFA,2)); //nmi vector
+}
+
+u16 CPU::getResetVectorValue() {
+    return Utils<u8>::getLittleEndianValue(read(0xFFFC,2)); //reset vector
+}
+
+u16 CPU::getBrkVectorValue() {
+    return Utils<u8>::getLittleEndianValue(read(0xFFFE,2)); //brk vector
+}
+
 void CPU::loadRom(Rom &rom) {
     CPU::rom = &rom;
-}
+    if (testing) {
+        PC = 0xC000;    
+    } else {
+        PC = getResetVectorValue();
+    }
+}   
 
 void CPU::test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic) {
     std::regex rgx("(.{4})\\s*(.{9}).(.{3})\\s(.{28})A:(.{2})\\sX:(.{2})\\sY:(.{2})\\sP:(.{2})\\sSP:(.{2})\\sCYC:(.*)");            
@@ -70,49 +88,65 @@ void CPU::test(const string &line, const vector<uint_least8_t> &instructionData,
     }
 }
 
+void CPU::identify(const vector<uint_least8_t> &instructionData, const shared_ptr<Instruction> &instruction) {
+    Utils<uint_least16_t>::printHex(PC);
+    cout << "  ";
+    Utils<uint_least8_t>::printHex(instruction->opcode);        
+    cout << " ";
+
+    int verboseData = 7;
+    for (auto data : instructionData) {
+        Utils<uint_least8_t>::printHex(data);
+        cout << " ";
+        verboseData -= 3;
+    }
+    cout << std::setw(verboseData) << std::setfill(' ') << " ";    
+    std::cout << instruction->menmonic << " ";
+    instruction->printAddress(*this, instructionData);
+    dumpRegs();
+}
+
 void CPU::run() {   
     std::ifstream testLog("build/nestest.log.txt");
     
     while (true) {
         string line;
-        if (testLog.is_open()) {
-            getline (testLog,line);         
-        }
-        else { 
-            cout << "Unable to open file"; 
-        }       
+        if (testing) {        
+            if (testLog.is_open()) {
+                if (!getline(testLog,line) ) {
+                    break;
+                } 
+            }
+            else { 
+                cout << "Unable to open file"; 
+            }       
+        }               
         
-        uint_least16_t pcStash = PC;
         uint_least8_t instructionCode = read(PC);
-        
-        Utils<uint_least16_t>::printHex(PC);
-        cout << "  ";
-        Utils<uint_least8_t>::printHex(instructionCode);        
-        cout << " ";
 
         if (instructionsMapping.find(instructionCode) != instructionsMapping.end()) {
             shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
             
-            int verboseData = 7;
             vector<uint_least8_t> instructionData;
             if (instruction->length > 1) {
-                instructionData = read(PC+1, instruction->length - 1);
-
-                for (auto data : instructionData) {
-                    Utils<uint_least8_t>::printHex(data);
-                    cout << " ";
-                    verboseData -= 3;
-                }                
+                instructionData = read(PC+1, instruction->length - 1);            
             }
-            test(line, instructionData, instruction->menmonic);
-            PC += instruction->length; 
-            cout << std::setw(verboseData) << std::setfill(' ') << " ";            
-            instruction->execute(*this, instructionData); //execute instruction            
-            //increment program counter if instruction did't change it, aka jumps and branches
+            
+            if (testing) {
+                identify(instructionData, instruction);
+                test(line, instructionData, instruction->menmonic);                
+            }
+            
+            PC += instruction->length;             
+            instruction->execute(*this, instructionData); 
         } else {            
-            std::cout << "Instruction " << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(instructionCode) << " not implemented" << std::endl;
+            std::cout << "Instruction ";
+            Utils<u8>::printHex(instructionCode);
+            cout << " not implemented" << std::endl;
             dumpRegs();
-            testLog.close();
+            if (testing) {
+                testLog.close();
+            }            
             return;            
         }
         reset = false;

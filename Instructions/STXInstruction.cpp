@@ -19,7 +19,6 @@ vector<shared_ptr<Instruction>> STXInstruction::createInstructions() {
 
     for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<STXInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "STX");
-        instruction->printsActionValue = true;
         instructions.push_back(instruction);
     }
     return instructions;

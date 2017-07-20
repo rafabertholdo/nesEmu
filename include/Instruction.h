@@ -38,16 +38,14 @@ class Instruction {
     } _affectedFlags;
 
     static std::unordered_map<std::string, create_f *> & registry();    
-    static std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;
-    uint_least16_t applyAddressing(CPU& cpu, const vector<uint_least8_t> &instructionData);
+    static std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;    
     void changeFlags(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
 
 public:
     uint_least8_t length;
     uint_least8_t opcode;
     string menmonic;
-    bool readsFromMemory;
-    bool printsActionValue;
+    bool readsFromMemory;    
     shared_ptr<Addressing> addressing;
     
     Instruction(const AddressingMode &addressingMode, 
@@ -55,11 +53,8 @@ public:
                 const uint_least8_t &length, 
                 const string &menmonic,
                 const AffectFlags &&affectedFlags = AffectFlags::None);
-    
-    void execute(CPU& cpu,  const vector<uint_least8_t> &instructionData);
-    virtual uint_least16_t action(CPU& cpu,  const uint_least16_t &value) = 0;
 
-    //dynamic instantiation
+    
     virtual ~Instruction() = default;    
 
     static void registrate(std::string const & name, create_f * fp) {
@@ -93,6 +88,9 @@ public:
         }        
     };
 
+    void execute(CPU& cpu,  const vector<uint_least8_t> &instructionData);
+    void printAddress(CPU& cpu,  const vector<uint_least8_t> &instructionData);
+    virtual uint_least16_t action(CPU& cpu,  const uint_least16_t &value) = 0;    
     virtual void updateCarry(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateZero(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateInterruptEnabled(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);

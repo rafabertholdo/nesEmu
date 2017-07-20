@@ -21,10 +21,12 @@ class CPU {
     PPU ppu;
     bool reset;
     bool running;       
+    bool testing;
     
     void test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic);
     map<uint_least8_t, shared_ptr<Instruction>> instructionsMapping;  
     uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);
+    void identify(const vector<uint_least8_t> &instructionData, const shared_ptr<Instruction> &instruction);
 public:
     
     //registers
@@ -57,6 +59,10 @@ public:
 
     void run();
     void dumpRegs();
+
+    u16 getNmiVectorValue();
+    u16 getResetVectorValue();
+    u16 getBrkVectorValue();
 };
 
 #endif

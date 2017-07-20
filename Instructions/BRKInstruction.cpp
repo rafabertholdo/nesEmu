@@ -22,11 +22,7 @@ uint_least16_t BRKInstruction::action(CPU& cpu, const uint_least16_t &value) {
     cpu.push(cpu.PC  >> 8);
     cpu.push(cpu.PC);
     cpu.Flags.raw |= 0b10000; //bit 4 is set on break
-    
-    //IRQ interrupt vector at $FFFE/F is loaded into the PC     
-    u16 IRQAddress = 0xFFFE;
-    u8 lsb = cpu.read(IRQAddress);
-    u8 msb = cpu.read(IRQAddress + 1);
-    cpu.PC = Utils<u8>::getLittleEndianValue(vector<u8>{lsb,msb}) + cpu.Y;
+        
+    cpu.PC = cpu.getBrkVectorValue();
     return cpu.PC;
 }

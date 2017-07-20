@@ -31,7 +31,6 @@ Instruction::Instruction(const AddressingMode &addressingMode,
     Instruction::length = length;
     Instruction::menmonic = menmonic;
     Instruction::_affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
-    Instruction::printsActionValue = false;
     Instruction::readsFromMemory = false;
 }
 
@@ -40,33 +39,19 @@ std::unordered_map<std::string, Instruction::create_f *> & Instruction::registry
     return impl;
 }
 
-void Instruction::execute(CPU& cpu,  const vector<uint_least8_t> &instructionData) {    
-    std::cout << menmonic << " ";
-    CPU cpuCopy = cpu;   
-    
-    u16 instructionValue = applyAddressing(cpu, instructionData);              
-    auto charCount = addressing->printAddress(instructionValue, !printsActionValue);   
-    //auto charCount = addressing->printAddress(instructionValue, true);   
+void Instruction::printAddress(CPU& cpu,  const vector<uint_least8_t> &instructionData) {
+    u16 instructionValue = addressing->getAddress(cpu, instructionData);
+    addressing->printAddress(instructionValue);
+}
+
+void Instruction::execute(CPU& cpu,  const vector<uint_least8_t> &instructionData) {        
+    u16 instructionValue = addressing->getAddress(cpu, instructionData);    
     
     if (readsFromMemory && !dynamic_cast<ImmediateAddressing*>(addressing.get())) {
         instructionValue = cpu.read(instructionValue);
     }
-    auto actionValue = action(cpu, instructionValue);    
-
-    if (printsActionValue) {
-        cout << " = ";
-        //auto valueFromMem = cpu.read(instructionValue);
-        auto actionValueSize = Utils<uint_least8_t>::printHex(actionValue);
-        cout << std::setw(28 - charCount - 3 - actionValueSize) << std::setfill(' ') << " ";        
-    }
-   
-    cpuCopy.dumpRegs();
+    auto actionValue = action(cpu, instructionValue);
     changeFlags(cpu, instructionValue, actionValue);
-}
-
-uint_least16_t Instruction::applyAddressing(CPU& cpu,  const vector<uint_least8_t> &instructionData) {
-    u16 instructionValue = addressing->getAddress(cpu, instructionData);    
-    return instructionValue;
 }
 
 void Instruction::changeFlags(CPU& cpu,  const uint_least16_t &value, const uint_least16_t &actionValue) {

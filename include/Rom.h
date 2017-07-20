@@ -4,12 +4,12 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include "utils.h"
 
 using namespace std;
 
 // An unsigned char can store 1 Bytes (8bits) of data (0-255)
-typedef uint_least8_t BYTE;
-static const BYTE HEADER_SIZE = 16;
+static const u8 HEADER_SIZE = 16;
 
 class Rom {        
     class impl;

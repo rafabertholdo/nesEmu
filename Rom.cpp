@@ -8,33 +8,32 @@
 
 #include <cassert>
 
-static const int PROGRAM_BLOCK_SIZE_IN_KB = 0x4000; //16kb
-static const int VRAM_BLOCK_SIZE_IN_KB = 0x2000; //8kb
+static const int kPrgBlockSizeInKb = 0x4000; //16kb
+static const int kChrBlockSizeInKb = 0x2000; //8kb
 
 class Rom::impl {
 public:
-    vector<BYTE> data;
-    vector<BYTE> rom;    
-    vector<BYTE> vram;    
-    BYTE numberOf16kbRomBanks;
-    BYTE numberOf8kbVRomBanks;
-    BYTE ctrlbyte;
-    BYTE mappernum;
+    vector<u8> data;
+    vector<u8> rom;    
+    vector<u8> chr;    
+    u16 prgROMSize;
+    u16 prgRAMSize;
+    u16 chrROMSize;
+    u8 ctrlbyte;
+    u8 mappernum;
     
     void loadProgramData() {
-        int programLength = (PROGRAM_BLOCK_SIZE_IN_KB * numberOf16kbRomBanks);
-        int programStart = HEADER_SIZE;
-        int programEnd = programStart + programLength;
+        int prgStart = HEADER_SIZE;
+        int prgEnd = prgStart + prgROMSize - 1;
         
-        int vramLength = (VRAM_BLOCK_SIZE_IN_KB * numberOf8kbVRomBanks);
-        int vramStart = programEnd + 1;
-        int vramEnd = vramStart + vramLength;
+        int chrStart = prgEnd + 1;
+        int chrEnd = chrStart + chrROMSize - 1;
         
-        rom = vector<BYTE>(&data[programStart], &data[programEnd]);
-        //vram = vector<BYTE>(&data[vramStart], &data[vramEnd]);
+        rom = vector<u8>(&data[prgStart], &data[prgEnd]);
+        chr = vector<u8>(&data[chrStart], &data[chrEnd]);
 
-        std::cout << "program length: " << programLength << std::endl;
-        std::cout << "varam length: " << vramLength << std::endl;
+        std::cout << "prg length: " << prgROMSize << std::endl;
+        std::cout << "chr length: " << chrROMSize << std::endl;
     }
 
     bool readFile(const char* filename) {
@@ -56,8 +55,8 @@ public:
 
             // read the data:
             data.insert(data.begin(),
-                    std::istream_iterator<BYTE>(file),
-                    std::istream_iterator<BYTE>());
+                    std::istream_iterator<u8>(file),
+                    std::istream_iterator<u8>());
             return true;
         }
         return false;
@@ -70,19 +69,17 @@ Rom::Rom(const char* filePath): pimpl{std::make_unique<impl>()} {
         // Read the ROM file header
         assert(pimpl->data[0] =='N' && pimpl->data[1]=='E' && pimpl->data[2]=='S' && pimpl->data[3]=='\32');
 
-        pimpl->numberOf16kbRomBanks = pimpl->data[4];        
-        pimpl->numberOf8kbVRomBanks = pimpl->data[5];
+        pimpl->prgROMSize = pimpl->data[4] * kPrgBlockSizeInKb; 
+        pimpl->chrROMSize = pimpl->data[5] * kChrBlockSizeInKb;
         pimpl->ctrlbyte = pimpl->data[6];
         pimpl->mappernum = pimpl->data[7] | (pimpl->ctrlbyte>>4); //Four higher bits of ROM Mapper Type
         if(pimpl->mappernum >= 0x40) {
             pimpl->mappernum &= 15;
         }        
+        pimpl->prgRAMSize = pimpl->data[8] * kChrBlockSizeInKb;
 
         pimpl->loadProgramData();
     }
-    
-    std::cout << "numberOfProgramBlocks: " << static_cast<int>(pimpl->numberOf16kbRomBanks) << std::endl;
-    std::cout << "numberOfvramBlocks: " << static_cast<int>(pimpl->numberOf8kbVRomBanks) << std::endl;
 }
 
 Rom::~Rom(){
