@@ -8,6 +8,8 @@
 #include "CPU.h"
 #include "ROM.h"
 
+enum class Mirroring { VERTICAL, HORIZONTAL };
+
 class CPU;
 class ROM;
 
@@ -57,7 +59,7 @@ class PPU {
     int read_buffer=0, open_bus=0, open_bus_decay_timer=0;
     bool even_odd_toggle=false, offset_toggle=false;
 
-    u8& mmap(int i);    
+    u8& memoryMap(int i);    
 public:
     PPU(const std::shared_ptr<IO> &io, const std::shared_ptr<CPU> cpu, const std::shared_ptr<ROM> rom);
     ~PPU();

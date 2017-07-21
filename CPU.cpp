@@ -23,7 +23,7 @@ CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) { //2k of ram
     
     Flags.raw = 0x24;
     SP = 0xFD;
-    reset = true;
+    reset = false;
 
     cout << "RAM size: " << RAM.size() << endl;
 }
@@ -219,9 +219,9 @@ void CPU::run() {
                 instructionData = read(PC+1, instruction->length - 1);            
             }
             
-            identify(instructionData, instruction);            
+            
             if (testing) {                
-                
+                identify(instructionData, instruction);            
                 test(line, instructionData, instruction->menmonic);                
             }
             

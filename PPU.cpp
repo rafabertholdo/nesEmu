@@ -13,23 +13,28 @@ PPU::~PPU() {
 }
 
 /* Memory mapping: Convert PPU memory address into a reference to relevant data */
-u8& PPU::mmap(int i) {
-    i &= 0x3FFF;
-    if (i >= 0x3F00) { 
-        if (i % 4 == 0 ) {
-            i &= 0x0F; 
-        }
-        return palette[i & 0x1F]; 
-    }
+u8& PPU::memoryMap(int address) {
+    address &= 0x3FFF; //if (addess > 0x#FFF) address -= 0x3FFF;
     
-    if (i < 0x2000) {
-        //auto index1 = (i / VROM_Granularity) % VROM_Pages;
-        //auto index2 = i % VROM_Granularity;        
-        //return rom->Vbanks[index1][index2];
-        return rom->chrAccess(i);
+    switch (address) {
+        case 0x0000 ... 0x1FFF:  return rom->chrAccess(address);  // CHR-ROM/RAM.
+        case 0x2000 ... 0x3EFF:  {
+            auto page = (address >> 10) & 3;
+            auto offset = address & 0x3FF;
+            return rom->nameTable[page][offset]; // Nametables.
+        }
+        case 0x3F00 ... 0x3FFF:  // Palettes:  
+            if ((address & 0x13) == 0x10) address &= ~0x10;
+            
+        /*
+            if (address % 4 == 0 ) {
+                address &= 0x0F; 
+            }*/
+            return palette[address & 0x1F];
+        default: 
+            u8* i = new u8;
+            return *i;
     }
-
-    return rom->Nta[(i>>10)&3][i&0x3FF];    
 }
 
 uint_least8_t PPU::access(uint_least16_t index, uint_least8_t value, bool write) {
@@ -100,7 +105,7 @@ uint_least8_t PPU::access(uint_least16_t index, uint_least8_t value, bool write)
                 break;
             case 7:
                 res = read_buffer;
-                u8& t = mmap(vaddr.raw); // Access the video memory.
+                u8& t = memoryMap(vaddr.raw); // Access the video memory.
                 if(write) {
                     res = t = value;
                 } else { 
@@ -140,7 +145,7 @@ void PPU::rendering_tick()
         case 1:
             if(x == 337 && scanline == -1 && even_odd_toggle && reg.ShowBG) scanline_end = 340;
             // Name table access
-            pat_addr = 0x1000*reg.BGaddr + 16*mmap(ioaddr) + vaddr.yfine;
+            pat_addr = 0x1000*reg.BGaddr + 16*memoryMap(ioaddr) + vaddr.yfine;
             if(!tile_decode_mode) break;
             // Push the current tile into shift registers.
             // The bitmap pattern is 16 bits, while the attribute is 2 bits, repeated 8 times.
@@ -151,7 +156,7 @@ void PPU::rendering_tick()
             // Attribute table access
             if(tile_decode_mode)
             {
-                tileattr = (mmap(ioaddr) >> ((vaddr.xcoarse&2) + 2*(vaddr.ycoarse&2))) & 3;
+                tileattr = (memoryMap(ioaddr) >> ((vaddr.xcoarse&2) + 2*(vaddr.ycoarse&2))) & 3;
                 // Go to the next tile horizontally (and switch nametable if it wraps)
                 if(!++vaddr.xcoarse) { vaddr.basenta_h = 1-vaddr.basenta_h; }
                 // At the edge of the screen, do the same but vertically
@@ -172,10 +177,10 @@ void PPU::rendering_tick()
             break;
         // Pattern table bytes
         case 5:
-            tilepat = mmap(pat_addr|0);
+            tilepat = memoryMap(pat_addr|0);
             break;
         case 7: // Interleave the bits of the two pattern bytes
-            unsigned p = tilepat | (mmap(pat_addr|8) << 8);
+            unsigned p = tilepat | (memoryMap(pat_addr|8) << 8);
             p = (p&0xF00F) | ((p&0x0F00)>>4) | ((p&0x00F0)<<4);
             p = (p&0xC3C3) | ((p&0x3030)>>2) | ((p&0x0C0C)<<2);
             p = (p&0x9999) | ((p&0x4444)>>1) | ((p&0x2222)<<1);

@@ -185,7 +185,7 @@ uint_least16_t IndirectYAddressing::getAddress(CPU &cpu, const std::vector<uint_
     if (cross(value - cpu.Y, cpu.Y)) {
         cpu.tick();
     }
-    return + cpu.Y;
+    return value + cpu.Y;
 };
 
 uint_least16_t IndirectYAddressing::printAddress(const uint_least16_t &address){

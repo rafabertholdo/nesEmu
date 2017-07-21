@@ -108,11 +108,11 @@ void Instruction::updateNegative(CPU& cpu, const uint_least16_t &value, const ui
 }
 
 uint_least16_t ClearInstruction::action(CPU& cpu, const uint_least16_t &value) {
-    cpu.tick();
+    //cpu.tick();
     return 0;
 }
 
 uint_least16_t SetInstruction::action(CPU& cpu, const uint_least16_t &value) {
-    cpu.tick();
+    //cpu.tick();
     return 1;
 }

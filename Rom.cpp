@@ -14,7 +14,7 @@ static const int kChrBlockSizeInKb = 0x2000; //8kb
 class ROM::impl {
 public:
     vector<u8> data;
-    vector<u8> rom;    
+    vector<u8> prg;    
     vector<u8> chr;    
     u16 prgROMSize;
     u16 prgRAMSize;
@@ -24,17 +24,16 @@ public:
 
     void loadProgramData() {
         int prgStart = HEADER_SIZE;
-        int prgEnd = prgStart + prgROMSize - 1;        
-        rom = vector<u8>(&data[prgStart], &data[prgEnd]);
-        
-        if (chrROMSize) {
-            int chrStart = prgEnd + 1;
-            int chrEnd = chrStart + chrROMSize - 1;
-            chr = vector<u8>(&data[chrStart], &data[chrEnd]);    
-        }        
+        int prgEnd = prgStart + prgROMSize;        
+        prg = vector<u8>(&data[prgStart], &data[prgEnd]);
 
-        std::cout << "prg length: " << prgROMSize << std::endl;
-        std::cout << "chr length: " << chrROMSize << std::endl;
+        if (chrROMSize) {
+            int chrEnd = prgEnd + chrROMSize;
+            chr = vector<u8>(&data[prgEnd], &data[chrEnd]);    
+        }       
+
+        std::cout << "prg length: " << prg.size() << std::endl;
+        std::cout << "chr length: " << chr.size() << std::endl;
     }
 
     bool readFile(const char* filename) {
@@ -92,12 +91,16 @@ ROM::~ROM(){
 uint_least8_t ROM::prgAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write) {
     //0x8000 - 0xBFFF
     //0xC000 - 0xFFFF
-    if (pimpl->prgROMSize == 1) {
-        return pimpl->rom[static_cast<int>(address) - (address < 0xC000 ? 0x8000 : 0xC000)];
+
+    if (address >= PRG_Start) {
+        auto page = (address / PRG_Granularity) % CHR_Pages;
+        auto pageOffset = address % PRG_Granularity;
+        return pimpl->prg[prgMap[page] + pageOffset];
     } else {
-        return pimpl->rom[static_cast<int>(address) - 0x8000];
-    }
-    
+        //TODO: PRG RAM
+        // return prgRam[addr - 0x6000];
+        return 0;
+    }   
 }
 
 template<unsigned npages,unsigned char*(&b)[npages], std::vector<u8>& r, unsigned granu>
@@ -111,7 +114,9 @@ static void SetPages(unsigned size, unsigned baseaddr, unsigned index)
 } 
 
 uint_least8_t& ROM::chrAccess(const uint_least16_t &address) {
-    return pimpl->chr.at(address);
+    auto page = address / CHR_Granularity;
+    auto pageOffset = address % CHR_Granularity;
+    return pimpl->chr.at(chrMap[page] + pageOffset);
 }
 
 void ROM::init() {        
@@ -120,8 +125,30 @@ void ROM::init() {
     //auto& SetROM  = SetPages< ROM_Pages, banks, ROM, ROM_Granularity>;
 
     //SetPages<VROM_Pages,Vbanks,pimpl->chr,VROM_Granularity>(0x2000, 0x0000, 0);
-    /*
-    for(unsigned v=0; v<4; ++v) {
-        SetROM(0x4000, v*0x4000, v==3 ? -1 : 0);
-    }*/
+    //map_chr(0x2000, 0x0000, 0);
+    //for(unsigned v=0; v<4; ++v) {
+      //  map_prg(0x4000, v*0x4000, v==3 ? -1 : 0);
+        //SetPages< PRG_Pages, prgMap, pimpl->prg, PRG_Granularity>(0x4000, v*0x4000, v==3 ? -1 : 0);
+
+        //SetROM(0x4000, v*0x4000, v==3 ? -1 : 0);
+    //}
+    map_prg(64, 0, 0);
+    map_chr(8, 0, 0);
+}
+
+/* PRG mapping functions */
+void ROM::map_prg(int pageKBs, int slot, int bank)
+{
+    if (bank < 0)
+        bank = (pimpl->prgROMSize / (0x400*pageKBs)) + bank;
+
+    for (int i = 0; i < (pageKBs/8); i++)
+        prgMap[(pageKBs/8) * slot + i] = (pageKBs*0x400*bank + 0x2000*i) % pimpl->prgROMSize;
+}
+
+/* CHR mapping functions */
+void ROM::map_chr(int pageKBs, int slot, int bank)
+{
+    for (int i = 0; i < pageKBs; i++)
+        chrMap[pageKBs*slot + i] = (pageKBs*0x400*bank + 0x400*i) % pimpl->chrROMSize;
 }

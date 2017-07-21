@@ -1,4 +1,5 @@
 {
+    "C_Cpp.intelliSenseEngine":"Default", 
     "files.associations": {
         "memory": "cpp",
         "iostream": "cpp",

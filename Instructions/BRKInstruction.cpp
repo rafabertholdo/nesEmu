@@ -4,11 +4,12 @@
 
 using namespace std;
 
+/*
 namespace
 {
     Instruction::Registrar<BRKInstruction> registrar("BRKInstruction");
 }
-
+*/
 
 vector<shared_ptr<Instruction>> BRKInstruction::createInstructions() {
     auto instruction = make_shared<BRKInstruction>(implict,0x00,1,"BRK");
