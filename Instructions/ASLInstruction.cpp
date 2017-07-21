@@ -27,7 +27,7 @@ vector<shared_ptr<Instruction>> ASLInstruction::createInstructions() {
 uint_least16_t ASLInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
     auto valueFromMemmory = cpu.read(value);
     cpu.Flags.Carry = valueFromMemmory & 0b10000000;
-    cpu.Tick();
+    cpu.tick();
     valueFromMemmory = valueFromMemmory << 1;
     cpu.write(value, valueFromMemmory);
     return valueFromMemmory;
@@ -37,7 +37,7 @@ uint_least16_t ASLInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (dynamic_cast<AccumulatorAddressing*>(addressing.get())) {
         cpu.Flags.Carry = value & 0b10000000;    
         cpu.A = value << 1;
-        cpu.Tick();
+        cpu.tick();
         return cpu.A;
     } else {
         return ASLInstruction::sharedAction(cpu, value);

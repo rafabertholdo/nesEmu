@@ -16,7 +16,7 @@ vector<shared_ptr<Instruction>> TAXInstruction::createInstructions() {
 }
 
 uint_least16_t TAXInstruction::action(CPU& cpu, const uint_least16_t &value) {    
-    cpu.X = cpu.A
+    cpu.X = cpu.A;
     cpu.tick();
     return cpu.X;
 }

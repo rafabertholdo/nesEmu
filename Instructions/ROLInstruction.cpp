@@ -29,7 +29,7 @@ uint_least16_t ROLInstruction::sharedAction(CPU& cpu, const uint_least16_t &valu
     auto valueFromMemmory = cpu.read(value);
     cpu.Flags.Carry = valueFromMemmory & 0b10000000;
     valueFromMemmory = ((valueFromMemmory << 1)% 0x100) + carry;
-    cpu.Tick();
+    cpu.tick();
     cpu.write(value, valueFromMemmory);
     return valueFromMemmory;
 }
@@ -39,7 +39,7 @@ uint_least16_t ROLInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (dynamic_cast<AccumulatorAddressing*>(addressing.get())) {        
         cpu.Flags.Carry = value & 0b10000000;    
         cpu.A = ((value << 1) % 0x100) + carry;
-        cpu.Tick();
+        cpu.tick();
         return cpu.A;
     } else {
         return ROLInstruction::sharedAction(cpu, value);

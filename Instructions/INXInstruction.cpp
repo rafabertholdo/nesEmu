@@ -17,6 +17,6 @@ vector<shared_ptr<Instruction>> INXInstruction::createInstructions() {
 
 uint_least16_t INXInstruction::action(CPU& cpu, const uint_least16_t &value) {    
     cpu.X++;
-    cpu.tick()
+    cpu.tick();
     return cpu.X;
 }

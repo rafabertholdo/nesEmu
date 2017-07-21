@@ -59,7 +59,7 @@ uint_least16_t ZeroPageAddressing::printAddress(const uint_least16_t &address) {
 //ZeroPageXAddressing
 uint_least16_t ZeroPageXAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
     u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
-    cpu.Tick();
+    cpu.tick();
     return ((rawAdrress + cpu.X) % 256);
 };
 
@@ -73,7 +73,7 @@ uint_least16_t ZeroPageXAddressing::printAddress(const uint_least16_t &address){
 //ZeroPageYAddressing
 uint_least16_t ZeroPageYAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
     u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
-    cpu.Tick();
+    cpu.tick();
     return ((rawAdrress + cpu.Y) % 256);
 };
 
@@ -97,11 +97,11 @@ uint_least16_t AbsoluteAddressing::printAddress(const uint_least16_t &address){
 
 //AbsoluteXAddressing
 uint_least16_t AbsoluteXAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
-    u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+    u16 rawAddresss = Utils<u8>::getLittleEndianValue(instructionData);
     if (cross(rawAddresss, cpu.X)) {
         cpu.tick();
     }
-    return rawAdrress + cpu.X;
+    return rawAddresss + cpu.X;
 };
 
 uint_least16_t AbsoluteXAddressing::printAddress(const uint_least16_t &address){
@@ -113,11 +113,11 @@ uint_least16_t AbsoluteXAddressing::printAddress(const uint_least16_t &address){
 
 //AbsoluteYAddressing
 uint_least16_t AbsoluteYAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
-    u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+    u16 rawAddresss = Utils<u8>::getLittleEndianValue(instructionData);
     if (cross(rawAddresss, cpu.Y)) {
         cpu.tick();
     }
-    return rawAdrress + cpu.Y;
+    return rawAddresss + cpu.Y;
 };
 
 uint_least16_t AbsoluteYAddressing::printAddress(const uint_least16_t &address){

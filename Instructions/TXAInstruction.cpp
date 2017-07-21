@@ -16,7 +16,7 @@ vector<shared_ptr<Instruction>> TXAInstruction::createInstructions() {
 }
 
 uint_least16_t TXAInstruction::action(CPU& cpu, const uint_least16_t &value) {    
-    cpu.A = cpu.X
+    cpu.A = cpu.X;
     cpu.tick();
     return cpu.A;
 }
