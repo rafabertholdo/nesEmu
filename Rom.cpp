@@ -24,13 +24,12 @@ public:
 
     void loadProgramData() {
         int prgStart = HEADER_SIZE;
-        int prgEnd = prgStart + prgROMSize - 1;
-        
-        int chrStart = prgEnd + 1;
-        int chrEnd = chrStart + chrROMSize - 1;
-        
+        int prgEnd = prgStart + prgROMSize - 1;        
         rom = vector<u8>(&data[prgStart], &data[prgEnd]);
+        
         if (chrROMSize) {
+            int chrStart = prgEnd + 1;
+            int chrEnd = chrStart + chrROMSize - 1;
             chr = vector<u8>(&data[chrStart], &data[chrEnd]);    
         }        
 
