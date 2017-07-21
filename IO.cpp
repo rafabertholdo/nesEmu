@@ -1,8 +1,11 @@
 #include "IO.h"
 #include <iostream>
 #include <cmath>
+#include "Utils.cpp"
 
 IO::IO() : joy_current{0,0}, joy_next{0,0}, joypos{0,0} {
+    joy1 = 0;
+    joy2 = 0;
     Init();
 }
 
@@ -18,16 +21,6 @@ void IO::Init() {
         } else {
             //Get window surface
             screenSurface = SDL_GetWindowSurface(window);
-            
-            /*
-            renderer = SDL_CreateRenderer(window, -1, 0);
-
-            //Fill the surface white
-            SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
-            
-            //Update the surface
-            SDL_UpdateWindowSurface( window );            
-            */
         }
     }       
 }
@@ -92,9 +85,19 @@ void IO::FlushScanline(unsigned py) {
 }
 
 void IO::JoyStrobe(unsigned v) {
-
+    if(v) { joy_current[0] = joy_next[0]; joypos[0]=0; }
+    if(v) { joy_current[1] = joy_next[1]; joypos[1]=0; }
 }
 
 u8 IO::JoyRead(unsigned idx) {
-    return 0;
+    //static const u8 masks[8] = {0x20,0x10,0x40,0x80,0x04,0x08,0x02,0x01};
+    //return ((joy_current[idx] & masks[joypos[idx]++ & 7]) ? 1 : 0);
+    //std::cout << "joy  1: " << static_cast<int>(joy1) << std::endl;
+    return joy1;
+}
+
+void IO::Joy1Write(u8 value) {
+    joy1 = value;
+    Utils<u8>::printHex(value);
+    std::cout << std::endl;
 }

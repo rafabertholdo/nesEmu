@@ -12,7 +12,7 @@ enum class AffectFlags : uint_least8_t {
     None = 0,
     Carry = 1,
     Zero = 2,
-    InterruptEnabled = 4,
+    InterruptDisabled = 4,
     DecimalMode = 8,
     Overflow = 64,
     Negative = 128
@@ -30,7 +30,7 @@ class Instruction {
         uint_least8_t raw;
         RegBit<0> Carry; // carry
         RegBit<1> Zero; // zero
-        RegBit<2> InterruptEnabled; // interrupt enable/disable
+        RegBit<2> InterruptDisabled; // interrupt enable/disable
         RegBit<3> DecimalMode; // decimal mode (unsupported on NES, but flag exists)
         // 4,5 (0x10,0x20) don't exist
         RegBit<6> Overflow; // overflow
@@ -93,7 +93,7 @@ public:
     virtual uint_least16_t action(CPU& cpu,  const uint_least16_t &value) = 0;    
     virtual void updateCarry(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateZero(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
-    virtual void updateInterruptEnabled(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
+    virtual void updateInterruptDisabled(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateDecimalMode(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateOverflow(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateNegative(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);

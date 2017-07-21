@@ -13,8 +13,8 @@
 
 using namespace std;
 
-CPU::CPU(): RAM(0x800) { //2k of ram  
-    
+CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) { //2k of ram      
+    CPU::io = io;
     for(auto&& instruction : Instruction::instantiateAll()) {
         instructionsMapping[instruction->opcode] = instruction;
     }
@@ -115,14 +115,44 @@ void CPU::run() {
 
     bool quit = false;
     //Event handler
-    SDL_Event e;
+    SDL_Event event;
     while(!quit) {
         //Handle events on queue
-        while( SDL_PollEvent( &e ) != 0 ) {
-            //User requests quit
-            if( e.type == SDL_QUIT ) {
-                quit = true;
-            }
+        while( SDL_PollEvent( &event ) != 0 ) {
+            switch( event.type ){
+                case SDL_KEYDOWN:
+                    //Set the proper message surface
+                    switch( event.key.keysym.sym ) {
+                        case SDLK_j: io->Joy1Write(io->JoyRead(0) | 1 << 7); break;
+                        case SDLK_h: io->Joy1Write(io->JoyRead(0) | 1 << 6); break;
+                        case SDLK_q: io->Joy1Write(io->JoyRead(0) | 1 << 5); break;
+                        case SDLK_e: io->Joy1Write(io->JoyRead(0) | 1 << 4); break;
+                        case SDLK_w: io->Joy1Write(io->JoyRead(0) | 1 << 3); break;
+                        case SDLK_s: io->Joy1Write(io->JoyRead(0) | 1 << 2); break;
+                        case SDLK_a: io->Joy1Write(io->JoyRead(0) | 1 << 1); break;
+                        case SDLK_d: io->Joy1Write(io->JoyRead(0) | 1 << 0); break;
+                    }
+                    break;
+
+                case SDL_KEYUP:
+                    switch( event.key.keysym.sym )
+                    {
+                        case SDLK_j: io->Joy1Write(io->JoyRead(0) & ~(1 << 7)); break;
+                        case SDLK_h: io->Joy1Write(io->JoyRead(0) & ~(1 << 6)); break;
+                        case SDLK_q: io->Joy1Write(io->JoyRead(0) & ~(1 << 5)); break;
+                        case SDLK_e: io->Joy1Write(io->JoyRead(0) & ~(1 << 4)); break;
+                        case SDLK_w: io->Joy1Write(io->JoyRead(0) & ~(1 << 3)); break;
+                        case SDLK_s: io->Joy1Write(io->JoyRead(0) & ~(1 << 2)); break;
+                        case SDLK_a: io->Joy1Write(io->JoyRead(0) & ~(1 << 1)); break;
+                        case SDLK_d: io->Joy1Write(io->JoyRead(0) & ~(1 << 0)); break;
+                    }                    
+                    break;
+                
+                case SDL_QUIT:
+                    quit = true;
+                default:
+                    break;
+            }            
         }  
 
         string line;
@@ -146,11 +176,23 @@ void CPU::run() {
         if(reset)  { 
             PC = getResetVectorValue();
             executeInstruction = false;            
-        } else if(nmi_now && !nmi_edge_detected) { 
+        } else if(nmi_now && !nmi_edge_detected) {             
+            push(PC  >> 8);
+            push(PC);                        
+            push(Flags.raw);
+            Flags.Break = 0; //Clear 4 is set on break
+            //Flags.InterruptDisabled = 1;
+
             PC = getNmiVectorValue();
             nmi_edge_detected = true; 
             executeInstruction = false;
-        } else if(intr && !Flags.InterruptEnabled) { 
+        } else if(intr && !Flags.InterruptDisabled) {             
+            push(PC  >> 8);
+            push(PC);
+            push(Flags.raw);
+            Flags.Break = 1; //bit 4 is set on break
+            Flags.InterruptDisabled = 1;
+
             PC = getBrkVectorValue();
             executeInstruction = false;
         }
@@ -166,9 +208,10 @@ void CPU::run() {
             if (instruction->length > 1) {
                 instructionData = read(PC+1, instruction->length - 1);            
             }
-                        
-            if (testing) {
-                identify(instructionData, instruction);    
+            
+            identify(instructionData, instruction);            
+            if (testing) {                
+                
                 test(line, instructionData, instruction->menmonic);                
             }
             
@@ -194,23 +237,41 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
     } else if (address < 0x4000) {
         return ppu->access(address&7, value, write);
     }
-    //else if (address < 0x4018)
-        /*
+    else if (address < 0x4018)    
         switch(address & 0x1F)
         {
             case 0x14: // OAM DMA: Copy 256 bytes from RAM into PPU's sprite memory
                 if(write) {
                     for (unsigned b=0; b<256; ++b) {
-                        write(0x2004, read((v&7)*0x0100+b));
+                        CPU::write(0x2004, read((value&7)*0x0100+b));
                     }
                 }
                 return 0;
-            case 0x15: if(!write) return APU::Read();        APU::Write(0x15,value); break;
-            case 0x16: if(!write) return IO::JoyRead(false); IO::JoyStrobe(value); break;
-            case 0x17: if(!write) return IO::JoyRead(true);  // write:passthru
-            default: if(!write) break;
-                     APU::Write(address&0x1F, value);
-        }*/
+            case 0x15: 
+                break;
+                /*
+                if(!write) {
+                    return APU::Read();
+                }        
+                APU::Write(0x15,value); break;*/
+            case 0x16: //joy1
+                if(!write) {
+                    return io->JoyRead(false);                     
+                }
+                io->JoyStrobe(value); 
+                break;
+            case 0x17: //joy1 
+                if(!write) {
+                    return io->JoyRead(true);  // write:passthru
+                }
+            default: 
+                break;
+                /*
+                if(!write) {
+                    break;
+                } 
+               APU::Write(address&0x1F, value);*/
+        }
     else return rom->prgAccess(address, value, write);
     return 0;
 }
@@ -267,7 +328,9 @@ void CPU::setPPU(const shared_ptr<PPU> &ppu) {
 
 void CPU::tick() {
     // PPU clock: 3 times the CPU rate
-    for(unsigned n=0; n<3; ++n) ppu->tick();
+    for(unsigned n=0; n<3; ++n) {
+        ppu->tick();
+    }
     // APU clock: 1 times the CPU rate
     //for(unsigned n=0; n<1; ++n) APU::tick();
 }

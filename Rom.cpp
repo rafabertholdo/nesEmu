@@ -30,7 +30,9 @@ public:
         int chrEnd = chrStart + chrROMSize - 1;
         
         rom = vector<u8>(&data[prgStart], &data[prgEnd]);
-        chr = vector<u8>(&data[chrStart], &data[chrEnd]);
+        if (chrROMSize) {
+            chr = vector<u8>(&data[chrStart], &data[chrEnd]);    
+        }        
 
         std::cout << "prg length: " << prgROMSize << std::endl;
         std::cout << "chr length: " << chrROMSize << std::endl;

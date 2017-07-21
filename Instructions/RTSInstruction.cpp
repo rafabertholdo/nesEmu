@@ -15,6 +15,6 @@ vector<shared_ptr<Instruction>> RTSInstruction::createInstructions() {
     return result;
 }
 
-uint_least16_t RTSInstruction::action(CPU& cpu, const uint_least16_t &value) {
+uint_least16_t RTSInstruction::action(CPU& cpu, const uint_least16_t &value) {        
     return cpu.PC = cpu.pop() + (cpu.pop() << 8) + 1;
 }

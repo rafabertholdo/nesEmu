@@ -10,7 +10,7 @@ namespace
 }
 
 vector<shared_ptr<Instruction>> CLIInstruction::createInstructions() {
-    auto instruction = make_shared<CLIInstruction>(implict,0x58,1,"CLI", AffectFlags::InterruptEnabled);
+    auto instruction = make_shared<CLIInstruction>(implict,0x58,1,"CLI", AffectFlags::InterruptDisabled);
     vector<shared_ptr<Instruction>> result{instruction};
     return result;
 }

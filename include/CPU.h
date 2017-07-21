@@ -6,6 +6,7 @@
 #include <map>
 #include <bitset>
 #include "ROM.h"
+#include "IO.h"
 #include "Instruction.h"
 #include "RegBit.h"
 #include "Addressing.h"
@@ -20,6 +21,7 @@ class CPU {
     
     shared_ptr<ROM> rom;
     shared_ptr<PPU> ppu;
+    shared_ptr<IO> io;
     
     bool running;       
     bool testing;
@@ -39,9 +41,9 @@ public:
         uint_least8_t raw;
         RegBit<0> Carry; // carry
         RegBit<1> Zero; // zero
-        RegBit<2> InterruptEnabled; // interrupt enable/disable
+        RegBit<2> InterruptDisabled; // interrupt enable/disable
         RegBit<3> DecimalMode; // decimal mode (unsupported on NES, but flag exists)
-        // 4,5 (0x10,0x20) don't exist
+        RegBit<4> Break; //break        
         RegBit<6> Overflow; // overflow
         RegBit<7> Negative; // negative
     } Flags;
@@ -49,8 +51,8 @@ public:
     uint_least16_t PC; //program counter
     bool reset=true, nmi=false, nmi_edge_detected=false, intr=false;
 
-    CPU();
-    CPU( const CPU &cpu);  // copy constructor
+    CPU(const shared_ptr<IO> &io);
+    CPU(const CPU &cpu);  // copy constructor
     ~CPU();
     void loadRom(const shared_ptr<ROM> &rom);
     uint_least8_t read(const uint_least16_t &address);
