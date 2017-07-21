@@ -17,6 +17,7 @@ vector<shared_ptr<Instruction>> BPLInstruction::createInstructions() {
 
 uint_least16_t BPLInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (!cpu.Flags.Negative) {
+        cpu.tick();
         cpu.PC = value;
     }
     return cpu.PC;

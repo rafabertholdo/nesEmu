@@ -16,5 +16,7 @@ vector<shared_ptr<Instruction>> INYInstruction::createInstructions() {
 }
 
 uint_least16_t INYInstruction::action(CPU& cpu, const uint_least16_t &value) {    
-    return ++cpu.Y;
+    cpu.Y++;
+    cpu.tick();
+    return cpu.Y;
 }

@@ -16,6 +16,7 @@ vector<shared_ptr<Instruction>> PHAInstruction::createInstructions() {
 }
 
 uint_least16_t PHAInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    cpu.tick();
     cpu.push(cpu.A);
     return cpu.A;
 }

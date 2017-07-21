@@ -17,6 +17,7 @@ vector<shared_ptr<Instruction>> BNEInstruction::createInstructions() {
 
 uint_least16_t BNEInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (!cpu.Flags.Zero) {
+        cpu.tick();
         cpu.PC = value;
     }
     return cpu.PC;

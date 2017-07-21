@@ -64,5 +64,6 @@ vector<shared_ptr<Instruction>> NOPInstruction::createInstructions() {
 }
 
 uint_least16_t NOPInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    cpu.tick();
     return value;
 }

@@ -29,8 +29,7 @@ class CPU {
     void test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic);
     map<uint_least8_t, shared_ptr<Instruction>> instructionsMapping;  
     uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    
-    void identify(const vector<uint_least8_t> &instructionData, const shared_ptr<Instruction> &instruction);
-    void tick();
+    void identify(const vector<uint_least8_t> &instructionData, const shared_ptr<Instruction> &instruction);    
 public:
     
     //registers
@@ -70,6 +69,7 @@ public:
     u16 getBrkVectorValue();
 
     void setPPU(const shared_ptr<PPU> &ppu);
+    void tick();
 };
 
 #endif

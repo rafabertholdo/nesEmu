@@ -17,6 +17,7 @@ vector<shared_ptr<Instruction>> BEQInstruction::createInstructions() {
 
 uint_least16_t BEQInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (cpu.Flags.Zero) {
+        cpu.tick();
         cpu.PC = value;
     }
     return cpu.PC;

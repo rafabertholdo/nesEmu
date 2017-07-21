@@ -26,6 +26,7 @@ vector<shared_ptr<Instruction>> DECInstruction::createInstructions() {
 
 uint_least16_t DECInstruction::action(CPU& cpu, const uint_least16_t &value) {           
     auto valueFromMemmory = cpu.read(value);        
+    cpu.Tick();
     cpu.write(value, --valueFromMemmory);
     return valueFromMemmory;    
 }

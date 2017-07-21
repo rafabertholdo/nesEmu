@@ -2,6 +2,10 @@
 #include "CPU.h"
 #include "Utils.cpp"
 
+bool cross(u16 a, u8 i) { 
+    return ((a+i) & 0xFF00) != ((a & 0xFF00)); 
+}
+
 uint_least16_t printSpaces(const uint_least16_t &length) {
     cout << std::setw(length) << std::setfill(' ') << " ";
 	return length;
@@ -55,6 +59,7 @@ uint_least16_t ZeroPageAddressing::printAddress(const uint_least16_t &address) {
 //ZeroPageXAddressing
 uint_least16_t ZeroPageXAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
     u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+    cpu.Tick();
     return ((rawAdrress + cpu.X) % 256);
 };
 
@@ -68,6 +73,7 @@ uint_least16_t ZeroPageXAddressing::printAddress(const uint_least16_t &address){
 //ZeroPageYAddressing
 uint_least16_t ZeroPageYAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
     u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+    cpu.Tick();
     return ((rawAdrress + cpu.Y) % 256);
 };
 
@@ -92,6 +98,9 @@ uint_least16_t AbsoluteAddressing::printAddress(const uint_least16_t &address){
 //AbsoluteXAddressing
 uint_least16_t AbsoluteXAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
     u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+    if (cross(rawAddresss, cpu.X)) {
+        cpu.tick();
+    }
     return rawAdrress + cpu.X;
 };
 
@@ -105,6 +114,9 @@ uint_least16_t AbsoluteXAddressing::printAddress(const uint_least16_t &address){
 //AbsoluteYAddressing
 uint_least16_t AbsoluteYAddressing::getAddress(CPU &cpu, const std::vector<uint_least8_t> &instructionData) {
     u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);
+    if (cross(rawAddresss, cpu.Y)) {
+        cpu.tick();
+    }
     return rawAdrress + cpu.Y;
 };
 
@@ -169,7 +181,11 @@ uint_least16_t IndirectYAddressing::getAddress(CPU &cpu, const std::vector<uint_
     u16 rawAdrress = Utils<u8>::getLittleEndianValue(instructionData);                
     u8 lsb = cpu.read(rawAdrress);
     u8 msb = cpu.read((rawAdrress + 1) % 256);
-    return Utils<u8>::getLittleEndianValue(vector<u8>{lsb,msb}) + cpu.Y;
+    u16 value = Utils<u8>::getLittleEndianValue(vector<u8>{lsb,msb});
+    if (cross(value - cpu.Y, cpu.Y)) {
+        cpu.tick();
+    }
+    return + cpu.Y;
 };
 
 uint_least16_t IndirectYAddressing::printAddress(const uint_least16_t &address){

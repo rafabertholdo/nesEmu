@@ -25,7 +25,8 @@ vector<shared_ptr<Instruction>> INCInstruction::createInstructions() {
 }
 
 uint_least16_t INCInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {           
-    auto valueFromMemmory = cpu.read(value);        
+    auto valueFromMemmory = cpu.read(value);   
+    cpu.tick();     
     cpu.write(value, ++valueFromMemmory);
     return valueFromMemmory;    
 }

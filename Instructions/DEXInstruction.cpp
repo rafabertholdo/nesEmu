@@ -16,5 +16,7 @@ vector<shared_ptr<Instruction>> DEXInstruction::createInstructions() {
 }
 
 uint_least16_t DEXInstruction::action(CPU& cpu, const uint_least16_t &value) {    
-    return --cpu.X;
+    cpu.X--;
+    cpu.tick();
+    return cpu.X;
 }

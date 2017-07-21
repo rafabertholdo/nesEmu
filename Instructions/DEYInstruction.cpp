@@ -16,5 +16,7 @@ vector<shared_ptr<Instruction>> DEYInstruction::createInstructions() {
 }
 
 uint_least16_t DEYInstruction::action(CPU& cpu, const uint_least16_t &value) {    
-    return --cpu.Y;
+    cpu.Y--;
+    cpu.tick();
+    return cpu.Y;
 }

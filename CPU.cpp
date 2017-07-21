@@ -174,24 +174,34 @@ void CPU::run() {
         
         bool executeInstruction = true;
         if(reset)  { 
+            tick();
+            tick();
             PC = getResetVectorValue();
             executeInstruction = false;            
         } else if(nmi_now && !nmi_edge_detected) {             
+            tick();
+            tick();
             push(PC  >> 8);
             push(PC);                        
             push(Flags.raw);
             Flags.Break = 0; //Clear 4 is set on break
-            //Flags.InterruptDisabled = 1;
+            tick();
+            tick();
+            tick();
 
             PC = getNmiVectorValue();
             nmi_edge_detected = true; 
             executeInstruction = false;
         } else if(intr && !Flags.InterruptDisabled) {             
+            tick();
             push(PC  >> 8);
             push(PC);
             push(Flags.raw);
             Flags.Break = 1; //bit 4 is set on break
             Flags.InterruptDisabled = 1;
+            tick();
+            tick();
+            tick();
 
             PC = getBrkVectorValue();
             executeInstruction = false;

@@ -17,6 +17,7 @@ vector<shared_ptr<Instruction>> BCSInstruction::createInstructions() {
 
 uint_least16_t BCSInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (cpu.Flags.Carry) {
+        cpu.tick();
         cpu.PC = value;
     }
     return cpu.PC;

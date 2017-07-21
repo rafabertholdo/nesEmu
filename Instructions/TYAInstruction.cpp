@@ -16,5 +16,7 @@ vector<shared_ptr<Instruction>> TYAInstruction::createInstructions() {
 }
 
 uint_least16_t TYAInstruction::action(CPU& cpu, const uint_least16_t &value) {    
-    return cpu.A = cpu.Y;
+    cpu.A = cpu.Y;
+    cpu.tick();
+    return cpu.A;
 }

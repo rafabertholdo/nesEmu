@@ -17,6 +17,7 @@ vector<shared_ptr<Instruction>> BMIInstruction::createInstructions() {
 
 uint_least16_t BMIInstruction::action(CPU& cpu, const uint_least16_t &value) {
     if (cpu.Flags.Negative) {
+        cpu.tick();
         cpu.PC = value;
     }
     return cpu.PC;
