@@ -68,16 +68,16 @@ void CPU::test(const string &line, const vector<uint_least8_t> &instructionData,
 
     if(std::regex_search(line, matches, rgx)) {       
 
-        u16 expectedPC = stoul(matches[1].str(),nullptr,16);
+		auto expectedPC = stoul(matches[1].str(),nullptr,16);
         string expectedData =  matches[2].str();
         
         string expectedInstruction = matches[3].str();
         string expectedInstructionData = matches[4].str();                
-        u8 expectedA = stoul(matches[5].str(),nullptr,16);                
-        u8 expectedX = stoul(matches[6].str(),nullptr,16);                
-        u8 expectedY = stoul(matches[7].str(),nullptr,16);                
-        u8 expectedP = stoul(matches[8].str(),nullptr,16);                
-        u8 expectedSP = stoull(matches[9].str(),nullptr,16);   
+        auto expectedA = stoul(matches[5].str(),nullptr,16);                
+		auto expectedX = stoul(matches[6].str(),nullptr,16);
+		auto expectedY = stoul(matches[7].str(),nullptr,16);
+		auto expectedP = stoul(matches[8].str(),nullptr,16);
+		auto expectedSP = stoull(matches[9].str(),nullptr,16);
 
         assert(PC == expectedPC);
         assert(A == expectedA);
