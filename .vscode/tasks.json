@@ -2,6 +2,8 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "0.1.0",    
+    "command": "sh",
+    "args": ["-c"],
     "isShellCommand": true,    
     "showOutput": "always",
     "suppressTaskName":true,
@@ -15,14 +17,13 @@
             "args": ["-G 'Visual Studio 15 2017 Win64' -DCMAKE_BUILD_TYPE=Debug .."]     
         },
         {
-            "command": "sh",
+            
             "taskName": "cmake",            
-            "args": ["-c cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug .."]     
+            "args": ["cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug .."]     
         },
         {
-            "command": "sh",
             "taskName": "make",
-            "args": ["-c make -j 8"],
+            "args": ["make -j 8"],
             "isBuildCommand": true            
         }
     ]
