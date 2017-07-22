@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include "Rom.h"
+#include "include/Rom.h"
 #include "CPU.h"
 #include "PPU.h"
 #include "IO.h"
@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
     cpu->loadRom(rom);
     cpu->run();
   }  
+  return 1;
 }
 
 

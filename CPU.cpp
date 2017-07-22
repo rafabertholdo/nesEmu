@@ -243,24 +243,32 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
     if(reset && write) return memAccess(address, 0, false);
     
     tick();
-    switch (address) {
-        case 0x0000 ... 0x1FFF: {                                                    // RAM.
-            uint_least8_t& reference = RAM[address & 0x7FF]; 
-            if(!write) {
-                return reference; 
-            }
-            reference = value; 
-            break;
-        }
-        case 0x2000 ... 0x3FFF: return ppu->access(address&7, value, write);         // PPU.
-        case 0x4000 ... 0x4013: break;                                               // APU
-        case            0x4014: if (write) dmaOam(value); break;                     // OAM DMA.
-        case            0x4015: break;                                               // APU
-        case            0x4016: if (write) { io->JoyStrobe(value); break; }          // Joypad strobe.
-                                else return io->JoyRead(false);                      // Joypad 0.
-        case            0x4017: if (!write) io->JoyRead(1); break;                   // Joypad 1.
-        case 0x4018 ... 0xFFFF: return rom->prgAccess(address, value, write);        // Cartridge.
-    }
+	if (address < 0x2000) {  // RAM 0x0000 ... 0x1FFF
+		uint_least8_t& reference = RAM[address & 0x7FF];
+		if (!write) {
+			return reference;
+		}
+		reference = value;
+	} else if (address < 0x4000) { //PPU 0x2000 ... 0x3FFF
+		return ppu->access(address & 7, value, write);
+	} else if (address < 0x4014 || address == 0x4015) { //APU address 0x4000 ... 0x4013
+		
+	} else if (address == 0x4014) { // OAM DMA.
+		if (write) dmaOam(value);
+	} else if (address == 0x4016) { // Joypad 0.
+		if (write) { 
+			io->JoyStrobe(value);        
+		} else { 
+			return io->JoyRead(0);        
+		}
+	} else if (address == 0x4017) { // Joypad 1.
+		if (!write) {
+			io->JoyRead(1);
+		}
+	} else { // ROM prg access 0x4018 ... 0xFFFF
+		return rom->prgAccess(address, value, write);
+	}
+
     return 0;
 }
 

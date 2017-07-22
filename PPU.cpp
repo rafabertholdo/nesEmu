@@ -16,25 +16,18 @@ PPU::~PPU() {
 u8& PPU::memoryMap(int address) {
     address &= 0x3FFF; //if (addess > 0x#FFF) address -= 0x3FFF;
     
-    switch (address) {
-        case 0x0000 ... 0x1FFF:  return rom->chrAccess(address);  // CHR-ROM/RAM.
-        case 0x2000 ... 0x3EFF:  {
-            auto page = (address >> 10) & 3;
-            auto offset = address & 0x3FF;
-            return rom->nameTable[page][offset]; // Nametables.
-        }
-        case 0x3F00 ... 0x3FFF:  // Palettes:  
-            if ((address & 0x13) == 0x10) address &= ~0x10;
-            
-        /*
-            if (address % 4 == 0 ) {
-                address &= 0x0F; 
-            }*/
-            return palette[address & 0x1F];
-        default: 
-            u8* i = new u8;
-            return *i;
-    }
+	if (address < 0x2000) {// CHR-ROM/RAM. 0x0000 ... 0x1FFF
+		return rom->chrAccess(address);
+	} else if (address < 0x3F00) { // Nametables .0x2000 ... 0x3EFF:
+		auto page = (address >> 10) & 3;
+		auto offset = address & 0x3FF;
+		return rom->nameTable[page][offset]; 
+	} else { // Palettes:  0x3F00 ... 0x3FFF		
+		if (address % 4 == 0 ) {
+			address &= 0x0F;
+		}
+		return palette[address & 0x1F];
+	}    
 }
 
 uint_least8_t PPU::access(uint_least16_t index, uint_least8_t value, bool write) {
