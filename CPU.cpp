@@ -117,6 +117,7 @@ void CPU::run() {
     //Event handler
     SDL_Event event;
     while(!quit) {
+        /*
         //Handle events on queue
         while( SDL_PollEvent( &event ) != 0 ) {
             switch( event.type ){
@@ -154,7 +155,7 @@ void CPU::run() {
                     break;
             }            
         }  
-
+        */
         string line;
         if (testing) {        
             if (testLog.is_open()) {
@@ -211,14 +212,13 @@ void CPU::run() {
             nmi_edge_detected=false;
         }
 
-        if (executeInstruction && instructionsMapping.find(instructionCode) != instructionsMapping.end()) {
+        if (executeInstruction) {
             shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
             
             vector<uint_least8_t> instructionData;
             if (instruction->length > 1) {
                 instructionData = read(PC+1, instruction->length - 1);            
             }
-            
             
             if (testing) {                
                 identify(instructionData, instruction);            
@@ -232,57 +232,35 @@ void CPU::run() {
     }	
 }
 
+void CPU::dmaOam(const uint_least8_t &value) {
+    for (unsigned b=0; b<256; ++b) {
+        write(0x2004, read((value&7)*0x0100+b));
+    }
+}
 
-uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write)
-{
+uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write) {
     // Memory writes are turned into reads while reset is being signalled
     if(reset && write) return memAccess(address, 0, false);
-
+    
     tick();
-    if (address < 0x2000) { 
-        uint_least8_t& reference = RAM[address & 0x7FF]; 
-        if(!write)
-            return reference; 
-        reference = value; 
-    } else if (address < 0x4000) {
-        return ppu->access(address&7, value, write);
-    }
-    else if (address < 0x4018)    
-        switch(address & 0x1F)
-        {
-            case 0x14: // OAM DMA: Copy 256 bytes from RAM into PPU's sprite memory
-                if(write) {
-                    for (unsigned b=0; b<256; ++b) {
-                        CPU::write(0x2004, read((value&7)*0x0100+b));
-                    }
-                }
-                return 0;
-            case 0x15: 
-                break;
-                /*
-                if(!write) {
-                    return APU::Read();
-                }        
-                APU::Write(0x15,value); break;*/
-            case 0x16: //joy1
-                if(!write) {
-                    return io->JoyRead(false);                     
-                }
-                io->JoyStrobe(value); 
-                break;
-            case 0x17: //joy1 
-                if(!write) {
-                    return io->JoyRead(true);  // write:passthru
-                }
-            default: 
-                break;
-                /*
-                if(!write) {
-                    break;
-                } 
-               APU::Write(address&0x1F, value);*/
+    switch (address) {
+        case 0x0000 ... 0x1FFF: {                                                    // RAM.
+            uint_least8_t& reference = RAM[address & 0x7FF]; 
+            if(!write) {
+                return reference; 
+            }
+            reference = value; 
+            break;
         }
-    else return rom->prgAccess(address, value, write);
+        case 0x2000 ... 0x3FFF: return ppu->access(address&7, value, write);         // PPU.
+        case 0x4000 ... 0x4013: break;                                               // APU
+        case            0x4014: if (write) dmaOam(value); break;                     // OAM DMA.
+        case            0x4015: break;                                               // APU
+        case            0x4016: if (write) { io->JoyStrobe(value); break; }          // Joypad strobe.
+                                else return io->JoyRead(false);                      // Joypad 0.
+        case            0x4017: if (!write) io->JoyRead(1); break;                   // Joypad 1.
+        case 0x4018 ... 0xFFFF: return rom->prgAccess(address, value, write);        // Cartridge.
+    }
     return 0;
 }
 
