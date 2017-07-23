@@ -126,12 +126,57 @@ void CPU::identify(const vector<uint_least8_t> &instructionData, const shared_pt
     dumpRegs();
 }
 
+bool CPU::handleInterruptions() {
+    bool executeInstruction = true;
+
+    /* Check the state of NMI flag */
+    bool nmi_now = nmi;
+
+    if(reset)  { 
+        tick();
+        tick();
+        PC = getResetVectorValue();
+        executeInstruction = false;            
+    } else if(nmi_now && !nmi_edge_detected) {             
+        tick();
+        tick();
+        push(PC  >> 8);
+        push(PC);                        
+        push(Flags.raw);
+        Flags.Break = 0; //Clear 4 is set on break
+        tick();
+        tick();
+        tick();
+
+        PC = getNmiVectorValue();
+        nmi_edge_detected = true; 
+        executeInstruction = false;
+    } else if(intr && !Flags.InterruptDisabled) {             
+        tick();
+        push(PC  >> 8);
+        push(PC);
+        push(Flags.raw);
+        Flags.Break = 1; //bit 4 is set on break
+        Flags.InterruptDisabled = 1;
+        tick();
+        tick();
+        tick();
+
+        PC = getBrkVectorValue();
+        executeInstruction = false;
+    }
+
+    if(!nmi_now) { 
+        nmi_edge_detected = false;
+    }
+    return executeInstruction;
+}
+
 void CPU::run() {   
     std::ifstream testLog("build/nestest.log.txt");
 
     bool quit = false;
     //Event handler
-    SDL_Event event;
     Timer timer;
     double instructions = 0;
     while(running) {
@@ -147,50 +192,10 @@ void CPU::run() {
                 cout << "Unable to open file"; 
             }       
         }               
-        
-        /* Check the state of NMI flag */
-        bool nmi_now = nmi;
 
         unsigned instructionCode = read(PC);        
         
-        bool executeInstruction = true;
-        if(reset)  { 
-            tick();
-            tick();
-            PC = getResetVectorValue();
-            executeInstruction = false;            
-        } else if(nmi_now && !nmi_edge_detected) {             
-            tick();
-            tick();
-            push(PC  >> 8);
-            push(PC);                        
-            push(Flags.raw);
-            Flags.Break = 0; //Clear 4 is set on break
-            tick();
-            tick();
-            tick();
-
-            PC = getNmiVectorValue();
-            nmi_edge_detected = true; 
-            executeInstruction = false;
-        } else if(intr && !Flags.InterruptDisabled) {             
-            tick();
-            push(PC  >> 8);
-            push(PC);
-            push(Flags.raw);
-            Flags.Break = 1; //bit 4 is set on break
-            Flags.InterruptDisabled = 1;
-            tick();
-            tick();
-            tick();
-
-            PC = getBrkVectorValue();
-            executeInstruction = false;
-        }
-        
-        if(!nmi_now) { 
-            nmi_edge_detected=false;
-        }
+        bool executeInstruction = handleInterruptions();
 
         if (executeInstruction) {
             shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
@@ -210,15 +215,14 @@ void CPU::run() {
         }   
         reset = false;
 
-        instructions++;
-        
-        if ((int)timer.elapsed() == 1) {
-            
-            std::cout << instructions / timer.elapsed() << " i/s" << std::endl;
-            instructions = 0;
-            timer.reset();
+        if (testing) {
+            instructions++;
+            if ((int)timer.elapsed() == 1) {
+                std::cout << instructions / timer.elapsed() << " i/s" << std::endl;
+                instructions = 0;
+                timer.reset();
+            }
         }
-        
     }	
 }
 

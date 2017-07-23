@@ -30,6 +30,7 @@ class CPU {
     uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    
     void identify(const vector<uint_least8_t> &instructionData, const shared_ptr<Instruction> &instruction);    
     void dmaOam(const uint_least8_t &value);
+    bool handleInterruptions();
 public:
     
     //registers

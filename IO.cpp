@@ -90,25 +90,22 @@ void IO::JoyStrobe(const u8 &value) {
     }
 }
 
-bool checkBit(const u8 &var, const u8 &pos) {
+bool IO::CheckBit(const u8 &var, const u8 &pos) {
     return (var) & (1 << (pos));
 }
 
 u8 IO::JoyRead(const u8 &gamePort) {
     if (strobe) { //return status of button A
-        return checkBit(joypadBits[gamePort], 0);
+        return CheckBit(joypadBits[gamePort], 0);
     }
-    return checkBit(joypadBits[gamePort], joypadIndex[gamePort]++);
+    
+    return CheckBit(joypadBits[gamePort], joypadIndex[gamePort]++);
 }
 
 void IO::JoyButtonPress(const u8 &gamePort, const JoypadButton &button) {
     joypadBits[gamePort] |= 1 << button;
-    Utils<u8>::printHex(joypadBits[gamePort]);
-    std::cout << std::endl;
 }
 
 void IO::JoyButtonRelease(const u8 &gamePort, const JoypadButton &button) {
     joypadBits[gamePort] &= ~(1 << button);
-    Utils<u8>::printHex(joypadBits[gamePort]);
-    std::cout << std::endl;
 }

@@ -323,22 +323,8 @@ void PPU::tick()
             case 241: // Begin of vertical blanking
                 SDL_Event event;
                 while( SDL_PollEvent( &event ) != 0 ) {
-                    /*
-                    auto keystate = SDL_GetKeyboardState(NULL);
-                    io->Joy1Write( keystate[SDLK_d] ? 1 : 0 +
-                                  (keystate[SDLK_a] ? 1 << 1 : 0) +
-                                  (keystate[SDLK_s] ? 1 << 2 : 0) +
-                                  (keystate[SDLK_w] ? 1 << 3 : 0) +
-                                  (keystate[SDLK_e] ? 1 << 4 : 0) +
-                                  (keystate[SDLK_q] ? 1 << 5 : 0) +
-                                  (keystate[SDLK_h] ? 1 << 6 : 0) +
-                                  (keystate[SDLK_j] ? 1 << 7 : 0));
-                    */
                     switch( event.type ){
-                        
                         case SDL_KEYDOWN: {
-                            u8 joyValue = 0;
-                        //Set the proper message surface
                             switch( event.key.keysym.sym ) {
                                 case SDLK_j: io->JoyButtonPress(0, BUTTON_A); break;
                                 case SDLK_h: io->JoyButtonPress(0, BUTTON_B); break;
@@ -349,7 +335,6 @@ void PPU::tick()
                                 case SDLK_a: io->JoyButtonPress(0, BUTTON_LEFT); break;
                                 case SDLK_d: io->JoyButtonPress(0, BUTTON_RIGHT); break;
                             }
-                            ;
                             break;
                         }
                         case SDL_KEYUP:
@@ -371,24 +356,6 @@ void PPU::tick()
                             break;
                     }            
                 }  
-                // I cheat here: I did not bother to learn how to use SDL events,
-                // so I simply read button presses from a movie file, which happens
-                // to be a TAS, rather than from the keyboard or from a joystick.
-                /*
-                static FILE* fp = fopen(inputfn, "rb");
-                if(fp)
-                {
-                    static unsigned ctrlmask = 0;
-                    if(!ftell(fp))
-                    {
-                        fseek(fp, 0x05, SEEK_SET);
-                        ctrlmask = fgetc(fp);
-                        fseek(fp, 0x90, SEEK_SET); // Famtasia Movie format.
-                    }
-                    if(ctrlmask & 0x80) { IO::joy_next[0] = fgetc(fp); if(feof(fp)) IO::joy_next[0] = 0; }
-                    if(ctrlmask & 0x40) { IO::joy_next[1] = fgetc(fp); if(feof(fp)) IO::joy_next[1] = 0; }
-                }
-                */
                 // Set vblank flag
                 VBlankState = 2;
         }

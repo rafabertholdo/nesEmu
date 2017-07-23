@@ -28,15 +28,22 @@ class IO {
     //The surface contained by the window
     SDL_Surface* screenSurface;
     SDL_Renderer* renderer;
+    bool CheckBit(const u8 &var, const u8 &pos);
 public:
     IO();
     ~IO();
     void Init();
     void PutPixel(unsigned px,unsigned py, unsigned pixel, int offset);
     void FlushScanline(unsigned py);
-    void JoyStrobe(const u8 &value);
     
+    //reset read index to 0 when strobe is 1
+    void JoyStrobe(const u8 &value);
+
+    //when strobe is 1, return status of A button 
+    //when strobe is 0 nes will make 8 consecutive reads to check if buttons are pressed in the folloing order 
+    //A, B, Select, Start, Up, Down, Left, Right.
     u8 JoyRead(const u8 &gamePort);
+    
     //bit:   	 7     6     5     4     3     2     1     0
     //button:  Right  Left  Down  Up  Start Select   B     A
     void JoyButtonPress(const u8 &gamePort, const JoypadButton &value);
