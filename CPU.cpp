@@ -205,10 +205,17 @@ void CPU::run() {
                 instructionData = read(PC+1, instruction->length - 1);            
             }
             
-            //if (testing) {                
-                //identify(instructionData, instruction);            
-                //test(line, instructionData, instruction->menmonic);                
-            //}
+            if (testing) {                
+                vector<u8> instructionDataVector;
+                if (instruction->length > 1) {
+                    for(int i=0;i<instruction->length;i++) {
+                        instructionDataVector.push_back(read(PC+1 +i));
+                    }
+                }
+
+                identify(instructionDataVector, instruction);            
+                test(line, instructionDataVector, instruction->menmonic);                
+            }
             
             PC += instruction->length;             
             instruction->execute(*this, instructionData); 
