@@ -22,8 +22,7 @@ class CPU {
     shared_ptr<ROM> rom;
     shared_ptr<PPU> ppu;
     shared_ptr<IO> io;
-    
-    bool running;       
+
     bool testing;
     
     void test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic);
@@ -35,7 +34,7 @@ public:
     
     //registers
     uint_least8_t A=0, X=0, Y=0, SP=0;    
-
+    bool running;       
     union /* Status flags: */
     {
         uint_least8_t raw;
@@ -56,7 +55,7 @@ public:
     ~CPU();
     void loadRom(const shared_ptr<ROM> &rom);
     uint_least8_t read(const uint_least16_t &address);
-    vector<uint_least8_t> read(const uint_least16_t &address, const uint_least8_t &length);
+    u16 read(const uint_least16_t &address, const uint_least8_t &length);
     void write(const uint_least16_t &address, const uint_least8_t &value);
 
     void push(const uint_least8_t &value);

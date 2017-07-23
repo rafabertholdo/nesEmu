@@ -3,9 +3,7 @@
 #include <cmath>
 #include "Utils.cpp"
 
-IO::IO() : joy_current{0,0}, joy_next{0,0}, joypos{0,0} {
-    joy1 = 0;
-    joy2 = 0;
+IO::IO() : joypadBits{0,0}, joypadIndex{0,0} {
     Init();
 }
 
@@ -84,20 +82,33 @@ void IO::FlushScanline(unsigned py) {
     } 
 }
 
-void IO::JoyStrobe(unsigned v) {
-    if(v) { joy_current[0] = joy_next[0]; joypos[0]=0; }
-    if(v) { joy_current[1] = joy_next[1]; joypos[1]=0; }
+void IO::JoyStrobe(const u8 &value) {
+    strobe = value;
+    if (value) {
+        joypadIndex[0] = 0;
+        joypadIndex[1] = 0;
+    }
 }
 
-u8 IO::JoyRead(unsigned idx) {
-    //static const u8 masks[8] = {0x20,0x10,0x40,0x80,0x04,0x08,0x02,0x01};
-    //return ((joy_current[idx] & masks[joypos[idx]++ & 7]) ? 1 : 0);
-    //std::cout << "joy  1: " << static_cast<int>(joy1) << std::endl;
-    return joy1;
+bool checkBit(const u8 &var, const u8 &pos) {
+    return (var) & (1 << (pos));
 }
 
-void IO::Joy1Write(u8 value) {
-    joy1 = value;
-    Utils<u8>::printHex(value);
+u8 IO::JoyRead(const u8 &gamePort) {
+    if (strobe) { //return status of button A
+        return checkBit(joypadBits[gamePort], 0);
+    }
+    return checkBit(joypadBits[gamePort], joypadIndex[gamePort]++);
+}
+
+void IO::JoyButtonPress(const u8 &gamePort, const JoypadButton &button) {
+    joypadBits[gamePort] |= 1 << button;
+    Utils<u8>::printHex(joypadBits[gamePort]);
+    std::cout << std::endl;
+}
+
+void IO::JoyButtonRelease(const u8 &gamePort, const JoypadButton &button) {
+    joypadBits[gamePort] &= ~(1 << button);
+    Utils<u8>::printHex(joypadBits[gamePort]);
     std::cout << std::endl;
 }

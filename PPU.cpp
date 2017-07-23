@@ -321,6 +321,56 @@ void PPU::tick()
                 VBlankState = -5;
                 break;
             case 241: // Begin of vertical blanking
+                SDL_Event event;
+                while( SDL_PollEvent( &event ) != 0 ) {
+                    /*
+                    auto keystate = SDL_GetKeyboardState(NULL);
+                    io->Joy1Write( keystate[SDLK_d] ? 1 : 0 +
+                                  (keystate[SDLK_a] ? 1 << 1 : 0) +
+                                  (keystate[SDLK_s] ? 1 << 2 : 0) +
+                                  (keystate[SDLK_w] ? 1 << 3 : 0) +
+                                  (keystate[SDLK_e] ? 1 << 4 : 0) +
+                                  (keystate[SDLK_q] ? 1 << 5 : 0) +
+                                  (keystate[SDLK_h] ? 1 << 6 : 0) +
+                                  (keystate[SDLK_j] ? 1 << 7 : 0));
+                    */
+                    switch( event.type ){
+                        
+                        case SDL_KEYDOWN: {
+                            u8 joyValue = 0;
+                        //Set the proper message surface
+                            switch( event.key.keysym.sym ) {
+                                case SDLK_j: io->JoyButtonPress(0, BUTTON_A); break;
+                                case SDLK_h: io->JoyButtonPress(0, BUTTON_B); break;
+                                case SDLK_q: io->JoyButtonPress(0, BUTTON_SELECT); break;
+                                case SDLK_e: io->JoyButtonPress(0, BUTTON_START); break;
+                                case SDLK_w: io->JoyButtonPress(0, BUTTON_UP); break;
+                                case SDLK_s: io->JoyButtonPress(0, BUTTON_DOWN); break;
+                                case SDLK_a: io->JoyButtonPress(0, BUTTON_LEFT); break;
+                                case SDLK_d: io->JoyButtonPress(0, BUTTON_RIGHT); break;
+                            }
+                            ;
+                            break;
+                        }
+                        case SDL_KEYUP:
+                            switch( event.key.keysym.sym )
+                            {
+                                case SDLK_j: io->JoyButtonRelease(0, BUTTON_A); break;
+                                case SDLK_h: io->JoyButtonRelease(0, BUTTON_B); break;
+                                case SDLK_q: io->JoyButtonRelease(0, BUTTON_SELECT); break;
+                                case SDLK_e: io->JoyButtonRelease(0, BUTTON_START); break;
+                                case SDLK_w: io->JoyButtonRelease(0, BUTTON_UP); break;
+                                case SDLK_s: io->JoyButtonRelease(0, BUTTON_DOWN); break;
+                                case SDLK_a: io->JoyButtonRelease(0, BUTTON_LEFT); break;
+                                case SDLK_d: io->JoyButtonRelease(0, BUTTON_RIGHT); break;
+                            }                    
+                            break;
+                        case SDL_QUIT:
+                            cpu->running = false;
+                        default:
+                            break;
+                    }            
+                }  
                 // I cheat here: I did not bother to learn how to use SDL events,
                 // so I simply read button presses from a movie file, which happens
                 // to be a TAS, rather than from the keyboard or from a joystick.

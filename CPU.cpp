@@ -9,9 +9,25 @@
 #include <regex>
 #include <cassert>
 #include <SDL2/SDL.h>
-
+#include <chrono>
 
 using namespace std;
+
+class Timer
+{
+public:
+    Timer() : beg_(clock_::now()) {}
+    void reset() { beg_ = clock_::now(); }
+    double elapsed() const { 
+        return std::chrono::duration_cast<second_>
+            (clock_::now() - beg_).count(); }
+
+private:
+    typedef std::chrono::high_resolution_clock clock_;
+    typedef std::chrono::duration<double, std::ratio<1> > second_;
+    std::chrono::time_point<clock_> beg_;
+};
+
 
 CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) { //2k of ram      
     CPU::io = io;
@@ -24,6 +40,7 @@ CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) { //2k of ram
     Flags.raw = 0x24;
     SP = 0xFD;
     reset = false;
+    running = true;
 
     cout << "RAM size: " << RAM.size() << endl;
 }
@@ -42,15 +59,15 @@ CPU::~CPU() {
 }
 
 u16 CPU::getNmiVectorValue() {
-    return Utils<u8>::getLittleEndianValue(read(0xFFFA,2)); //nmi vector
+    return read(0xFFFA,2); //nmi vector
 }
 
 u16 CPU::getResetVectorValue() {
-    return Utils<u8>::getLittleEndianValue(read(0xFFFC,2)); //reset vector
+    return read(0xFFFC,2); //reset vector
 }
 
 u16 CPU::getBrkVectorValue() {
-    return Utils<u8>::getLittleEndianValue(read(0xFFFE,2)); //brk vector
+    return read(0xFFFE,2); //brk vector
 }
 
 void CPU::loadRom(const shared_ptr<ROM> &rom) {
@@ -105,57 +122,20 @@ void CPU::identify(const vector<uint_least8_t> &instructionData, const shared_pt
     }
     cout << std::setw(verboseData) << std::setfill(' ') << " ";    
     std::cout << instruction->menmonic << " ";
-    instruction->printAddress(*this, instructionData);
+    instruction->printAddress(*this, Utils<u8>::getLittleEndianValue(instructionData));
     dumpRegs();
 }
 
 void CPU::run() {   
-
     std::ifstream testLog("build/nestest.log.txt");
 
     bool quit = false;
     //Event handler
     SDL_Event event;
-    while(!quit) {
-        /*
-        //Handle events on queue
-        while( SDL_PollEvent( &event ) != 0 ) {
-            switch( event.type ){
-                case SDL_KEYDOWN:
-                    //Set the proper message surface
-                    switch( event.key.keysym.sym ) {
-                        case SDLK_j: io->Joy1Write(io->JoyRead(0) | 1 << 7); break;
-                        case SDLK_h: io->Joy1Write(io->JoyRead(0) | 1 << 6); break;
-                        case SDLK_q: io->Joy1Write(io->JoyRead(0) | 1 << 5); break;
-                        case SDLK_e: io->Joy1Write(io->JoyRead(0) | 1 << 4); break;
-                        case SDLK_w: io->Joy1Write(io->JoyRead(0) | 1 << 3); break;
-                        case SDLK_s: io->Joy1Write(io->JoyRead(0) | 1 << 2); break;
-                        case SDLK_a: io->Joy1Write(io->JoyRead(0) | 1 << 1); break;
-                        case SDLK_d: io->Joy1Write(io->JoyRead(0) | 1 << 0); break;
-                    }
-                    break;
-
-                case SDL_KEYUP:
-                    switch( event.key.keysym.sym )
-                    {
-                        case SDLK_j: io->Joy1Write(io->JoyRead(0) & ~(1 << 7)); break;
-                        case SDLK_h: io->Joy1Write(io->JoyRead(0) & ~(1 << 6)); break;
-                        case SDLK_q: io->Joy1Write(io->JoyRead(0) & ~(1 << 5)); break;
-                        case SDLK_e: io->Joy1Write(io->JoyRead(0) & ~(1 << 4)); break;
-                        case SDLK_w: io->Joy1Write(io->JoyRead(0) & ~(1 << 3)); break;
-                        case SDLK_s: io->Joy1Write(io->JoyRead(0) & ~(1 << 2)); break;
-                        case SDLK_a: io->Joy1Write(io->JoyRead(0) & ~(1 << 1)); break;
-                        case SDLK_d: io->Joy1Write(io->JoyRead(0) & ~(1 << 0)); break;
-                    }                    
-                    break;
-                
-                case SDL_QUIT:
-                    quit = true;
-                default:
-                    break;
-            }            
-        }  
-        */
+    Timer timer;
+    double instructions = 0;
+    while(running) {
+        
         string line;
         if (testing) {        
             if (testLog.is_open()) {
@@ -215,20 +195,30 @@ void CPU::run() {
         if (executeInstruction) {
             shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
             
-            vector<uint_least8_t> instructionData;
+            u16 instructionData = 0;
             if (instruction->length > 1) {
                 instructionData = read(PC+1, instruction->length - 1);            
             }
             
-            if (testing) {                
-                identify(instructionData, instruction);            
-                test(line, instructionData, instruction->menmonic);                
-            }
+            //if (testing) {                
+                //identify(instructionData, instruction);            
+                //test(line, instructionData, instruction->menmonic);                
+            //}
             
             PC += instruction->length;             
             instruction->execute(*this, instructionData); 
         }   
         reset = false;
+
+        instructions++;
+        
+        if ((int)timer.elapsed() == 1) {
+            
+            std::cout << instructions / timer.elapsed() << " i/s" << std::endl;
+            instructions = 0;
+            timer.reset();
+        }
+        
     }	
 }
 
@@ -276,14 +266,13 @@ u8 CPU::read(const u16 &address) {
     return memAccess(address, 0, false);
 }
 
-vector<u8> CPU::read(const u16 &address, const u8 &length) {
-    std::vector<u8> buffer;
-    buffer.reserve(length);
+u16 CPU::read(const u16 &address, const u8 &length) {
+    u16 result = 0;
     for (u8 i = 0; i < length; i++) {
-        buffer.push_back(read(address+i));
+        result |= read(address+i) << (i * 8); //read little endian value
     }
     
-    return buffer;
+    return result;
 }
 
 void CPU::write(const uint_least16_t &address, const uint_least8_t &value) {

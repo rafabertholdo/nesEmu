@@ -6,13 +6,22 @@
 #include "Utils.h"
 #include <memory>
 
-class IO {
-    std::vector<int> joy_current;
-    std::vector<int> joy_next;
-    std::vector<int> joypos;
+enum JoypadButton {
+    BUTTON_A,    
+    BUTTON_B,        
+    BUTTON_SELECT,   
+    BUTTON_START,    
+    BUTTON_UP,       
+    BUTTON_DOWN,     
+    BUTTON_LEFT,    
+    BUTTON_RIGHT    
+};
 
-    u8 joy1;
-    u8 joy2;
+class IO {
+    std::vector<u8> joypadBits;
+    std::vector<u8> joypadIndex;
+    bool strobe;
+
     //The window we'll be rendering to
     SDL_Window* window;
     
@@ -25,11 +34,13 @@ public:
     void Init();
     void PutPixel(unsigned px,unsigned py, unsigned pixel, int offset);
     void FlushScanline(unsigned py);
-    void JoyStrobe(unsigned v);
-    u8 JoyRead(unsigned idx);
+    void JoyStrobe(const u8 &value);
+    
+    u8 JoyRead(const u8 &gamePort);
     //bit:   	 7     6     5     4     3     2     1     0
-    //button:	 A     B  Select Start  Up   Down  Left  Right
-    void Joy1Write(u8 value);
+    //button:  Right  Left  Down  Up  Start Select   B     A
+    void JoyButtonPress(const u8 &gamePort, const JoypadButton &value);
+    void JoyButtonRelease(const u8 &gamePort, const JoypadButton &value);
 };
 
 #endif

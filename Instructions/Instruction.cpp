@@ -39,12 +39,12 @@ std::unordered_map<std::string, Instruction::create_f *> & Instruction::registry
     return impl;
 }
 
-void Instruction::printAddress(CPU& cpu,  const vector<uint_least8_t> &instructionData) {
+void Instruction::printAddress(CPU& cpu,  const uint_least16_t &instructionData) {
     u16 instructionValue = addressing->getAddress(cpu, instructionData);
     addressing->printAddress(instructionValue);
 }
 
-void Instruction::execute(CPU& cpu,  const vector<uint_least8_t> &instructionData) {        
+void Instruction::execute(CPU& cpu,  const uint_least16_t &instructionData) {        
     u16 instructionValue = addressing->getAddress(cpu, instructionData);    
     
     if (readsFromMemory && !dynamic_cast<ImmediateAddressing*>(addressing.get())) {

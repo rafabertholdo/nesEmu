@@ -88,8 +88,8 @@ public:
         }        
     };
 
-    void execute(CPU& cpu,  const vector<uint_least8_t> &instructionData);
-    void printAddress(CPU& cpu,  const vector<uint_least8_t> &instructionData);
+    void execute(CPU& cpu,  const uint_least16_t &instructionData);
+    void printAddress(CPU& cpu,  const uint_least16_t &instructionData);
     virtual uint_least16_t action(CPU& cpu,  const uint_least16_t &value) = 0;    
     virtual void updateCarry(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateZero(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
