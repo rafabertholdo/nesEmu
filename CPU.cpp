@@ -9,27 +9,11 @@
 #include <regex>
 #include <cassert>
 #include <SDL2/SDL.h>
-#include <chrono>
+#include <thread>
 
 using namespace std;
 
-class Timer
-{
-public:
-    Timer() : beg_(clock_::now()) {}
-    void reset() { beg_ = clock_::now(); }
-    double elapsed() const { 
-        return std::chrono::duration_cast<second_>
-            (clock_::now() - beg_).count(); }
-
-private:
-    typedef std::chrono::high_resolution_clock clock_;
-    typedef std::chrono::duration<double, std::ratio<1> > second_;
-    std::chrono::time_point<clock_> beg_;
-};
-
-
-CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) { //2k of ram      
+CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) , totalCycles(29781) { //2k of ram      
     CPU::io = io;
     for(auto&& instruction : Instruction::instantiateAll()) {
         instructionsMapping[instruction->opcode] = instruction;
@@ -41,11 +25,11 @@ CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) { //2k of ram
     SP = 0xFD;
     reset = false;
     running = true;
-
+    tickCount = 0;
     cout << "RAM size: " << RAM.size() << endl;
 }
 
-CPU::CPU(const CPU &cpu) {
+CPU::CPU(const CPU &cpu): totalCycles(29781) {
     A = cpu.A;
     X = cpu.X;
     Y = cpu.Y;
@@ -177,9 +161,10 @@ void CPU::run() {
 
     bool quit = false;
     //Event handler
-    Timer timer;
+    timer.reset();
     double instructions = 0;
-    while(running) {
+    remainingCycles += totalCycles;
+    while(remainingCycles > 0) {
         
         string line;
         if (testing) {        
@@ -224,8 +209,8 @@ void CPU::run() {
 
         if (testing) {
             instructions++;
-            if ((int)timer.elapsed() == 1) {
-                std::cout << instructions / timer.elapsed() << " i/s" << std::endl;
+            if (timer.elapsed() > 1000) {
+                std::cout << instructions << " i/s" << std::endl;
                 instructions = 0;
                 timer.reset();
             }
@@ -327,6 +312,8 @@ void CPU::tick() {
     for(unsigned n=0; n<3; ++n) {
         ppu->tick();
     }
+    
+    remainingCycles--;
     // APU clock: 1 times the CPU rate
     //for(unsigned n=0; n<1; ++n) APU::tick();
 }

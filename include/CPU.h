@@ -10,11 +10,27 @@
 #include "Instruction.h"
 #include "RegBit.h"
 #include "Addressing.h"
+#include <chrono>
 
 using namespace std;
 class Instruction; //forward declaration
 
 class PPU;
+
+class Timer
+{
+public:
+    Timer() : beg_(clock_::now()) {}
+    void reset() { beg_ = clock_::now(); }
+    int elapsed() const { 
+        return std::chrono::duration_cast<mili_>
+            (clock_::now() - beg_).count(); }
+
+private:
+    typedef std::chrono::high_resolution_clock clock_;
+    typedef std::chrono::duration<int, std::milli > mili_;
+    std::chrono::time_point<clock_> beg_;
+};
 
 class CPU {
     vector<uint_least8_t> RAM;
@@ -22,9 +38,15 @@ class CPU {
     shared_ptr<ROM> rom;
     shared_ptr<PPU> ppu;
     shared_ptr<IO> io;
+    u32 tickCount;
+
+    // Remaining clocks to end frame:
+    const int totalCycles;
+    int remainingCycles;
+    int elapsed();
 
     bool testing;
-    
+    Timer timer;
     void test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic);
     map<uint_least8_t, shared_ptr<Instruction>> instructionsMapping;  
     uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    
