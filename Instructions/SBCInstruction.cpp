@@ -19,7 +19,7 @@ vector<shared_ptr<Instruction>> SBCInstruction::createInstructions() {
 
     for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<SBCInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "SBC", AffectFlags::Negative | AffectFlags::Zero);
-        instruction->readsFromMemory = true;
+        instruction->setReadsFromMemory(true);
         instructions.push_back(instruction);
     }
     return instructions;

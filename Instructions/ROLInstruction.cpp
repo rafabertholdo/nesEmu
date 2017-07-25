@@ -36,7 +36,7 @@ uint_least16_t ROLInstruction::sharedAction(CPU& cpu, const uint_least16_t &valu
 
 uint_least16_t ROLInstruction::action(CPU& cpu, const uint_least16_t &value) {        
     bool carry = cpu.Flags.Carry;
-    if (dynamic_cast<AccumulatorAddressing*>(addressing.get())) {        
+    if (dynamic_cast<AccumulatorAddressing*>(_addressing.get())) {        
         cpu.Flags.Carry = value & 0b10000000;    
         cpu.A = ((value << 1) % 0x100) + carry;
         cpu.tick();

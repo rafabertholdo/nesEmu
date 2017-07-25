@@ -19,7 +19,7 @@ vector<shared_ptr<Instruction>> ORAInstruction::createInstructions() {
 
     for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<ORAInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "ORA", AffectFlags::Negative | AffectFlags::Zero);
-        instruction->readsFromMemory = true;
+        instruction->setReadsFromMemory(true);
         instructions.push_back(instruction);
     }
     return instructions;

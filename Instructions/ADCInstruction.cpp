@@ -8,6 +8,7 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<ADCInstruction> registrar("ADCInstruction");
+    Instruction::Registrar2<ADCInstruction> registrar2("ADCInstruction");
 }
 
 vector<shared_ptr<Instruction>> ADCInstruction::createInstructions() {
@@ -19,11 +20,26 @@ vector<shared_ptr<Instruction>> ADCInstruction::createInstructions() {
 
     for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<ADCInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "ADC", AffectFlags::Negative | AffectFlags::Zero);
-        instruction->readsFromMemory = true;
+        instruction->setReadsFromMemory(true);
         instructions.push_back(instruction);
     }
     return instructions;
 }
+
+void ADCInstruction::createInstructions2(vector<Instruction> &instructions) {    
+
+    vector<AddressingMode> addressingModeList{immediate, zeroPage, zeroPageX, absolute, absoluteX, absoluteY, indirectX, indirectY};
+    vector<uint_least8_t> opcodeList{              0x69,     0x65,      0x75,     0x6D,      0x7D,      0x79,      0x61,      0x71};
+    vector<uint_least8_t> lengthList{                 2,        2,         2,        3,         3,         3,         2,         2};
+
+    for(int i=0; i < opcodeList.size(); i++) {
+        Instruction instruction(addressingModeList[i], opcodeList[i], lengthList[i], "ADC", AffectFlags::Negative | AffectFlags::Zero);
+        instruction.setReadsFromMemory(true);  
+        instruction.setLambda(ADCInstruction::sharedAction);
+        instructions.at(instruction.getOpcode()) = instruction;        
+    }    
+}
+
 
 uint_least16_t ADCInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
     auto sum = cpu.A + value + cpu.Flags.Carry;    

@@ -56,7 +56,7 @@ vector<shared_ptr<Instruction>> NOPInstruction::createInstructions() {
 
     for(int i=0; i < opcodeList.size(); i++) {        
         auto instruction = make_shared<NOPInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "NOP");
-        instruction->readsFromMemory = true;
+        instruction->setReadsFromMemory(true);
         instructions.push_back(instruction);
     }
     return instructions;

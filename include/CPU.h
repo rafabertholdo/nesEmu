@@ -11,6 +11,8 @@
 #include "RegBit.h"
 #include "Addressing.h"
 #include <chrono>
+#include <functional>
+#include <fstream>
 
 using namespace std;
 class Instruction; //forward declaration
@@ -35,13 +37,15 @@ private:
 
 class CPU {
     vector<uint_least8_t> RAM;
-    
+    std::ifstream _testLogFile;
+
     shared_ptr<ROM> rom;
     shared_ptr<PPU> ppu;
     shared_ptr<IO> io;
     shared_ptr<APU> _apu;
     u32 tickCount;
-
+    double executedInstructionsCount = 0;
+    
     // Remaining clocks to end frame:
     const int totalCycles;
     int remainingCycles;
@@ -50,9 +54,13 @@ class CPU {
     bool testing;
     Timer timer;
     void test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic);
+    vector<Instruction> instructions;  
+    //std::vector<std::reference_wrapper<Instruction>>;
     map<uint_least8_t, shared_ptr<Instruction>> instructionsMapping;  
+    
+    void executeInstruction(Instruction &instruction);
     uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    
-    void identify(const vector<uint_least8_t> &instructionData, const shared_ptr<Instruction> &instruction);    
+    void identify(const vector<uint_least8_t> &instructionData, const Instruction &instruction);    
     void dmaOam(const uint_least8_t &value);
     bool handleInterruptions();
 public:

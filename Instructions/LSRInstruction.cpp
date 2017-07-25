@@ -34,7 +34,7 @@ uint_least16_t LSRInstruction::sharedAction(CPU& cpu, const uint_least16_t &valu
 }
 
 uint_least16_t LSRInstruction::action(CPU& cpu, const uint_least16_t &value) {        
-    if (dynamic_cast<AccumulatorAddressing*>(addressing.get())) {
+    if (dynamic_cast<AccumulatorAddressing*>(_addressing.get())) {
         cpu.Flags.Carry = value & 0b1;    
         cpu.A = value >> 1;
         cpu.tick();

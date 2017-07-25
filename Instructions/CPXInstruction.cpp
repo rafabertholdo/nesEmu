@@ -19,7 +19,7 @@ vector<shared_ptr<Instruction>> CPXInstruction::createInstructions() {
 
     for(int i=0; i < opcodeList.size(); i++) {
         auto instruction = make_shared<CPXInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "CPX", AffectFlags::Negative | AffectFlags::Zero | AffectFlags::Carry);
-        instruction->readsFromMemory = true;
+        instruction->setReadsFromMemory(true);
         instructions.push_back(instruction);
     }
     return instructions;

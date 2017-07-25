@@ -5,7 +5,6 @@
 
 #include <string>
 #include <iostream>
-#include <fstream>
 #include <iomanip>
 #include <regex>
 #include <cassert>
@@ -14,13 +13,20 @@
 
 using namespace std;
 
-CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) , totalCycles(29781) { //2k of ram      
+CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) , totalCycles(29781)  { //2k of ram      
     CPU::io = io;
+    //instructions.reserve(230);
+    instructions.resize(230);
+    Instruction::instantiateAll(instructions);
+
     for(auto&& instruction : Instruction::instantiateAll()) {
-        instructionsMapping[instruction->opcode] = instruction;
+        instructionsMapping[instruction->getOpcode()] = instruction;
     }
     
     testing = false;
+    if (testing) {
+        _testLogFile = std::ifstream("build/nestest.log.txt");
+    }
     
     Flags.raw = 0x24;
     SP = 0xFD;
@@ -93,10 +99,10 @@ void CPU::test(const string &line, const vector<uint_least8_t> &instructionData,
     }
 }
 
-void CPU::identify(const vector<uint_least8_t> &instructionData, const shared_ptr<Instruction> &instruction) {
+void CPU::identify(const vector<uint_least8_t> &instructionData, const Instruction &instruction) {
     Utils<uint_least16_t>::printHex(PC);
     cout << "  ";
-    Utils<uint_least8_t>::printHex(instruction->opcode);        
+    Utils<uint_least8_t>::printHex(instruction.getOpcode());        
     cout << " ";
 
     int verboseData = 7;
@@ -106,8 +112,8 @@ void CPU::identify(const vector<uint_least8_t> &instructionData, const shared_pt
         verboseData -= 3;
     }
     cout << std::setw(verboseData) << std::setfill(' ') << " ";    
-    std::cout << instruction->menmonic << " ";
-    instruction->printAddress(*this, Utils<u8>::getLittleEndianValue(instructionData));
+    std::cout << instruction.getMenmonic() << " ";
+    instruction.printAddress(*this, Utils<u8>::getLittleEndianValue(instructionData));
     dumpRegs();
 }
 
@@ -157,62 +163,61 @@ bool CPU::handleInterruptions() {
     return executeInstruction;
 }
 
-void CPU::run() {   
-    std::ifstream testLog("build/nestest.log.txt");
+void CPU::executeInstruction(Instruction &instruction) {
+    u16 instructionData = 0;
+    if (instruction.getLength() > 1) {
+        instructionData = read(PC+1, instruction.getLength() - 1);            
+    }
+    vector<u8> instructionDataVector;
+        if (instruction.getLength() > 1) {
+            for(int i=0;i<instruction.getLength();i++) {
+                instructionDataVector.push_back(read(PC+1 +i));
+            }
+        }
 
-    bool quit = false;
-    //Event handler
-    timer.reset();
-    double instructions = 0;
-    remainingCycles += totalCycles;
-    while(remainingCycles > 0) {
-        
+        identify(instructionDataVector, instruction);   
+         
+    
+    if (testing) {               
         string line;
         if (testing) {        
-            if (testLog.is_open()) {
-                if (!getline(testLog,line) ) {
-                    break;
-                } 
+            if (_testLogFile.is_open()) {
+                getline(_testLogFile,line);
             }
             else { 
                 cout << "Unable to open file"; 
             }       
         }               
-
-        unsigned instructionCode = read(PC);        
         
-        bool executeInstruction = handleInterruptions();
+        test(line, instructionDataVector, instruction.getMenmonic());   
+    }
+    
+    PC += instruction.getLength();             
+    instruction.execute(*this, instructionData); 
+}
 
-        if (executeInstruction) {
-            shared_ptr<Instruction> instruction = instructionsMapping[instructionCode]; //fetch instruction
-            
-            u16 instructionData = 0;
-            if (instruction->length > 1) {
-                instructionData = read(PC+1, instruction->length - 1);            
-            }
-            
-            if (testing) {                
-                vector<u8> instructionDataVector;
-                if (instruction->length > 1) {
-                    for(int i=0;i<instruction->length;i++) {
-                        instructionDataVector.push_back(read(PC+1 +i));
-                    }
-                }
+void CPU::run() {   
 
-                identify(instructionDataVector, instruction);            
-                test(line, instructionDataVector, instruction->menmonic);                
-            }
-            
-            PC += instruction->length;             
-            instruction->execute(*this, instructionData); 
+    bool quit = false;
+    //Event handler    
+    remainingCycles += totalCycles;
+    while(remainingCycles > 0) {
+
+        auto instructionCode = read(PC);        
+        //0x69,     0x65,      0x75,     0x6D
+        //instructionCode = 0x69;
+        bool willExecuteInstruction = handleInterruptions();
+
+        if (willExecuteInstruction) {
+            executeInstruction(*instructionsMapping.at(instructionCode));           
         }   
         reset = false;
 
         if (testing) {
-            instructions++;
+            executedInstructionsCount++;
             if (timer.elapsed() > 1000) {
-                std::cout << instructions << " i/s" << std::endl;
-                instructions = 0;
+                std::cout << executedInstructionsCount << " i/s" << std::endl;
+                executedInstructionsCount = 0;
                 timer.reset();
             }
         }

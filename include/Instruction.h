@@ -23,8 +23,9 @@ inline AffectFlags operator|(AffectFlags a, AffectFlags b) {
 }
 
 class Instruction {    
-    using create_f = std::vector<std::shared_ptr<Instruction>>();            
-
+    using create_f = std::vector<std::shared_ptr<Instruction>>();   
+    using create_f2 = void(std::vector<Instruction> &instrucitons);            
+    
     union 
     {
         uint_least8_t raw;
@@ -38,47 +39,35 @@ class Instruction {
     } _affectedFlags;
 
     static std::unordered_map<std::string, create_f *> & registry();    
+    static std::unordered_map<std::string, create_f2 *> & registry2();    
     static const std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;    
     static std::map<AddressingMode, shared_ptr<Addressing>> createAddressingMap();
     void changeFlags(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
+protected:
+    uint_least8_t _opcode;
+    string _menmonic;
+    bool _readsFromMemory;    
+    shared_ptr<Addressing> _addressing;
+    uint_least8_t _length;
+    std::function<uint_least16_t(CPU& cpu,  const uint_least16_t &value)> _lambda;
 
-public:
-    uint_least8_t length;
-    uint_least8_t opcode;
-    string menmonic;
-    bool readsFromMemory;    
-    shared_ptr<Addressing> addressing;
-    
+public:    
+    Instruction();
     Instruction(const AddressingMode &addressingMode, 
                 const uint_least8_t &opcode, 
                 const uint_least8_t &length, 
                 const string &menmonic,
                 const AffectFlags &&affectedFlags = AffectFlags::None);
 
-    
-    virtual ~Instruction() = default;    
+    ~Instruction();
+    //Instruction(const Instruction& that) = delete;
+    //virtual ~Instruction() = default;    
 
-    static void registrate(std::string const & name, create_f * fp) {
-        registry()[name] = fp;
-    }
-
-    static std::vector<std::shared_ptr<Instruction>> instantiate(std::string const & name) {
-        std::vector<std::shared_ptr<Instruction>> empty;
-        auto it = registry().find(name);
-        return it == registry().end() ? empty : (it->second)();
-    }
-
-    static std::vector<std::shared_ptr<Instruction>> instantiateAll() {
-        std::vector<std::shared_ptr<Instruction>> result;
-
-        for(auto it = registry().begin(); it != registry().end(); ++it) { 
-            for(auto specializedInstruction : (it->second)()) {
-                result.push_back(specializedInstruction);
-            }
-            
-        }
-        return result;
-    }
+    static void registrate(std::string const & name, create_f * fp);
+    static void registrate2(std::string const & name, create_f2 * fp);
+    static std::vector<std::shared_ptr<Instruction>> instantiate(std::string const & name);
+    static std::vector<std::shared_ptr<Instruction>> instantiateAll();
+    static void instantiateAll(std::vector<Instruction> &instructions);
 
     template <typename D>
     struct Registrar
@@ -89,9 +78,26 @@ public:
         }        
     };
 
+    template <typename D>
+    struct Registrar2
+    {
+        explicit Registrar2(std::string const & name)
+        {
+            Instruction::registrate2(name, &D::createInstructions2);
+        }        
+    };
+
+    uint_least8_t getOpcode() const;
+    uint_least8_t getLength() const;
+    string getMenmonic() const;
+    bool readsFromMemory() const;
+    void setReadsFromMemory(bool readsFromMemory);
+    void setLambda(std::function<uint_least16_t(CPU&,const uint_least16_t &)> lambda);
+
+    
     void execute(CPU& cpu,  const uint_least16_t &instructionData);
-    void printAddress(CPU& cpu,  const uint_least16_t &instructionData);
-    virtual uint_least16_t action(CPU& cpu,  const uint_least16_t &value) = 0;    
+    void printAddress(CPU& cpu,  const uint_least16_t &instructionData) const;
+    virtual uint_least16_t action(CPU& cpu,  const uint_least16_t &value);    
     virtual void updateCarry(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateZero(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
     virtual void updateInterruptDisabled(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
