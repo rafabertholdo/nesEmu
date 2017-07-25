@@ -168,15 +168,7 @@ void CPU::executeInstruction(Instruction &instruction) {
     if (instruction.getLength() > 1) {
         instructionData = read(PC+1, instruction.getLength() - 1);            
     }
-    vector<u8> instructionDataVector;
-        if (instruction.getLength() > 1) {
-            for(int i=0;i<instruction.getLength();i++) {
-                instructionDataVector.push_back(read(PC+1 +i));
-            }
-        }
 
-        identify(instructionDataVector, instruction);   
-         
     
     if (testing) {               
         string line;
@@ -187,8 +179,16 @@ void CPU::executeInstruction(Instruction &instruction) {
             else { 
                 cout << "Unable to open file"; 
             }       
-        }               
+        }
         
+        vector<u8> instructionDataVector;
+        if (instruction.getLength() > 1) {
+            for(int i=0;i<instruction.getLength();i++) {
+                instructionDataVector.push_back(read(PC+1 +i));
+            }
+        }
+
+        identify(instructionDataVector, instruction);   
         test(line, instructionDataVector, instruction.getMenmonic());   
     }
     
