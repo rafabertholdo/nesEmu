@@ -168,15 +168,13 @@ void CPU::executeInstruction(Instruction &instruction) {
     if (instruction.getLength() > 1) {
         instructionData = read(PC+1, instruction.getLength() - 1);            
     }
-
     
     if (testing) {               
         string line;
         if (testing) {        
             if (_testLogFile.is_open()) {
                 getline(_testLogFile,line);
-            }
-            else { 
+            } else { 
                 cout << "Unable to open file"; 
             }       
         }
@@ -190,6 +188,13 @@ void CPU::executeInstruction(Instruction &instruction) {
 
         identify(instructionDataVector, instruction);   
         test(line, instructionDataVector, instruction.getMenmonic());   
+
+        executedInstructionsCount++;
+        if (timer.elapsed() > 1000) {
+            std::cout << executedInstructionsCount << " i/s" << std::endl;
+            executedInstructionsCount = 0;
+            timer.reset();
+        }
     }
     
     PC += instruction.getLength();             
@@ -204,23 +209,12 @@ void CPU::run() {
     while(remainingCycles > 0) {
 
         auto instructionCode = read(PC);        
-        //0x69,     0x65,      0x75,     0x6D
-        //instructionCode = 0x69;
         bool willExecuteInstruction = handleInterruptions();
 
         if (willExecuteInstruction) {
             executeInstruction(*instructionsMapping.at(instructionCode));           
         }   
         reset = false;
-
-        if (testing) {
-            executedInstructionsCount++;
-            if (timer.elapsed() > 1000) {
-                std::cout << executedInstructionsCount << " i/s" << std::endl;
-                executedInstructionsCount = 0;
-                timer.reset();
-            }
-        }
     }	
 }
 

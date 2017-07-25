@@ -38,9 +38,6 @@ Instruction::Instruction(const AddressingMode &addressingMode,
     _addressing = Instruction::addressingModes.at(addressingMode);
     _opcode = opcode;
     _length = _addressing->length;
-    if (_addressing->length != length) {
-        int a = 0;
-    }
     _menmonic = menmonic;
     _affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
     _readsFromMemory = false;
