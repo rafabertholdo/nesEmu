@@ -5,7 +5,8 @@
 
 using namespace std;
 
-std::map<AddressingMode, shared_ptr<Addressing>>Instruction::addressingModes = {
+std::map<AddressingMode, shared_ptr<Addressing>> Instruction::createAddressingMap() {
+    std::map<AddressingMode, shared_ptr<Addressing>> map = {
     {implict, make_shared<ImplictAddressing>()},
     {accumulator, make_shared<AccumulatorAddressing>()},                                
     {immediate, make_shared<ImmediateAddressing>()},
@@ -19,14 +20,18 @@ std::map<AddressingMode, shared_ptr<Addressing>>Instruction::addressingModes = {
     {indirect, make_shared<IndirectAddressing>()},
     {indirectX, make_shared<IndirectXAddressing>()},
     {indirectY, make_shared<IndirectYAddressing>()}
-};
+    };
+    return map;
+}
+
+const std::map<AddressingMode, shared_ptr<Addressing>>Instruction::addressingModes  =  Instruction::createAddressingMap();
 
 Instruction::Instruction(const AddressingMode &addressingMode,
                          const uint_least8_t &opcode, 
                          const uint_least8_t &length, 
                          const string &menmonic,
                          const AffectFlags &&affectedFlags) {
-    Instruction::addressing = Instruction::addressingModes[addressingMode];
+    Instruction::addressing = Instruction::addressingModes.at(addressingMode);
     Instruction::opcode = opcode;
     Instruction::length = length;
     Instruction::menmonic = menmonic;

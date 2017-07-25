@@ -38,7 +38,8 @@ class Instruction {
     } _affectedFlags;
 
     static std::unordered_map<std::string, create_f *> & registry();    
-    static std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;    
+    static const std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;    
+    static std::map<AddressingMode, shared_ptr<Addressing>> createAddressingMap();
     void changeFlags(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
 
 public:

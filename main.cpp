@@ -4,8 +4,10 @@
 #include "CPU.h"
 #include "PPU.h"
 #include "IO.h"
+#include "APU.h"
 #include <vector>
 #include <SDL2/SDL.h>
+#include <SDL_mixer.h>
 
 using namespace std;
 
@@ -21,7 +23,10 @@ int main(int argc, char *argv[]) {
     auto rom = make_shared<ROM>(argv[1]);
     auto cpu = make_shared<CPU>(io);
     auto ppu = make_shared<PPU>(io,cpu,rom);
+    auto apu = make_shared<APU>(cpu);
+    apu->init();
     cpu->setPPU(ppu);
+    cpu->setAPU(apu);
     cpu->loadRom(rom);
 
     // Framerate control:

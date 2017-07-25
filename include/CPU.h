@@ -16,6 +16,7 @@ using namespace std;
 class Instruction; //forward declaration
 
 class PPU;
+class APU;
 
 class Timer
 {
@@ -38,6 +39,7 @@ class CPU {
     shared_ptr<ROM> rom;
     shared_ptr<PPU> ppu;
     shared_ptr<IO> io;
+    shared_ptr<APU> _apu;
     u32 tickCount;
 
     // Remaining clocks to end frame:
@@ -92,6 +94,7 @@ public:
     u16 getBrkVectorValue();
 
     void setPPU(const shared_ptr<PPU> &ppu);
+    void setAPU(const shared_ptr<APU> &apu);
     void tick();
 };
 

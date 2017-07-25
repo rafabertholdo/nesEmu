@@ -1,5 +1,6 @@
 #include "CPU.h" 
 #include "PPU.h"
+#include "APU.h"
 #include "Utils.cpp"
 
 #include <string>
@@ -306,14 +307,18 @@ uint_least8_t CPU::pop() {
 void CPU::setPPU(const shared_ptr<PPU> &ppu) {
     CPU::ppu = ppu;
 }
+void CPU::setAPU(const shared_ptr<APU> &apu) {
+    _apu = apu;
+}
 
 void CPU::tick() {
     // PPU clock: 3 times the CPU rate
     for(unsigned n=0; n<3; ++n) {
         ppu->tick();
     }
+    // APU clock: 1 times the CPU rate
+    //_apu->tick();
     
     remainingCycles--;
-    // APU clock: 1 times the CPU rate
-    //for(unsigned n=0; n<1; ++n) APU::tick();
+    
 }

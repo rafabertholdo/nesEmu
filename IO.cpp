@@ -9,7 +9,7 @@ IO::IO() : joypadBits{0,0}, joypadIndex{0,0} {
 
 void IO::Init() {
     //Initialize SDL
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
+    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0 ) {
         std::cout << "SDL could not initialize! SDL_Error: " <<  SDL_GetError() << std::endl;
     } else {
         //Create window
