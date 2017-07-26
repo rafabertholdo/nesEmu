@@ -34,13 +34,18 @@ uint_least16_t RORInstruction::sharedAction(CPU& cpu, const uint_least16_t &valu
     return valueFromMemmory;
 }
 
-uint_least16_t RORInstruction::action(CPU& cpu, const uint_least16_t &value) {        
+uint_least16_t RORInstruction::sharedActionA(CPU& cpu, const uint_least16_t &value) {
     bool carry = cpu.Flags.Carry;
+    cpu.Flags.Carry = value & 0b1;    
+    cpu.A = (value >> 1) + (carry << 7);
+    cpu.tick();
+    return cpu.A;
+}
+
+uint_least16_t RORInstruction::action(CPU& cpu, const uint_least16_t &value) {        
+
     if (dynamic_cast<AccumulatorAddressing*>(_addressing.get())) {        
-        cpu.Flags.Carry = value & 0b1;    
-        cpu.A = (value >> 1) + (carry << 7);
-        cpu.tick();
-        return cpu.A;
+        return RORInstruction::sharedActionA(cpu, value);
     } else {
         return RORInstruction::sharedAction(cpu, value);
     }    

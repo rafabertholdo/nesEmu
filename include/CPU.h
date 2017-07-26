@@ -90,6 +90,7 @@ public:
     uint_least8_t read(const uint_least16_t &address);
     u16 read(const uint_least16_t &address, const uint_least8_t &length);
     void write(const uint_least16_t &address, const uint_least8_t &value);
+    //uint_least8_t& memoryAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    
 
     void push(const uint_least8_t &value);
     uint_least8_t pop();

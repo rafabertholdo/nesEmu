@@ -31,16 +31,30 @@ Instruction::Instruction() {
 }
 
 Instruction::Instruction(const AddressingMode &addressingMode,
-                         const uint_least8_t &opcode, 
-                         const uint_least8_t &length, 
+                         const uint_least8_t &opcode,                          
                          const string &menmonic,
-                         const AffectFlags &&affectedFlags) {
+                         const AffectFlags &&affectedFlags,                         
+                         const bool &readsFromMemory) {
     _addressing = Instruction::addressingModes.at(addressingMode);
     _opcode = opcode;
     _length = _addressing->length;
     _menmonic = menmonic;
     _affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
-    _readsFromMemory = false;
+    setReadsFromMemory(readsFromMemory);
+}
+
+Instruction::Instruction(const AddressingMode &addressingMode, 
+                         const uint_least8_t &opcode,                 
+                         const uint_least8_t &length,                 
+                         const string &menmonic,
+                         const AffectFlags &&affectedFlags,
+                         const bool &readsFromMemory) {
+    _addressing = Instruction::addressingModes.at(addressingMode);
+    _opcode = opcode;
+    _length = _addressing->length;
+    _menmonic = menmonic;
+    _affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
+    setReadsFromMemory(readsFromMemory);
 }
 
 Instruction::~Instruction() {
@@ -57,12 +71,21 @@ std::unordered_map<std::string, Instruction::create_f2 *> & Instruction::registr
     return impl;
 }
 
+std::unordered_map<std::string, Instruction::create_f3 *> & Instruction::registry3() {
+    static std::unordered_map<std::string, Instruction::create_f3 *> impl;
+    return impl;
+}
+
 void Instruction::registrate(std::string const & name, create_f * fp) {
     registry()[name] = fp;
 }
 
 void Instruction::registrate2(std::string const & name, create_f2 * fp) {
     registry2()[name] = fp;
+}
+
+void Instruction::registrate3(std::string const & name, create_f3 * fp) {
+    registry3()[name] = fp;
 }
 
  std::vector<std::shared_ptr<Instruction>> Instruction::instantiate(std::string const & name) {
@@ -83,10 +106,13 @@ std::vector<std::shared_ptr<Instruction>> Instruction::instantiateAll() {
 }
 
 void Instruction::instantiateAll(std::vector<Instruction> &instructions) {
-     std::vector<Instruction>::iterator instrucitonsIterator;
-     instrucitonsIterator = instructions.begin();
-
      for(auto it = registry2().begin(); it != registry2().end(); ++it) { 
+         (it->second)(instructions);
+     }        
+ }
+
+ void Instruction::instantiateAll(std::vector<unique_ptr<Instruction>> &instructions) {
+     for(auto it = registry3().begin(); it != registry3().end(); ++it) { 
          (it->second)(instructions);
      }        
  }
@@ -104,7 +130,7 @@ bool Instruction::readsFromMemory() const {
 }
 
 void Instruction::setReadsFromMemory(bool readsFromMemory) {
-    _readsFromMemory = readsFromMemory;
+    dynamic_cast<ImmediateAddressing*>(_addressing.get()) ? _readsFromMemory = false : _readsFromMemory = readsFromMemory;
 }
 
 void Instruction::setLambda(std::function<uint_least16_t(CPU&,const uint_least16_t &)> lambda) {
@@ -128,7 +154,7 @@ uint_least16_t Instruction::action(CPU& cpu,  const uint_least16_t &instructionD
 void Instruction::execute(CPU& cpu,  const uint_least16_t &instructionData) {        
     u16 instructionValue = _addressing->getAddress(cpu, instructionData);    
     
-    if (_readsFromMemory && !dynamic_cast<ImmediateAddressing*>(_addressing.get())) {
+    if (_readsFromMemory) {
         instructionValue = cpu.read(instructionValue);
     }
     auto actionValue = action(cpu, instructionValue);

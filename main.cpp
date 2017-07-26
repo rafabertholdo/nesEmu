@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include "include/Rom.h"
+#include "ROM.h"
 #include "CPU.h"
 #include "PPU.h"
 #include "IO.h"

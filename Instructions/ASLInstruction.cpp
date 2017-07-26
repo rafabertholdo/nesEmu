@@ -33,12 +33,17 @@ uint_least16_t ASLInstruction::sharedAction(CPU& cpu, const uint_least16_t &valu
     return valueFromMemmory;
 }
 
+uint_least16_t ASLInstruction::sharedActionA(CPU& cpu, const uint_least16_t &value) {
+    cpu.Flags.Carry = value & 0b10000000;    
+    cpu.A = value << 1;
+    cpu.tick();
+    return cpu.A;
+}
+
+
 uint_least16_t ASLInstruction::action(CPU& cpu, const uint_least16_t &value) {        
     if (dynamic_cast<AccumulatorAddressing*>(_addressing.get())) {
-        cpu.Flags.Carry = value & 0b10000000;    
-        cpu.A = value << 1;
-        cpu.tick();
-        return cpu.A;
+        return ASLInstruction::sharedActionA(cpu, value);
     } else {
         return ASLInstruction::sharedAction(cpu, value);
     }

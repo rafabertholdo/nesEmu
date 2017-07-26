@@ -13,7 +13,7 @@ void IO::Init() {
         std::cout << "SDL could not initialize! SDL_Error: " <<  SDL_GetError() << std::endl;
     } else {
         //Create window
-        window = SDL_CreateWindow( "Nes Emulator", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 256, 240, SDL_WINDOW_SHOWN);
+        window = SDL_CreateWindow( "Nes Emulator", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 256, 240, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
         if( window == NULL ) {
             std::cout << "Window could not be created! SDL_Error: << " << SDL_GetError() << std::endl;
         } else {

@@ -1,5 +1,5 @@
 #include "Instructions/SREInstruction.h"
-#include "Instructions/lSRInstruction.h"
+#include "Instructions/LSRInstruction.h"
 #include "Instructions/EORInstruction.h"
 #include "Addressing.h"
 #include <iostream>

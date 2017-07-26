@@ -16,11 +16,11 @@ using namespace std;
 CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) , totalCycles(29781)  { //2k of ram      
     CPU::io = io;
     //instructions.reserve(230);
-    instructions.resize(230);
+    instructions.resize(0x100);
     Instruction::instantiateAll(instructions);
 
     for(auto&& instruction : Instruction::instantiateAll()) {
-        instructionsMapping[instruction->getOpcode()] = instruction;
+        instructionsMapping[instruction->getOpcode()] = instruction;                
     }
     
     testing = false;

@@ -33,12 +33,16 @@ uint_least16_t LSRInstruction::sharedAction(CPU& cpu, const uint_least16_t &valu
     return valueFromMemmory;
 }
 
+uint_least16_t LSRInstruction::sharedActionA(CPU& cpu, const uint_least16_t &value) {
+    cpu.Flags.Carry = value & 0b1;    
+    cpu.A = value >> 1;
+    cpu.tick();
+    return cpu.A;
+}
+
 uint_least16_t LSRInstruction::action(CPU& cpu, const uint_least16_t &value) {        
     if (dynamic_cast<AccumulatorAddressing*>(_addressing.get())) {
-        cpu.Flags.Carry = value & 0b1;    
-        cpu.A = value >> 1;
-        cpu.tick();
-        return cpu.A;
+        return LSRInstruction::sharedActionA(cpu, value);
     } else {
         return LSRInstruction::sharedAction(cpu, value);
     }    
