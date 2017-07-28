@@ -8,21 +8,27 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<EORInstruction> registrar("EORInstruction");
+    Instruction::Registrar2<EORInstruction> registrar2("EORInstruction");
 }
 
-vector<shared_ptr<Instruction>> EORInstruction::createInstructions() {
-    vector<shared_ptr<Instruction>> instructions;
-
+namespace EOR {
     vector<AddressingMode> addressingModeList{immediate, zeroPage, zeroPageX, absolute, absoluteX, absoluteY, indirectX, indirectY};
     vector<uint_least8_t> opcodeList{              0x49,     0x45,      0x55,     0x4D,      0x5D,      0x59,      0x41,      0x51};
-    vector<uint_least8_t> lengthList{                 2,        2,         2,        3,         3,         3,         2,         2};
+}
 
-    for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<EORInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "EOR", AffectFlags::Negative | AffectFlags::Zero);
-        instruction->setReadsFromMemory(true);
-        instructions.push_back(instruction);
-    }
-    return instructions;
+void EORInstruction::createInstructions(vector<unique_ptr<Instruction>> &instructions) {
+    for(int i=0; i < EOR::opcodeList.size(); i++) {        
+        instructions.at(EOR::opcodeList[i]) = make_unique<EORInstruction>(EOR::addressingModeList[i], EOR::opcodeList[i], "EOR", AffectFlags::Negative | AffectFlags::Zero, true);
+    }    
+}
+
+void EORInstruction::createInstructions2(vector<Instruction> &instructions) {    
+
+    for(int i=0; i < EOR::opcodeList.size(); i++) {
+        Instruction instruction(EOR::addressingModeList[i], EOR::opcodeList[i], "EOR", AffectFlags::Negative | AffectFlags::Zero, true);
+        instruction.setLambda(EORInstruction::sharedAction);
+        instructions.at(instruction.getOpcode()) = instruction;        
+    }    
 }
 
 uint_least16_t EORInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {

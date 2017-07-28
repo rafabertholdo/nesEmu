@@ -7,16 +7,27 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<DEYInstruction> registrar("DEYInstruction");
+    Instruction::Registrar2<DEYInstruction> registrar2("DEYInstruction");
 }
 
-vector<shared_ptr<Instruction>> DEYInstruction::createInstructions() {
-    auto instruction = make_shared<DEYInstruction>(implict,0x88,1,"DEY", AffectFlags::Negative | AffectFlags::Zero);
-    vector<shared_ptr<Instruction>> result{instruction};
-    return result;
+void DEYInstruction::createInstructions(vector<unique_ptr<Instruction>> &insctructions) {    
+    auto opcode = 0x88;    
+    insctructions.at(opcode) = make_unique<DEYInstruction>(implict, opcode, "DEY", AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t DEYInstruction::action(CPU& cpu, const uint_least16_t &value) {    
+void DEYInstruction::createInstructions2(vector<Instruction> &insctructions) {    
+    auto opcode = 0x88;    
+    auto instruction = DEYInstruction(implict, opcode, "DEY", AffectFlags::Negative | AffectFlags::Zero);
+    instruction.setLambda(DEYInstruction::sharedAction);
+    insctructions.at(opcode) = instruction;
+}
+
+uint_least16_t DEYInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
     cpu.Y--;
     cpu.tick();
     return cpu.Y;
+}
+
+uint_least16_t DEYInstruction::action(CPU& cpu, const uint_least16_t &value) {    
+    return DEYInstruction::sharedAction(cpu, value);
 }

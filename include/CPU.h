@@ -55,8 +55,7 @@ class CPU {
     Timer timer;
     void test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic);
     vector<Instruction> instructions;  
-    //std::vector<std::reference_wrapper<Instruction>>;
-    map<uint_least8_t, shared_ptr<Instruction>> instructionsMapping;  
+    vector<unique_ptr<Instruction>> instructionVector;    
     
     void executeInstruction(Instruction &instruction);
     uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    

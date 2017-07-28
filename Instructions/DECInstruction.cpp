@@ -8,25 +8,35 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<DECInstruction> registrar("DECInstruction");
+    Instruction::Registrar2<DECInstruction> registrar2("DECInstruction");
 }
 
-vector<shared_ptr<Instruction>> DECInstruction::createInstructions() {
-    vector<shared_ptr<Instruction>> instructions;
-
+namespace DEC {
     vector<AddressingMode> addressingModeList{zeroPage, zeroPageX, absolute, absoluteX};
     vector<uint_least8_t> opcodeList{             0xC6,      0xD6,     0xCE,      0xDE};
-    vector<uint_least8_t> lengthList{                2,         2,        3,         3};
-
-    for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<DECInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "DEC", AffectFlags::Negative | AffectFlags::Zero);        
-        instructions.push_back(instruction);
-    }
-    return instructions;
 }
 
-uint_least16_t DECInstruction::action(CPU& cpu, const uint_least16_t &value) {           
+void DECInstruction::createInstructions(vector<unique_ptr<Instruction>> &instructions) {
+    for(int i=0; i < DEC::opcodeList.size(); i++) {        
+        instructions.at(DEC::opcodeList[i]) = make_unique<DECInstruction>(DEC::addressingModeList[i], DEC::opcodeList[i], "DEC", AffectFlags::Negative | AffectFlags::Zero);
+    }    
+}
+
+void DECInstruction::createInstructions2(vector<Instruction> &instructions) {    
+    for(int i=0; i < DEC::opcodeList.size(); i++) {
+        Instruction instruction(DEC::addressingModeList[i], DEC::opcodeList[i], "DEC", AffectFlags::Negative | AffectFlags::Zero);
+        instruction.setLambda(DECInstruction::sharedAction);
+        instructions.at(instruction.getOpcode()) = instruction;        
+    }    
+}
+
+uint_least16_t DECInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {           
     auto valueFromMemmory = cpu.read(value);        
     cpu.tick();
     cpu.write(value, --valueFromMemmory);
     return valueFromMemmory;    
+}
+
+uint_least16_t DECInstruction::action(CPU& cpu, const uint_least16_t &value) {           
+    return DECInstruction::sharedAction(cpu, value);
 }

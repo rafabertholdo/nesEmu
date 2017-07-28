@@ -7,8 +7,7 @@ using namespace std;
 
 namespace {
     Instruction::Registrar<ADCInstruction> registrar("ADCInstruction");
-    Instruction::Registrar2<ADCInstruction> registrar2("ADCInstruction");
-    Instruction::Registrar3<ADCInstruction> registrar3("ADCInstruction");
+    Instruction::Registrar2<ADCInstruction> registrar2("ADCInstruction");    
 }
 
 namespace ADC {
@@ -16,14 +15,10 @@ namespace ADC {
     vector<uint_least8_t> opcodeList{              0x69,     0x65,      0x75,     0x6D,      0x7D,      0x79,      0x61,      0x71};
 }
 
-vector<shared_ptr<Instruction>> ADCInstruction::createInstructions() {
-    vector<shared_ptr<Instruction>> instructions;
-
-    for(int i=0; i < ADC::opcodeList.size(); i++) {
-        auto instruction = make_shared<ADCInstruction>(ADC::addressingModeList[i], ADC::opcodeList[i], "ADC", AffectFlags::Negative | AffectFlags::Zero, true);
-        instructions.push_back(instruction);
-    }
-    return instructions;
+void ADCInstruction::createInstructions(vector<unique_ptr<Instruction>> &instructions) {
+    for(int i=0; i < ADC::opcodeList.size(); i++) {        
+        instructions.at(ADC::opcodeList[i]) = make_unique<ADCInstruction>(ADC::addressingModeList[i], ADC::opcodeList[i], "ADC", AffectFlags::Negative | AffectFlags::Zero, true);
+    }    
 }
 
 void ADCInstruction::createInstructions2(vector<Instruction> &instructions) {    
@@ -32,14 +27,6 @@ void ADCInstruction::createInstructions2(vector<Instruction> &instructions) {
         Instruction instruction(ADC::addressingModeList[i], ADC::opcodeList[i], "ADC", AffectFlags::Negative | AffectFlags::Zero, true);
         instruction.setLambda(ADCInstruction::sharedAction);
         instructions.at(instruction.getOpcode()) = instruction;        
-    }    
-}
-
-void ADCInstruction::createInstructions3(vector<unique_ptr<Instruction>> &instructions) {    
-
-    for(int i=0; i < ADC::opcodeList.size(); i++) {
-        auto instruction = make_unique<ADCInstruction>(ADC::addressingModeList[i], ADC::opcodeList[i], "ADC", AffectFlags::Negative | AffectFlags::Zero, true);        
-        instructions.at(ADC::opcodeList[i]) = move(instruction);        
     }    
 }
 

@@ -7,10 +7,17 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<CLIInstruction> registrar("CLIInstruction");
+    Instruction::Registrar2<CLIInstruction> registrar2("CLIInstruction");
 }
 
-vector<shared_ptr<Instruction>> CLIInstruction::createInstructions() {
-    auto instruction = make_shared<CLIInstruction>(implict,0x58,1,"CLI", AffectFlags::InterruptDisabled);
-    vector<shared_ptr<Instruction>> result{instruction};
-    return result;
+void CLIInstruction::createInstructions(vector<unique_ptr<Instruction>> &insctructions) {    
+    auto opcode = 0x58;    
+    insctructions.at(opcode) = make_unique<CLIInstruction>(implict, opcode, "CLI", AffectFlags::InterruptDisabled);
+}
+
+void CLIInstruction::createInstructions2(vector<Instruction> &insctructions) {    
+    auto opcode = 0x58;    
+    auto instruction = CLIInstruction(implict, opcode, "CLI", AffectFlags::InterruptDisabled);
+    instruction.setLambda(ClearInstruction::sharedAction);
+    insctructions.at(opcode) = instruction;
 }

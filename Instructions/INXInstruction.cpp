@@ -7,16 +7,27 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<INXInstruction> registrar("INXInstruction");
+    Instruction::Registrar2<INXInstruction> registrar2("INXInstruction");
 }
 
-vector<shared_ptr<Instruction>> INXInstruction::createInstructions() {
-    auto instruction = make_shared<INXInstruction>(implict,0xE8,1,"INX", AffectFlags::Negative | AffectFlags::Zero);
-    vector<shared_ptr<Instruction>> result{instruction};
-    return result;
+void INXInstruction::createInstructions(vector<unique_ptr<Instruction>> &insctructions) {    
+    auto opcode = 0xE8;    
+    insctructions.at(opcode) = make_unique<INXInstruction>(implict, opcode, "INX", AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t INXInstruction::action(CPU& cpu, const uint_least16_t &value) {    
+void INXInstruction::createInstructions2(vector<Instruction> &insctructions) {    
+    auto opcode = 0xE8;    
+    auto instruction = INXInstruction(implict, opcode, "INX", AffectFlags::Negative | AffectFlags::Zero);
+    instruction.setLambda(INXInstruction::sharedAction);
+    insctructions.at(opcode) = instruction;
+}
+
+uint_least16_t INXInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
     cpu.X++;
     cpu.tick();
     return cpu.X;
+}
+
+uint_least16_t INXInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    return INXInstruction::sharedAction(cpu, value);
 }

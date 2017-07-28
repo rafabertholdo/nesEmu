@@ -8,21 +8,27 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<SBCInstruction> registrar("SBCInstruction");
+    Instruction::Registrar2<SBCInstruction> registrar2("SBCInstruction");
 }
 
-vector<shared_ptr<Instruction>> SBCInstruction::createInstructions() {
-    vector<shared_ptr<Instruction>> instructions;
-
+namespace SBC {
     vector<AddressingMode> addressingModeList{immediate, immediate, zeroPage, zeroPageX, absolute, absoluteX, absoluteY, indirectX, indirectY};
     vector<uint_least8_t> opcodeList{              0xE9,      0xEB,     0xE5,      0xF5,     0xED,      0xFD,      0xF9,      0xE1,      0xF1};
-    vector<uint_least8_t> lengthList{                 2,         2,        2,         2,        3,         3,         3,         2,         2};
+}
 
-    for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<SBCInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "SBC", AffectFlags::Negative | AffectFlags::Zero);
-        instruction->setReadsFromMemory(true);
-        instructions.push_back(instruction);
-    }
-    return instructions;
+void SBCInstruction::createInstructions(vector<unique_ptr<Instruction>> &instructions) {
+    for(int i=0; i < SBC::opcodeList.size(); i++) {        
+        instructions.at(SBC::opcodeList[i]) = make_unique<SBCInstruction>(SBC::addressingModeList[i], SBC::opcodeList[i], "SBC", AffectFlags::Negative | AffectFlags::Zero, true);
+    }    
+}
+
+void SBCInstruction::createInstructions2(vector<Instruction> &instructions) {    
+
+    for(int i=0; i < SBC::opcodeList.size(); i++) {
+        Instruction instruction(SBC::addressingModeList[i], SBC::opcodeList[i], "SBC", AffectFlags::Negative | AffectFlags::Zero, true);
+        instruction.setLambda(SBCInstruction::sharedAction);
+        instructions.at(instruction.getOpcode()) = instruction;        
+    }    
 }
 
 uint_least16_t SBCInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {

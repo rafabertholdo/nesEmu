@@ -23,9 +23,8 @@ inline AffectFlags operator|(AffectFlags a, AffectFlags b) {
 }
 
 class Instruction {    
-    using create_f = std::vector<std::shared_ptr<Instruction>>();   
-    using create_f2 = void(std::vector<Instruction> &instrucitons);            
-    using create_f3 = void(std::vector<unique_ptr<Instruction>> &instrucitons);
+    using create_f = void(std::vector<unique_ptr<Instruction>> &instrucitons);
+    using create_f2 = void(std::vector<Instruction> &instrucitons);
     
     union 
     {
@@ -40,8 +39,7 @@ class Instruction {
     } _affectedFlags;
 
     static std::unordered_map<std::string, create_f *> & registry();    
-    static std::unordered_map<std::string, create_f2 *> & registry2();    
-    static std::unordered_map<std::string, create_f3 *> & registry3();    
+    static std::unordered_map<std::string, create_f2 *> & registry2();        
     static const std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;    
     static std::map<AddressingMode, shared_ptr<Addressing>> createAddressingMap();
     void changeFlags(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
@@ -68,17 +66,13 @@ public:
                 const AffectFlags &&affectedFlags = AffectFlags::None,
                 const bool &readsFromMemory = false);
 
-    ~Instruction();
-    //Instruction(const Instruction& that) = delete;
-    //virtual ~Instruction() = default;    
+    ~Instruction();    
 
     static void registrate(std::string const & name, create_f * fp);
-    static void registrate2(std::string const & name, create_f2 * fp);
-    static void registrate3(std::string const & name, create_f3 * fp);
-    static std::vector<std::shared_ptr<Instruction>> instantiate(std::string const & name);
-    static std::vector<std::shared_ptr<Instruction>> instantiateAll();
-    static void instantiateAll(std::vector<Instruction> &instructions);
-    static void instantiateAll(std::vector<unique_ptr<Instruction>> &instructions);
+    static void registrate2(std::string const & name, create_f2 * fp);    
+    //static std::vector<std::shared_ptr<Instruction>> instantiate(std::string const & name);
+    static void instantiateAll(std::vector<unique_ptr<Instruction>> &instructions);    
+    static void instantiateAll(std::vector<Instruction> &instructions);    
 
     template <typename D>
     struct Registrar
@@ -95,15 +89,6 @@ public:
         explicit Registrar2(std::string const & name)
         {
             Instruction::registrate2(name, &D::createInstructions2);
-        }        
-    };
-
-    template <typename D>
-    struct Registrar3
-    {
-        explicit Registrar3(std::string const & name)
-        {
-            Instruction::registrate3(name, &D::createInstructions3);
         }        
     };
 
@@ -127,12 +112,16 @@ public:
 };
 
 class ClearInstruction : public Instruction {
+public:
     using Instruction::Instruction;
+    static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);
     uint_least16_t action(CPU& cpu, const uint_least16_t &value);
 };
 
 class SetInstruction : public Instruction {
+public:
     using Instruction::Instruction;
+    static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);
     uint_least16_t action(CPU& cpu, const uint_least16_t &value);
 };
 

@@ -8,20 +8,27 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<INCInstruction> registrar("INCInstruction");
+    Instruction::Registrar2<INCInstruction> registrar2("INCInstruction");
 }
 
-vector<shared_ptr<Instruction>> INCInstruction::createInstructions() {
-    vector<shared_ptr<Instruction>> instructions;
-
+namespace INC {
     vector<AddressingMode> addressingModeList{zeroPage, zeroPageX, absolute, absoluteX};
     vector<uint_least8_t> opcodeList{             0xE6,      0xF6,     0xEE,      0xFE};
-    vector<uint_least8_t> lengthList{                2,         2,        3,         3};
+}
 
-    for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<INCInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "INC", AffectFlags::Negative | AffectFlags::Zero);        
-        instructions.push_back(instruction);
-    }
-    return instructions;
+void INCInstruction::createInstructions(vector<unique_ptr<Instruction>> &instructions) {
+    for(int i=0; i < INC::opcodeList.size(); i++) {        
+        instructions.at(INC::opcodeList[i]) = make_unique<INCInstruction>(INC::addressingModeList[i], INC::opcodeList[i], "INC", AffectFlags::Negative | AffectFlags::Zero);
+    }    
+}
+
+void INCInstruction::createInstructions2(vector<Instruction> &instructions) {    
+
+    for(int i=0; i < INC::opcodeList.size(); i++) {
+        Instruction instruction(INC::addressingModeList[i], INC::opcodeList[i], "INC", AffectFlags::Negative | AffectFlags::Zero);
+        instruction.setLambda(INCInstruction::sharedAction);
+        instructions.at(instruction.getOpcode()) = instruction;        
+    }    
 }
 
 uint_least16_t INCInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {           

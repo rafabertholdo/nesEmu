@@ -7,18 +7,29 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<RTSInstruction> registrar("RTSInstruction");
+    Instruction::Registrar2<RTSInstruction> registrar2("RTSInstruction");
 }
 
-vector<shared_ptr<Instruction>> RTSInstruction::createInstructions() {
-    auto instruction = make_shared<RTSInstruction>(implict,0x60,1,"RTS");
-    vector<shared_ptr<Instruction>> result{instruction};
-    return result;
+void RTSInstruction::createInstructions(vector<unique_ptr<Instruction>> &insctructions) {    
+    auto opcode = 0x60;    
+    insctructions.at(opcode) = make_unique<RTSInstruction>(implict, opcode, "RTS");
 }
 
-uint_least16_t RTSInstruction::action(CPU& cpu, const uint_least16_t &value) {        
+void RTSInstruction::createInstructions2(vector<Instruction> &insctructions) {    
+    auto opcode = 0x60;    
+    auto instruction = RTSInstruction(implict, opcode, "RTS");
+    instruction.setLambda(RTSInstruction::sharedAction);
+    insctructions.at(opcode) = instruction;
+}
+
+uint_least16_t RTSInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {        
     cpu.tick();
     cpu.tick();
     cpu.PC = cpu.pop() + (cpu.pop() << 8) + 1;
     cpu.tick();
     return cpu.PC;
+}
+
+uint_least16_t RTSInstruction::action(CPU& cpu, const uint_least16_t &value) {        
+    return RTSInstruction::sharedAction(cpu, value);
 }

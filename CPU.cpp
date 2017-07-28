@@ -15,13 +15,12 @@ using namespace std;
 
 CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) , totalCycles(29781)  { //2k of ram      
     CPU::io = io;
-    //instructions.reserve(230);
+    
     instructions.resize(0x100);
     Instruction::instantiateAll(instructions);
-
-    for(auto&& instruction : Instruction::instantiateAll()) {
-        instructionsMapping[instruction->getOpcode()] = instruction;                
-    }
+    
+    instructionVector.resize(0x100);    
+    Instruction::instantiateAll(instructionVector);    
     
     testing = false;
     if (testing) {
@@ -165,7 +164,8 @@ bool CPU::handleInterruptions() {
 
 void CPU::executeInstruction(Instruction &instruction) {
     u16 instructionData = 0;
-    if (instruction.getLength() > 1) {
+    auto length = instruction.getLength();
+    if (length > 1) {
         instructionData = read(PC+1, instruction.getLength() - 1);            
     }
     
@@ -181,7 +181,7 @@ void CPU::executeInstruction(Instruction &instruction) {
         
         vector<u8> instructionDataVector;
         if (instruction.getLength() > 1) {
-            for(int i=0;i<instruction.getLength();i++) {
+            for(int i=0;i<instruction.getLength() - 1;i++) {
                 instructionDataVector.push_back(read(PC+1 +i));
             }
         }
@@ -189,14 +189,15 @@ void CPU::executeInstruction(Instruction &instruction) {
         identify(instructionDataVector, instruction);   
         test(line, instructionDataVector, instruction.getMenmonic());   
 
-        executedInstructionsCount++;
-        if (timer.elapsed() > 1000) {
-            std::cout << executedInstructionsCount << " i/s" << std::endl;
-            executedInstructionsCount = 0;
-            timer.reset();
-        }
+        
     }
-    
+    executedInstructionsCount++;
+    if (timer.elapsed() > 1000) {
+        std::cout << executedInstructionsCount << " i/s" << std::endl;
+        executedInstructionsCount = 0;
+        timer.reset();
+    }
+
     PC += instruction.getLength();             
     instruction.execute(*this, instructionData); 
 }
@@ -212,7 +213,7 @@ void CPU::run() {
         bool willExecuteInstruction = handleInterruptions();
 
         if (willExecuteInstruction) {
-            executeInstruction(*instructionsMapping.at(instructionCode));           
+            executeInstruction(instructions.at(instructionCode));           
         }   
         reset = false;
     }	

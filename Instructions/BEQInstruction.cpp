@@ -7,18 +7,30 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<BEQInstruction> registrar("BEQInstruction");
+    Instruction::Registrar2<BEQInstruction> registrar2("BEQInstruction");
 }
 
-vector<shared_ptr<Instruction>> BEQInstruction::createInstructions() {
-    auto instruction = make_shared<BEQInstruction>(relative,0xF0,2,"BEQ");
-    vector<shared_ptr<Instruction>> result{instruction};
-    return result;
+
+void BEQInstruction::createInstructions(vector<unique_ptr<Instruction>> &insctructions) {    
+    auto opcode = 0xF0;
+    insctructions.at(opcode) = make_unique<BEQInstruction>(relative,opcode,"BEQ");
 }
 
-uint_least16_t BEQInstruction::action(CPU& cpu, const uint_least16_t &value) {
+void BEQInstruction::createInstructions2(vector<Instruction> &insctructions) {    
+    auto opcode = 0xF0;
+    auto instruction = BEQInstruction(relative,opcode,"BEQ");
+    instruction.setLambda(BEQInstruction::sharedAction);
+    insctructions.at(opcode) = instruction;
+}
+
+uint_least16_t BEQInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
     if (cpu.Flags.Zero) {
         cpu.tick();
         cpu.PC = value;
     }
     return cpu.PC;
+}
+
+uint_least16_t BEQInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    return BEQInstruction::sharedAction(cpu, value);
 }

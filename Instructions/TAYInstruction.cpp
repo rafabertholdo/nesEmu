@@ -7,16 +7,27 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<TAYInstruction> registrar("TAYInstruction");
+    Instruction::Registrar2<TAYInstruction> registrar2("TAYInstruction");
 }
 
-vector<shared_ptr<Instruction>> TAYInstruction::createInstructions() {
-    auto instruction = make_shared<TAYInstruction>(implict,0xA8,1,"TAY", AffectFlags::Negative | AffectFlags::Zero);
-    vector<shared_ptr<Instruction>> result{instruction};
-    return result;
+void TAYInstruction::createInstructions(vector<unique_ptr<Instruction>> &insctructions) {    
+    auto opcode = 0xA8;    
+    insctructions.at(opcode) = make_unique<TAYInstruction>(implict, opcode, "TAY", AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t TAYInstruction::action(CPU& cpu, const uint_least16_t &value) {    
+void TAYInstruction::createInstructions2(vector<Instruction> &insctructions) {    
+    auto opcode = 0xA8;    
+    auto instruction = TAYInstruction(implict, opcode, "TAY", AffectFlags::Negative | AffectFlags::Zero);
+    instruction.setLambda(TAYInstruction::sharedAction);
+    insctructions.at(opcode) = instruction;
+}
+
+uint_least16_t TAYInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
     cpu.Y = cpu.A;
     cpu.tick();
     return cpu.Y;
+}
+
+uint_least16_t TAYInstruction::action(CPU& cpu, const uint_least16_t &value) {    
+    return TAYInstruction::sharedAction(cpu, value);
 }

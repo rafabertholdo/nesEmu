@@ -7,10 +7,17 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<CLDInstruction> registrar("CLDInstruction");
+    Instruction::Registrar2<CLDInstruction> registrar2("CLDInstruction");
 }
 
-vector<shared_ptr<Instruction>> CLDInstruction::createInstructions() {
-    auto instruction = make_shared<CLDInstruction>(implict,0xD8,1,"CLD", AffectFlags::DecimalMode);
-    vector<shared_ptr<Instruction>> result{instruction};
-    return result;
+void CLDInstruction::createInstructions(vector<unique_ptr<Instruction>> &insctructions) {    
+    auto opcode = 0xD8;    
+    insctructions.at(opcode) = make_unique<CLDInstruction>(implict, opcode, "CLD",  AffectFlags::DecimalMode);
+}
+
+void CLDInstruction::createInstructions2(vector<Instruction> &insctructions) {    
+    auto opcode = 0xD8;    
+    auto instruction = CLDInstruction(implict, opcode, "CLD", AffectFlags::DecimalMode);
+    instruction.setLambda(ClearInstruction::sharedAction);
+    insctructions.at(opcode) = instruction;
 }

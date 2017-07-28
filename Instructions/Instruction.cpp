@@ -71,11 +71,6 @@ std::unordered_map<std::string, Instruction::create_f2 *> & Instruction::registr
     return impl;
 }
 
-std::unordered_map<std::string, Instruction::create_f3 *> & Instruction::registry3() {
-    static std::unordered_map<std::string, Instruction::create_f3 *> impl;
-    return impl;
-}
-
 void Instruction::registrate(std::string const & name, create_f * fp) {
     registry()[name] = fp;
 }
@@ -84,35 +79,22 @@ void Instruction::registrate2(std::string const & name, create_f2 * fp) {
     registry2()[name] = fp;
 }
 
-void Instruction::registrate3(std::string const & name, create_f3 * fp) {
-    registry3()[name] = fp;
-}
-
- std::vector<std::shared_ptr<Instruction>> Instruction::instantiate(std::string const & name) {
+/*
+std::vector<std::shared_ptr<Instruction>> Instruction::instantiate(std::string const & name) {
     std::vector<std::shared_ptr<Instruction>> empty;
     auto it = registry().find(name);
     return it == registry().end() ? empty : (it->second)();
 }
+*/
 
-std::vector<std::shared_ptr<Instruction>> Instruction::instantiateAll() {
-    std::vector<std::shared_ptr<Instruction>> result;
+void Instruction::instantiateAll(std::vector<std::unique_ptr<Instruction>> &instructions) {    
     for(auto it = registry().begin(); it != registry().end(); ++it) { 
-        for(auto specializedInstruction : (it->second)()) {
-            result.push_back(specializedInstruction);
-        }
-        
-    }
-    return result;
+        (it->second)(instructions);
+    }    
 }
 
 void Instruction::instantiateAll(std::vector<Instruction> &instructions) {
      for(auto it = registry2().begin(); it != registry2().end(); ++it) { 
-         (it->second)(instructions);
-     }        
- }
-
- void Instruction::instantiateAll(std::vector<unique_ptr<Instruction>> &instructions) {
-     for(auto it = registry3().begin(); it != registry3().end(); ++it) { 
          (it->second)(instructions);
      }        
  }
@@ -214,13 +196,21 @@ void Instruction::updateNegative(CPU& cpu, const uint_least16_t &value, const ui
     cpu.Flags.Negative = set.test(7);
 }
 
-uint_least16_t ClearInstruction::action(CPU& cpu, const uint_least16_t &value) {    
+uint_least16_t ClearInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
     cpu.tick();
     return 0;
 }
 
-uint_least16_t SetInstruction::action(CPU& cpu, const uint_least16_t &value) {
+uint_least16_t ClearInstruction::action(CPU& cpu, const uint_least16_t &value) {    
+    return ClearInstruction::sharedAction(cpu, value);
+}
+
+uint_least16_t SetInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
     cpu.tick();
     return 1;
+}
+
+uint_least16_t SetInstruction::action(CPU& cpu, const uint_least16_t &value) {
+    return SetInstruction::sharedAction(cpu, value);
 }
 

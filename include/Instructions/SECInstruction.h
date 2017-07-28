@@ -6,7 +6,8 @@
 class SECInstruction : public SetInstruction {    
 public:
     using SetInstruction::SetInstruction;
-    static vector<shared_ptr<Instruction>> createInstructions();
+    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
+    static void createInstructions2(vector<Instruction> &instructions);    
 };
 
 #endif

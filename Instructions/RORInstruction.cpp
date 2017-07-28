@@ -8,20 +8,31 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<RORInstruction> registrar("RORInstruction");
+    Instruction::Registrar2<RORInstruction> registrar2("RORInstruction");
 }
 
-vector<shared_ptr<Instruction>> RORInstruction::createInstructions() {
-    vector<shared_ptr<Instruction>> instructions;
-
+namespace ROR {
     vector<AddressingMode> addressingModeList{accumulator, zeroPage, zeroPageX, absolute, absoluteX};
     vector<uint_least8_t> opcodeList{                0x6A,     0x66,      0x76,     0x6E,      0x7E};
-    vector<uint_least8_t> lengthList{                   1,        2,         2,        3,         3};
+}
 
-    for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<RORInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "ROR", AffectFlags::Negative | AffectFlags::Zero);        
-        instructions.push_back(instruction);
-    }
-    return instructions;
+void RORInstruction::createInstructions(vector<unique_ptr<Instruction>> &instructions) {
+    for(int i=0; i < ROR::opcodeList.size(); i++) {        
+        instructions.at(ROR::opcodeList[i]) = make_unique<RORInstruction>(ROR::addressingModeList[i], ROR::opcodeList[i], "ROR", AffectFlags::Negative | AffectFlags::Zero);
+    }    
+}
+
+void RORInstruction::createInstructions2(vector<Instruction> &instructions) {    
+
+    for(int i=0; i < ROR::opcodeList.size(); i++) {
+        Instruction instruction(ROR::addressingModeList[i], ROR::opcodeList[i], "ROR", AffectFlags::Negative | AffectFlags::Zero);
+        if (ROR::addressingModeList[i] == accumulator) {
+            instruction.setLambda(RORInstruction::sharedActionA);
+        } else {
+            instruction.setLambda(RORInstruction::sharedAction);            
+        }        
+        instructions.at(instruction.getOpcode()) = instruction;        
+    }    
 }
 
 uint_least16_t RORInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {

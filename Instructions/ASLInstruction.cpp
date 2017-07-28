@@ -8,20 +8,32 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<ASLInstruction> registrar("ASLInstruction");
+    Instruction::Registrar2<ASLInstruction> registrar2("ASLInstruction");
 }
 
-vector<shared_ptr<Instruction>> ASLInstruction::createInstructions() {
-    vector<shared_ptr<Instruction>> instructions;
-
+namespace ASL {
     vector<AddressingMode> addressingModeList{accumulator, zeroPage, zeroPageX, absolute, absoluteX};
     vector<uint_least8_t> opcodeList{                0x0A,     0x06,      0x16,     0x0E,      0x1E};
-    vector<uint_least8_t> lengthList{                   1,        2,         2,        3,         3};
+}
 
-    for(int i=0; i < opcodeList.size(); i++) {
-        auto instruction = make_shared<ASLInstruction>(addressingModeList[i], opcodeList[i], lengthList[i], "ASL", AffectFlags::Negative | AffectFlags::Zero);        
-        instructions.push_back(instruction);
-    }
-    return instructions;
+void ASLInstruction::createInstructions(vector<unique_ptr<Instruction>> &instructions) {
+    for(int i=0; i < ASL::opcodeList.size(); i++) {        
+        instructions.at(ASL::opcodeList[i]) = make_unique<ASLInstruction>(ASL::addressingModeList[i], ASL::opcodeList[i], "ASL", AffectFlags::Negative | AffectFlags::Zero);
+    }    
+}
+
+void ASLInstruction::createInstructions2(vector<Instruction> &instructions) {    
+
+    for(int i=0; i < ASL::opcodeList.size(); i++) {
+        Instruction instruction(ASL::addressingModeList[i], ASL::opcodeList[i], "ASL", AffectFlags::Negative | AffectFlags::Zero);
+
+        if (ASL::addressingModeList[i] == accumulator) {
+            instruction.setLambda(ASLInstruction::sharedActionA);
+        } else {
+            instruction.setLambda(ASLInstruction::sharedAction);            
+        }        
+        instructions.at(instruction.getOpcode()) = instruction;        
+    }    
 }
 
 uint_least16_t ASLInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
@@ -39,7 +51,6 @@ uint_least16_t ASLInstruction::sharedActionA(CPU& cpu, const uint_least16_t &val
     cpu.tick();
     return cpu.A;
 }
-
 
 uint_least16_t ASLInstruction::action(CPU& cpu, const uint_least16_t &value) {        
     if (dynamic_cast<AccumulatorAddressing*>(_addressing.get())) {
