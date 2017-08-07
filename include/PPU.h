@@ -6,7 +6,7 @@
 #include "IO.h"
 #include <vector>
 #include "CPU.h"
-#include "ROM.h"
+#include "Rom.h"
 
 enum class Mirroring { VERTICAL, HORIZONTAL };
 

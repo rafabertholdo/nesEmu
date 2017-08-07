@@ -1,12 +1,12 @@
 #include <fstream>
 #include <iostream>
-#include "ROM.h"
+#include "Rom.h"
 #include "CPU.h"
 #include "PPU.h"
 #include "IO.h"
 #include "APU.h"
 #include <vector>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <SDL_mixer.h>
 
 using namespace std;

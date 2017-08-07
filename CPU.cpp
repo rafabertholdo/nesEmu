@@ -8,7 +8,7 @@
 #include <iomanip>
 #include <regex>
 #include <cassert>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <thread>
 
 using namespace std;

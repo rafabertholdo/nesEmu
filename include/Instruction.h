@@ -47,9 +47,10 @@ protected:
     uint_least8_t _opcode;
     string _menmonic;
     bool _readsFromMemory;    
-    shared_ptr<Addressing> _addressing;
+    shared_ptr<Addressing> _addressing;    
     uint_least8_t _length;
     std::function<uint_least16_t(CPU& cpu,  const uint_least16_t &value)> _lambda;
+    std::function<uint_least16_t(CPU& cpu,  const uint_least16_t &instructionData)> _addressingLambda;    
 
 public:    
     Instruction();
@@ -98,6 +99,7 @@ public:
     bool readsFromMemory() const;
     void setReadsFromMemory(bool readsFromMemory);
     void setLambda(std::function<uint_least16_t(CPU&,const uint_least16_t &)> lambda);
+    void setAddressingLambda(std::function<uint_least16_t(CPU&,const uint_least16_t &)> lambda);
 
     
     void execute(CPU& cpu,  const uint_least16_t &instructionData);

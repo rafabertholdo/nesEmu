@@ -119,6 +119,10 @@ void Instruction::setLambda(std::function<uint_least16_t(CPU&,const uint_least16
     _lambda = lambda;
 }
 
+void Instruction::setAddressingLambda(std::function<uint_least16_t(CPU&,const uint_least16_t &)> lambda) {
+    _addressingLambda = lambda;
+}
+
 uint_least8_t Instruction::getLength() const {
     //return _addressing->length;
     return _length;

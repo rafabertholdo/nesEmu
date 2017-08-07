@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 #include <bitset>
-#include "ROM.h"
+#include "Rom.h"
 #include "IO.h"
 #include "Instruction.h"
 #include "RegBit.h"

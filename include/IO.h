@@ -2,7 +2,7 @@
 #define IO_H
 
 #include <vector>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "Utils.h"
 #include <memory>
 
