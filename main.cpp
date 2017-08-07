@@ -7,7 +7,6 @@
 #include "APU.h"
 #include <vector>
 #include <SDL.h>
-#include <SDL_mixer.h>
 
 using namespace std;
 

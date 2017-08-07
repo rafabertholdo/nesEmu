@@ -5,6 +5,7 @@
 #include "Addressing.h"
 #include "RegBit.h"
 #include <unordered_map>
+#include <functional>
 
 class CPU; //forward declaration
 

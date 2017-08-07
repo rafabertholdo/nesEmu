@@ -1,6 +1,5 @@
 #include "APU.h"
 #include <iostream>
-#include <SDL_mixer.h>
 
 const u8 APU::LengthCounters[32] = { 10,254,20, 2,40, 4,80, 6,160, 8,60,10,14,12,26,14,
                                12, 16,24,18,48,20,96,22,192,24,72,26,16,28,32,30 };
@@ -104,9 +103,8 @@ void APU::tick() // Invoked at CPU's rate.
             APUChannel& ch = channels[c];
             int wl = ch.reg.WaveLength;
             // Length tick (all channels except DMC, but different disable bit for triangle wave)
-            if(HalfTick && ch.length_counter
-            && !(c==2 ? ch.reg.LinearCounterDisable : ch.reg.LengthCounterDisable))
-                ch.length_counter -= 1;
+            //if(HalfTick && ch.length_counter && !(c==2 ? ch.reg.LinearCounterDisable : ch.reg.LengthCounterDisable))
+            //    ch.length_counter -= 1;
             // Sweep tick (square waves only)
             if(HalfTick && c < 2 && count(ch.sweep_delay, ch.reg.SweepRate))
                 if(wl >= 8 && ch.reg.SweepEnable && ch.reg.SweepShift)
