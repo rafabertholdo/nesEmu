@@ -238,11 +238,19 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
 		reference = value;
 	} else if (address < 0x4000) { //PPU 0x2000 ... 0x3FFF
 		return ppu->access(address & 7, value, write);
-	} else if (address < 0x4014 || address == 0x4015) { //APU address 0x4000 ... 0x4013
-		
+	} else if (address < 0x4014) { //APU address 0x4000 ... 0x4013
+		if(write) {
+            _apu->Write(address & 0x1F, value);
+        }
 	} else if (address == 0x4014) { // OAM DMA.
 		if (write) dmaOam(value);
-	} else if (address == 0x4016) { // Joypad 0.
+	} else if (address == 0x4015) {
+        if(write) {
+            _apu->Write(0x15,value);
+        } else {
+            return _apu->Read(); 
+        }
+    } else if (address == 0x4016) { // Joypad 0.
 		if (write) { 
 			io->JoyStrobe(value);        
 		} else { 
@@ -317,7 +325,7 @@ void CPU::tick() {
         ppu->tick();
     }
     // APU clock: 1 times the CPU rate
-    //_apu->tick();
+    _apu->tick();
     
     remainingCycles--;
     

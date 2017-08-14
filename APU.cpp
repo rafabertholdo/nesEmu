@@ -9,29 +9,78 @@ const u16 APU::DMCperiods[16] = { 428,380,340,320,286,254,226,214,190,160,142,12
 
 APU::APU(const std::shared_ptr<CPU> &cpu) {
     _cpu = cpu;    
+
+    bufs = NULL;
+	free_sem = NULL;
+	write_buf = 0;
+	write_pos = 0;
+	read_buf = 0;
+	sound_open = false;
 }
+
+APU::~APU() {
+    if (sound_open) {
+		SDL_PauseAudio( true );
+		SDL_CloseAudio();
+	}
+	
+	if (free_sem)
+		SDL_DestroySemaphore(free_sem);
+	
+	delete [] bufs;
+}
+
+
+void APU::fill_buffer(u8 *audioData, int length)
+{
+	if (SDL_SemValue(free_sem) < _buf_count - 1) {
+		memcpy(audioData, buf(read_buf), length);
+		read_buf = (read_buf + 1) % _buf_count;
+		SDL_SemPost(free_sem);
+	} else {
+		memset(audioData, 0, length);
+	}
+}
+
+void APU::fill_buffer_(void* userData, u8* audioData, int length) {
+	((APU*) userData)->fill_buffer(audioData, length);
+}
+
+inline u8* APU::buf(int index) {
+	return bufs + (long)index * _buf_size;
+}
+
 
 void APU::init() {
     for(int i=0;i<5;i++){
         channels.push_back(APUChannel(shared_from_this(), _cpu));
     }
-    
-    
 
-    /*
-    if (Mix_OpenAudio(44100, AUDIO_S16SYS, 1, 512) < 0) {
-        std::cout << "SDL Mixer could not initialize! SDL_Error: " <<  Mix_GetError() << std::endl;
+    bufs = new u8 [(long) _buf_size * _buf_count];
+	if ( !bufs )
+		cout << "Out of memory";
+	
+	free_sem = SDL_CreateSemaphore( _buf_count - 1 );
+	if ( !free_sem )
+		cout << "Couldn't create semaphore";
+
+    SDL_AudioSpec as;
+	as.freq = 96000;
+	as.format = AUDIO_S16SYS;
+	as.channels = 1;
+	as.silence = 0;
+	as.samples = _buf_size;
+	as.size = 0;
+	as.callback = fill_buffer_;
+	as.userdata = this;
+	if ( SDL_OpenAudio( &as, NULL ) < 0 ) {
+        std::cout <<  "Couldn't open SDL audio"  << std::endl;
     }
-    
-    if( Mix_AllocateChannels(5) < 0 ) {
-        std::cout << "Unable to allocate mixing channels: " << SDL_GetError() << std::endl;
-        exit(-1);
-    }*/
+		
+	SDL_PauseAudio( false );
+	sound_open = true;
 }
 
-APU::~APU() {
-
-}
 
 bool APU::count(int& v, int reset) { 
     return --v < 0 ? (v=reset),true : false; 
@@ -76,15 +125,21 @@ void APU::Write(u8 index, u8 value) {
 
 u8 APU::Read()
 {
-    u8 res = 0;
-    for(unsigned c=0; c<5; ++c) res |= (channels[c].length_counter ? 1 << c : 0);
-    if(PeriodicIRQ) res |= 0x40; PeriodicIRQ = false;
-    if(DMC_IRQ)     res |= 0x80; DMC_IRQ     = false;
+    u8 result = 0;
+    for(unsigned c=0; c<5; ++c) {
+        result |= (channels[c].length_counter ? 1 << c : 0);
+    }
+    if(PeriodicIRQ) {
+        result |= 0x40; 
+    } 
+    PeriodicIRQ = false;
+    if(DMC_IRQ) {
+        result |= 0x80;
+    }     
+    DMC_IRQ = false;
     _cpu->intr = false;
-    return res;
+    return result;
 }
-
-void audio_callback(void*, Uint8*, int);
 
 void APU::tick() // Invoked at CPU's rate.
 {
@@ -103,8 +158,8 @@ void APU::tick() // Invoked at CPU's rate.
             APUChannel& ch = channels[c];
             int wl = ch.reg.WaveLength;
             // Length tick (all channels except DMC, but different disable bit for triangle wave)
-            //if(HalfTick && ch.length_counter && !(c==2 ? ch.reg.LinearCounterDisable : ch.reg.LengthCounterDisable))
-            //    ch.length_counter -= 1;
+            if(HalfTick && ch.length_counter && !(c==2 ? ch.reg.LinearCounterDisable : ch.reg.LengthCounterDisable))
+                ch.length_counter -= 1;
             // Sweep tick (square waves only)
             if(HalfTick && c < 2 && count(ch.sweep_delay, ch.reg.SweepRate))
                 if(wl >= 8 && ch.reg.SweepEnable && ch.reg.SweepShift)
@@ -143,26 +198,37 @@ void APU::tick() // Invoked at CPU's rate.
     //fputc(sample/256, fp);
 
 /*
-    SDL_AudioSpec desiredSpec;
 
-    desiredSpec.freq = 44100;
-    desiredSpec.format = AUDIO_S16SYS;
-    desiredSpec.channels = 1;
-    desiredSpec.samples = 2048;
-    desiredSpec.callback = audio_callback;
-    desiredSpec.userdata = this;
+    // NOTE: Sound test
+    int SamplesPerSecond = 48000;
+    int ToneHz = 256;
+    int_least16_t ToneVolume = 3000;
+    u32 RunningSampleIndex = 0;
+    int SquareWavePeriod = SamplesPerSecond / ToneHz;
+    int HalfSquareWavePeriod = SquareWavePeriod / 2;
+    int BytesPerSample = sizeof(int_least16_t) * 2;
 
-    SDL_AudioSpec obtainedSpec;
+    int BytesToWrite = 800 * BytesPerSample;
 
-    // you might want to look for errors here
-    SDL_OpenAudio(&desiredSpec, &obtainedSpec);
+    void *SoundBuffer = malloc(BytesToWrite);
+    int_least16_t *SampleOut = (int_least16_t *)SoundBuffer;
+    int SampleCount = BytesToWrite/BytesPerSample;
 
-    // start play audio
-    SDL_PauseAudio(0);
-
-    SDL_LockAudio();
-    //beeps.push(bo);
-    SDL_UnlockAudio();
-*/    
-    
+    for(int SampleIndex = 0;
+    SampleIndex < SampleCount;
+    ++SampleIndex)
+    {
+        int_least16_t SampleValue = ((RunningSampleIndex++ / HalfSquareWavePeriod) % 2) ? ToneVolume : -ToneVolume;
+        *SampleOut++ = sample;
+        *SampleOut++ = sample/256;
+    }
+    SDL_QueueAudio(1, SoundBuffer, BytesToWrite);
+    free(SoundBuffer);
+    int SoundIsPlaying = 0;
+    if (!SoundIsPlaying)
+    {
+        SDL_PauseAudio(0);
+        SoundIsPlaying = true;
+    }   
+    */
 }

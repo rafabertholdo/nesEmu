@@ -42,6 +42,7 @@
         "deque": "cpp",
         "regex": "cpp",
         "__functional_base": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "chrono": "cpp"
     }
 }
