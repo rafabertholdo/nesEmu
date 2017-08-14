@@ -11,14 +11,28 @@ uint_least16_t printSpaces(const uint_least16_t &length) {
 	return length;
 }
 
+
 uint_least16_t Addressing::printAddress(const uint_least16_t &address) {
-    return Utils<uint_least16_t>::printHex(address);    
+	return Utils<uint_least16_t>::printHex(address);
+}
+
+//AddressingWrapper
+template <class T>
+AddressingWrapper<T>::AddressingWrapper() {
+	length = T::length;
+}
+
+template <class T>
+getAddressPointer AddressingWrapper<T>::getAddressFunction() {
+	return T::getAddress;
 }
 
 //ImplictAddressing
 ImplictAddressing::ImplictAddressing() {
     length = 1;
 }
+
+u8 ImplictAddressing::length = 1;
 
 uint_least16_t ImplictAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     return 0;
@@ -33,6 +47,8 @@ AccumulatorAddressing::AccumulatorAddressing() {
     length = 1;
 }
 
+u8 AccumulatorAddressing::length = 1;
+
 uint_least16_t AccumulatorAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     return cpu.A;
 };
@@ -46,6 +62,8 @@ uint_least16_t AccumulatorAddressing::printAddress(const uint_least16_t &address
 ImmediateAddressing::ImmediateAddressing() {
     length = 2;
 }
+
+u8 ImmediateAddressing::length = 2;
 
 uint_least16_t ImmediateAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     return instructionData;
@@ -62,6 +80,8 @@ ZeroPageAddressing::ZeroPageAddressing() {
     length = 2;
 }
 
+u8 ZeroPageAddressing::length = 2;
+
 uint_least16_t ZeroPageAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     return instructionData;
 };
@@ -76,6 +96,8 @@ uint_least16_t ZeroPageAddressing::printAddress(const uint_least16_t &address) {
 ZeroPageXAddressing::ZeroPageXAddressing() {
     length = 2;
 }
+
+u8 ZeroPageXAddressing::length = 2;
 
 uint_least16_t ZeroPageXAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     cpu.tick();
@@ -94,6 +116,8 @@ ZeroPageYAddressing::ZeroPageYAddressing() {
     length = 2;
 }
 
+u8 ZeroPageYAddressing::length = 2;
+
 uint_least16_t ZeroPageYAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     cpu.tick();
     return ((instructionData + cpu.Y) % 256);
@@ -111,6 +135,8 @@ AbsoluteAddressing::AbsoluteAddressing() {
     length = 3;
 }
 
+u8 AbsoluteAddressing::length = 3;
+
 uint_least16_t AbsoluteAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     return instructionData;
 };
@@ -125,6 +151,8 @@ uint_least16_t AbsoluteAddressing::printAddress(const uint_least16_t &address){
 AbsoluteXAddressing::AbsoluteXAddressing() {
     length = 3;
 }
+
+u8 AbsoluteXAddressing::length = 3;
 
 uint_least16_t AbsoluteXAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     if (cross(instructionData, cpu.X)) {
@@ -145,6 +173,8 @@ AbsoluteYAddressing::AbsoluteYAddressing() {
     length = 3;
 }
 
+u8 AbsoluteYAddressing::length = 3;
+
 uint_least16_t AbsoluteYAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     if (cross(instructionData, cpu.Y)) {
         cpu.tick();
@@ -164,6 +194,8 @@ RelativeAddressing::RelativeAddressing() {
     length = 2;
 }
 
+u8 RelativeAddressing::length = 2;
+
 uint_least16_t RelativeAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     s8 address = instructionData;
     return cpu.PC + address;      
@@ -179,6 +211,8 @@ uint_least16_t RelativeAddressing::printAddress(const uint_least16_t &address){
 IndirectAddressing::IndirectAddressing() {
     length = 3;
 }
+
+u8 IndirectAddressing::length = 3;
 
 uint_least16_t IndirectAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     u8 lsb = cpu.read(instructionData);
@@ -205,6 +239,8 @@ IndirectXAddressing::IndirectXAddressing() {
     length = 2;
 }
 
+u8 IndirectXAddressing::length = 2;
+
 uint_least16_t IndirectXAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     u8 lsb = cpu.read((instructionData + cpu.X) % 256);
     u8 msb = cpu.read((instructionData + cpu.X + 1) % 256);
@@ -222,6 +258,8 @@ uint_least16_t IndirectXAddressing::printAddress(const uint_least16_t &address){
 IndirectYAddressing::IndirectYAddressing() {
     length = 2;
 }
+
+u8 IndirectYAddressing::length = 2;
 
 uint_least16_t IndirectYAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
     u8 lsb = cpu.read(instructionData);

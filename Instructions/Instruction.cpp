@@ -5,26 +5,28 @@
 
 using namespace std;
 
-std::map<AddressingMode, shared_ptr<Addressing>> Instruction::createAddressingMap() {
-    std::map<AddressingMode, shared_ptr<Addressing>> map = {
-    {implict, make_shared<ImplictAddressing>()},
-    {accumulator, make_shared<AccumulatorAddressing>()},                                
-    {immediate, make_shared<ImmediateAddressing>()},
-    {zeroPage, make_shared<ZeroPageAddressing>()},
-    {zeroPageX, make_shared<ZeroPageXAddressing>()},
-    {zeroPageY, make_shared<ZeroPageYAddressing>()},
-    {absolute, make_shared<AbsoluteAddressing>()},
-    {absoluteX, make_shared<AbsoluteXAddressing>()},
-    {absoluteY, make_shared<AbsoluteYAddressing>()},
-    {relative, make_shared<RelativeAddressing>()},
-    {indirect, make_shared<IndirectAddressing>()},
-    {indirectX, make_shared<IndirectXAddressing>()},
-    {indirectY, make_shared<IndirectYAddressing>()}
+
+std::map<AddressingMode, std::tuple<u8, std::function<uint_least16_t(CPU& cpu, const uint_least16_t &instructionData)>>> Instruction::createAddressingMap() {
+
+	std::map<AddressingMode, std::tuple<u8, std::function<uint_least16_t(CPU& cpu, const uint_least16_t &instructionData)>>> map = {
+	{implict     , { ImplictAddressing::length     , ImplictAddressing::getAddress     } },
+	{accumulator , { AccumulatorAddressing::length , AccumulatorAddressing::getAddress } },
+    {immediate   , { ImmediateAddressing::length   , ImmediateAddressing::getAddress   } },
+    {zeroPage    , { ZeroPageAddressing::length    , ZeroPageAddressing::getAddress    } },
+    {zeroPageX   , { ZeroPageXAddressing::length   , ZeroPageXAddressing::getAddress   } },
+    {zeroPageY   , { ZeroPageYAddressing::length   , ZeroPageYAddressing::getAddress   } },
+    {absolute    , { AbsoluteAddressing::length    , AbsoluteAddressing::getAddress    } },
+    {absoluteX   , { AbsoluteXAddressing::length   , AbsoluteXAddressing::getAddress   } },
+	{absoluteY   , { AbsoluteYAddressing::length   , AbsoluteYAddressing::getAddress   } },
+    {relative    , { RelativeAddressing::length    , RelativeAddressing::getAddress    } },
+    {indirect    , { IndirectAddressing::length    , IndirectAddressing::getAddress    } },
+    {indirectX   , { IndirectXAddressing::length   , IndirectXAddressing::getAddress   } },
+    {indirectY   , { IndirectYAddressing::length   , IndirectYAddressing::getAddress   } }
     };
-    return map;
+	return map;
 }
 
-const std::map<AddressingMode, shared_ptr<Addressing>>Instruction::addressingModes  =  Instruction::createAddressingMap();
+const std::map<AddressingMode, std::tuple<u8, std::function<uint_least16_t(CPU& cpu, const uint_least16_t &instructionData)>>>Instruction::addressingModes  =  Instruction::createAddressingMap();
 
 Instruction::Instruction() {
 
@@ -35,9 +37,11 @@ Instruction::Instruction(const AddressingMode &addressingMode,
                          const string &menmonic,
                          const AffectFlags &&affectedFlags,                         
                          const bool &readsFromMemory) {
-    _addressing = Instruction::addressingModes.at(addressingMode);
+	
+	auto addressingWrapper = Instruction::addressingModes.at(addressingMode);
+    setAddressingLambda(get<1>(addressingWrapper));
     _opcode = opcode;
-    _length = _addressing->length;
+    _length = get<0>(addressingWrapper);
     _menmonic = menmonic;
     _affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
     setReadsFromMemory(readsFromMemory);
@@ -49,9 +53,10 @@ Instruction::Instruction(const AddressingMode &addressingMode,
                          const string &menmonic,
                          const AffectFlags &&affectedFlags,
                          const bool &readsFromMemory) {
-    _addressing = Instruction::addressingModes.at(addressingMode);
+	auto addressingWrapper = Instruction::addressingModes.at(addressingMode);
+	setAddressingLambda(get<1>(addressingWrapper));
     _opcode = opcode;
-    _length = _addressing->length;
+	_length = get<0>(addressingWrapper);
     _menmonic = menmonic;
     _affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
     setReadsFromMemory(readsFromMemory);
@@ -129,8 +134,8 @@ uint_least8_t Instruction::getLength() const {
 }
 
 void Instruction::printAddress(CPU& cpu,  const uint_least16_t &instructionData) const {
-    u16 instructionValue = _addressing->getAddress(cpu, instructionData);
-    _addressing->printAddress(instructionValue);
+    //u16 instructionValue = _addressing->getAddress(cpu, instructionData);
+    //_addressing->printAddress(instructionValue);
 }
 
 uint_least16_t Instruction::action(CPU& cpu,  const uint_least16_t &instructionData) {
@@ -138,7 +143,7 @@ uint_least16_t Instruction::action(CPU& cpu,  const uint_least16_t &instructionD
 }
 
 void Instruction::execute(CPU& cpu,  const uint_least16_t &instructionData) {        
-    u16 instructionValue = _addressing->getAddress(cpu, instructionData);    
+	u16 instructionValue = _addressingLambda(cpu, instructionData);
     
     if (_readsFromMemory) {
         instructionValue = cpu.read(instructionValue);

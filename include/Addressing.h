@@ -2,6 +2,7 @@
 #define ADDRESSING_H
 
 #include "Utils.h"
+using namespace std;
 
 enum AddressingMode {     
     immediate,
@@ -20,101 +21,125 @@ enum AddressingMode {
 };
 
 class CPU;
+
 class Addressing {
-public:
-    u8 length;
+public:    
     virtual uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) = 0;
     virtual uint_least16_t printAddress(const uint_least16_t &address) = 0;
 };
 
+typedef uint_least16_t(*getAddressPointer)(CPU&, const uint_least16_t&);
+
+template<class T>
+class AddressingWrapper {
+public:
+	u8 length;
+	AddressingWrapper();
+	getAddressPointer getAddressFunction();
+};
+
+
 class ImplictAddressing : public Addressing {
 public:
+	static u8 length;
     ImplictAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class AccumulatorAddressing : public Addressing  {
 public:
+	static u8 length;
     AccumulatorAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+	static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class ImmediateAddressing : public Addressing  {
 public:
+	static u8 length;
     ImmediateAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class ZeroPageAddressing : public Addressing  {
 public:
+	static u8 length;
     ZeroPageAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class ZeroPageXAddressing : public Addressing  {
 public:
+	static u8 length;
     ZeroPageXAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class ZeroPageYAddressing : public Addressing  {
 public:
+	static u8 length;
     ZeroPageYAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+	static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class AbsoluteAddressing : public Addressing  {
 public:
+	static u8 length;
     AbsoluteAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class AbsoluteXAddressing : public Addressing  {
 public:
+	static u8 length;
     AbsoluteXAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class AbsoluteYAddressing : public Addressing  {
 public:
+	static u8 length;
     AbsoluteYAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class RelativeAddressing : public Addressing  {
 public:
+	static u8 length;
     RelativeAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class IndirectAddressing : public Addressing  {
 public:
+	static u8 length;
     IndirectAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class IndirectXAddressing : public Addressing  {
 public:
+	static u8 length;
     IndirectXAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 
 class IndirectYAddressing : public Addressing  {
 public:
+	static u8 length;
     IndirectYAddressing();
-    uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) override;
+    static uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData);
 	uint_least16_t printAddress(const uint_least16_t &address) override;
 };
 

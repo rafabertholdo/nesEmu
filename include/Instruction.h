@@ -6,6 +6,7 @@
 #include "RegBit.h"
 #include <unordered_map>
 #include <functional>
+#include <tuple>
 
 class CPU; //forward declaration
 
@@ -41,8 +42,10 @@ class Instruction {
 
     static std::unordered_map<std::string, create_f *> & registry();    
     static std::unordered_map<std::string, create_f2 *> & registry2();        
-    static const std::map<AddressingMode, shared_ptr<Addressing>> addressingModes;    
-    static std::map<AddressingMode, shared_ptr<Addressing>> createAddressingMap();
+    static const std::map<AddressingMode, 
+		std::tuple<u8, std::function<uint_least16_t(CPU& cpu, const uint_least16_t &instructionData)>>> addressingModes;
+    static std::map<AddressingMode,
+		std::tuple<u8, std::function<uint_least16_t(CPU& cpu, const uint_least16_t &instructionData)>>> createAddressingMap();
     void changeFlags(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
 protected:
     uint_least8_t _opcode;
