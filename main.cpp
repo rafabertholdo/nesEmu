@@ -30,8 +30,8 @@ int main(int argc, char *argv[]) {
 
     // Framerate control:
     u32 frameStart, frameTime;
-    const int FPS   = 60;
-    const int DELAY = 1000.0f / FPS;
+    const float FPS   = 60.098814f;
+    const float DELAY = 1000.0f / FPS;
     SDL_Event event;
 
     while (true) {

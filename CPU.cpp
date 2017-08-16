@@ -9,7 +9,6 @@
 #include <regex>
 #include <cassert>
 #include <SDL.h>
-#include <thread>
 
 using namespace std;
 
@@ -213,7 +212,7 @@ void CPU::run() {
         bool willExecuteInstruction = handleInterruptions();
 
         if (willExecuteInstruction) {
-            executeInstruction(instructions.at(instructionCode));           
+            executeInstruction(*instructionVector.at(instructionCode));           
         }   
         reset = false;
     }	
@@ -257,9 +256,11 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
 			return io->JoyRead(0);        
 		}
 	} else if (address == 0x4017) { // Joypad 1.
-		if (!write) {
-			io->JoyRead(1);
-		}
+		if (write) {
+			_apu->Write(0x17,value);
+		} else {
+            io->JoyRead(1);
+        }
 	} else { // ROM prg access 0x4018 ... 0xFFFF
 		return rom->prgAccess(address, value, write);
 	}
@@ -320,13 +321,10 @@ void CPU::setAPU(const shared_ptr<APU> &apu) {
 }
 
 void CPU::tick() {
-    // PPU clock: 3 times the CPU rate
     for(unsigned n=0; n<3; ++n) {
         ppu->tick();
     }
-    // APU clock: 1 times the CPU rate
     _apu->tick();
     
     remainingCycles--;
-    
 }

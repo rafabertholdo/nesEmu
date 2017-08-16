@@ -10,6 +10,9 @@
 
 class CPU; //forward declaration
 
+typedef uint_least16_t(*getAddressPointer)(CPU&, const uint_least16_t&);
+typedef uint_least16_t(*actionPointer)(CPU&, const uint_least16_t&);
+
 enum class AffectFlags : uint_least8_t {
     None = 0,
     Carry = 1,
@@ -43,18 +46,18 @@ class Instruction {
     static std::unordered_map<std::string, create_f *> & registry();    
     static std::unordered_map<std::string, create_f2 *> & registry2();        
     static const std::map<AddressingMode, 
-		std::tuple<u8, std::function<uint_least16_t(CPU& cpu, const uint_least16_t &instructionData)>>> addressingModes;
+		std::tuple<u8, getAddressPointer>> addressingModes;
     static std::map<AddressingMode,
-		std::tuple<u8, std::function<uint_least16_t(CPU& cpu, const uint_least16_t &instructionData)>>> createAddressingMap();
+		std::tuple<u8, getAddressPointer>> createAddressingMap();
     void changeFlags(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
 protected:
     uint_least8_t _opcode;
     string _menmonic;
     bool _readsFromMemory;    
-    shared_ptr<Addressing> _addressing;    
+    AddressingMode _addressing;    
     uint_least8_t _length;
-    std::function<uint_least16_t(CPU& cpu,  const uint_least16_t &value)> _lambda;
-    std::function<uint_least16_t(CPU& cpu,  const uint_least16_t &instructionData)> _addressingLambda;    
+    actionPointer _lambda;
+    getAddressPointer _addressingLambda;    
 
 public:    
     Instruction();
@@ -101,9 +104,9 @@ public:
     uint_least8_t getLength() const;
     string getMenmonic() const;
     bool readsFromMemory() const;
-    void setReadsFromMemory(bool readsFromMemory);
-    void setLambda(std::function<uint_least16_t(CPU&,const uint_least16_t &)> lambda);
-    void setAddressingLambda(std::function<uint_least16_t(CPU&,const uint_least16_t &)> lambda);
+    void setReadsFromMemory(bool readsFromMemory, const AddressingMode &addressingMode);
+    void setLambda(actionPointer lambda);
+    void setAddressingLambda(getAddressPointer lambda);
 
     
     void execute(CPU& cpu,  const uint_least16_t &instructionData);

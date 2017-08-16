@@ -18,6 +18,7 @@ class APU : public std::enable_shared_from_this<APU> {
     u8* buf(int index);
     void fill_buffer(u8 *audioData, int length);
     static void fill_buffer_(void *userData, u8 *audioData, int length);
+    void writeBuffer(const short* sample, int count);
 public:
     APU(const std::shared_ptr<CPU> &cpu);
     ~APU();

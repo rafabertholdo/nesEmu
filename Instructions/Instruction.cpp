@@ -6,9 +6,9 @@
 using namespace std;
 
 
-std::map<AddressingMode, std::tuple<u8, std::function<uint_least16_t(CPU& cpu, const uint_least16_t &instructionData)>>> Instruction::createAddressingMap() {
+std::map<AddressingMode, std::tuple<u8, getAddressPointer>> Instruction::createAddressingMap() {
 
-	std::map<AddressingMode, std::tuple<u8, std::function<uint_least16_t(CPU& cpu, const uint_least16_t &instructionData)>>> map = {
+	std::map<AddressingMode, std::tuple<u8, getAddressPointer>> map = {
 	{implict     , { ImplictAddressing::length     , ImplictAddressing::getAddress     } },
 	{accumulator , { AccumulatorAddressing::length , AccumulatorAddressing::getAddress } },
     {immediate   , { ImmediateAddressing::length   , ImmediateAddressing::getAddress   } },
@@ -26,7 +26,7 @@ std::map<AddressingMode, std::tuple<u8, std::function<uint_least16_t(CPU& cpu, c
 	return map;
 }
 
-const std::map<AddressingMode, std::tuple<u8, std::function<uint_least16_t(CPU& cpu, const uint_least16_t &instructionData)>>>Instruction::addressingModes  =  Instruction::createAddressingMap();
+const std::map<AddressingMode, std::tuple<u8, getAddressPointer>>Instruction::addressingModes  =  Instruction::createAddressingMap();
 
 Instruction::Instruction() {
 
@@ -40,11 +40,12 @@ Instruction::Instruction(const AddressingMode &addressingMode,
 	
 	auto addressingWrapper = Instruction::addressingModes.at(addressingMode);
     setAddressingLambda(get<1>(addressingWrapper));
+    _addressing = addressingMode;
     _opcode = opcode;
     _length = get<0>(addressingWrapper);
     _menmonic = menmonic;
     _affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
-    setReadsFromMemory(readsFromMemory);
+    setReadsFromMemory(readsFromMemory, addressingMode);
 }
 
 Instruction::Instruction(const AddressingMode &addressingMode, 
@@ -55,11 +56,12 @@ Instruction::Instruction(const AddressingMode &addressingMode,
                          const bool &readsFromMemory) {
 	auto addressingWrapper = Instruction::addressingModes.at(addressingMode);
 	setAddressingLambda(get<1>(addressingWrapper));
+    _addressing = addressingMode;
     _opcode = opcode;
 	_length = get<0>(addressingWrapper);
     _menmonic = menmonic;
     _affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
-    setReadsFromMemory(readsFromMemory);
+    setReadsFromMemory(readsFromMemory, addressingMode);
 }
 
 Instruction::~Instruction() {
@@ -116,15 +118,15 @@ bool Instruction::readsFromMemory() const {
     return _readsFromMemory;
 }
 
-void Instruction::setReadsFromMemory(bool readsFromMemory) {
-    dynamic_cast<ImmediateAddressing*>(_addressing.get()) ? _readsFromMemory = false : _readsFromMemory = readsFromMemory;
+void Instruction::setReadsFromMemory(bool readsFromMemory, const AddressingMode &addressingMode) {
+    addressingMode == immediate ? _readsFromMemory = false : _readsFromMemory = readsFromMemory;
 }
 
-void Instruction::setLambda(std::function<uint_least16_t(CPU&,const uint_least16_t &)> lambda) {
+void Instruction::setLambda(actionPointer lambda) {
     _lambda = lambda;
 }
 
-void Instruction::setAddressingLambda(std::function<uint_least16_t(CPU&,const uint_least16_t &)> lambda) {
+void Instruction::setAddressingLambda(getAddressPointer lambda) {
     _addressingLambda = lambda;
 }
 

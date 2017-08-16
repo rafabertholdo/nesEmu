@@ -53,7 +53,7 @@ uint_least16_t ASLInstruction::sharedActionA(CPU& cpu, const uint_least16_t &val
 }
 
 uint_least16_t ASLInstruction::action(CPU& cpu, const uint_least16_t &value) {        
-    if (dynamic_cast<AccumulatorAddressing*>(_addressing.get())) {
+    if (_addressing == accumulator) {
         return ASLInstruction::sharedActionA(cpu, value);
     } else {
         return ASLInstruction::sharedAction(cpu, value);

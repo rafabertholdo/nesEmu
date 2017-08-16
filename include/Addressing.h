@@ -24,20 +24,9 @@ class CPU;
 
 class Addressing {
 public:    
-    virtual uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) = 0;
+    //virtual uint_least16_t getAddress(CPU &cpu, const uint_least16_t &instructionData) = 0;
     virtual uint_least16_t printAddress(const uint_least16_t &address) = 0;
 };
-
-typedef uint_least16_t(*getAddressPointer)(CPU&, const uint_least16_t&);
-
-template<class T>
-class AddressingWrapper {
-public:
-	u8 length;
-	AddressingWrapper();
-	getAddressPointer getAddressFunction();
-};
-
 
 class ImplictAddressing : public Addressing {
 public:

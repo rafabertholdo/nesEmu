@@ -54,7 +54,7 @@ uint_least16_t ROLInstruction::sharedActionA(CPU& cpu, const uint_least16_t &val
 }
 
 uint_least16_t ROLInstruction::action(CPU& cpu, const uint_least16_t &value) {            
-    if (dynamic_cast<AccumulatorAddressing*>(_addressing.get())) {        
+    if (_addressing == accumulator) {        
         return ROLInstruction::sharedActionA(cpu, value);
     } else {
         return ROLInstruction::sharedAction(cpu, value);

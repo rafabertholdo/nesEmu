@@ -16,17 +16,6 @@ uint_least16_t Addressing::printAddress(const uint_least16_t &address) {
 	return Utils<uint_least16_t>::printHex(address);
 }
 
-//AddressingWrapper
-template <class T>
-AddressingWrapper<T>::AddressingWrapper() {
-	length = T::length;
-}
-
-template <class T>
-getAddressPointer AddressingWrapper<T>::getAddressFunction() {
-	return T::getAddress;
-}
-
 //ImplictAddressing
 ImplictAddressing::ImplictAddressing() {
     length = 1;

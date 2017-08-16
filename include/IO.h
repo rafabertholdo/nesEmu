@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include "Utils.h"
 #include <memory>
+#include "Timer.h"
 
 enum JoypadButton {
     BUTTON_A,    
@@ -29,6 +30,8 @@ class IO {
     SDL_Surface* screenSurface;
     SDL_Renderer* renderer;
     bool CheckBit(const u8 &var, const u8 &pos);
+    Timer timer;
+    int frameCount = 0;
 public:
     IO();
     ~IO();

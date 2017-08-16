@@ -10,30 +10,16 @@
 #include "Instruction.h"
 #include "RegBit.h"
 #include "Addressing.h"
-#include <chrono>
 #include <functional>
 #include <fstream>
+#include <thread>
+#include "Timer.h"
 
 using namespace std;
 class Instruction; //forward declaration
 
 class PPU;
 class APU;
-
-class Timer
-{
-public:
-    Timer() : beg_(clock_::now()) {}
-    void reset() { beg_ = clock_::now(); }
-    int elapsed() const { 
-        return std::chrono::duration_cast<mili_>
-            (clock_::now() - beg_).count(); }
-
-private:
-    typedef std::chrono::high_resolution_clock clock_;
-    typedef std::chrono::duration<int, std::milli > mili_;
-    std::chrono::time_point<clock_> beg_;
-};
 
 class CPU {
     vector<uint_least8_t> RAM;
@@ -62,6 +48,8 @@ class CPU {
     void identify(const vector<uint_least8_t> &instructionData, const Instruction &instruction);    
     void dmaOam(const uint_least8_t &value);
     bool handleInterruptions();
+
+    std::unique_ptr<std::thread> thread;
 public:
     
     //registers

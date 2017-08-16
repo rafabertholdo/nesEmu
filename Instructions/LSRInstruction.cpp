@@ -54,7 +54,7 @@ uint_least16_t LSRInstruction::sharedActionA(CPU& cpu, const uint_least16_t &val
 }
 
 uint_least16_t LSRInstruction::action(CPU& cpu, const uint_least16_t &value) {        
-    if (dynamic_cast<AccumulatorAddressing*>(_addressing.get())) {
+    if (_addressing == accumulator) {
         return LSRInstruction::sharedActionA(cpu, value);
     } else {
         return LSRInstruction::sharedAction(cpu, value);
