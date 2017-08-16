@@ -4,37 +4,60 @@
 APUChannel::APUChannel(const shared_ptr<APU> &apu, const shared_ptr<CPU> &cpu) {
     _apu = apu;
     _cpu = cpu;
+
+    length_counter = 0;
+    linear_counter = 0;
+    address = 0;
+    envelope = 0;
+    sweep_delay = 0;
+    env_delay = 0; 
+    wave_counter = 0;
+    hold = 0;
+    phase = 0;
+    level = 0;
 }
 
 APUChannel::~APUChannel(){
 
 }
  
-int APUChannel::tick(unsigned c) {
+int APUChannel::tick(unsigned channelNumber) {
     APUChannel& ch = *this;
-    if(!_apu->ChannelsEnabled[c]) return c==4 ? 64 : 8;
-    int wl = (ch.reg.WaveLength+1) * (c >= 2 ? 1 : 2);
-    if(c == 3) wl = _apu->NoisePeriods[ ch.reg.NoiseFreq ];
+    if (!_apu->ChannelsEnabled[channelNumber]) {
+        return channelNumber == 4 ? 64 : 8;
+    }
+    int wl = (ch.reg.WaveLength + 1) * (channelNumber >= 2 ? 1 : 2);
+    if (channelNumber == 3) {
+        wl = _apu->NoisePeriods[ch.reg.NoiseFreq];
+    }
     int volume = ch.length_counter ? ch.reg.EnvDecayDisable ? ch.reg.FixedVolume : ch.envelope : 0;
     // Sample may change at wavelen intervals.
-    auto& S = ch.level;
-    if(!APU::count(ch.wave_counter, wl)) return S;
-    switch(c)
-    {
+    auto& sample = ch.level;
+    if(!APU::count(ch.wave_counter, wl)) {
+        return sample;
+    }
+
+    switch(channelNumber) {
         default:// Square wave. With four different 8-step binary waveforms (32 bits of data total).
-            if(wl < 8) return S = 8;
-            return S = (0xF33C0C04u & (1u << (++ch.phase % 8 + ch.reg.DutyCycle * 8))) ? volume : 0;
+            if (wl < 8) {
+                return sample = 8;
+            }
+            return sample = (0xF33C0C04u & (1u << (++ch.phase % 8 + ch.reg.DutyCycle * 8))) ? volume : 0;
         case 2: // Triangle wave
-            if(ch.length_counter && ch.linear_counter && wl >= 3) ++ch.phase;
-            return S = (ch.phase & 15) ^ ((ch.phase & 16) ? 15 : 0);
+            if (ch.length_counter && ch.linear_counter && wl >= 3) {
+                ++ch.phase;
+            }
+            return sample = (ch.phase & 15) ^ ((ch.phase & 16) ? 15 : 0);
         case 3: // Noise: Linear feedback shift register
-            if(!ch.hold) ch.hold = 1;
+            if (!ch.hold) {
+                ch.hold = 1;
+            }
             ch.hold = (ch.hold >> 1)
                   | (((ch.hold ^ (ch.hold >> (ch.reg.NoiseType ? 6 : 1))) & 1) << 14);
-            return S = (ch.hold & 1) ? 0 : volume;
+            return sample = (ch.hold & 1) ? 0 : volume;
         case 4: // Delta modulation channel (DMC)
             // hold = 8 bit value, phase = number of bits buffered
-            if(ch.phase == 0) // Nothing in sample buffer?
+            if (ch.phase == 0) // Nothing in sample buffer?
             {
                 if(!ch.length_counter && ch.reg.LoopEnabled) // Loop?
                 {
@@ -61,6 +84,6 @@ int APUChannel::tick(unsigned c) {
                 if(ch.hold & (0x80 >> --ch.phase)) v += 2; else v -= 2;
                 if(v >= 0 && v <= 0x7F) ch.linear_counter = v;
             }
-            return S = ch.linear_counter;
+            return sample = ch.linear_counter;
     }
 }

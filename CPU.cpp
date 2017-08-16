@@ -190,13 +190,15 @@ void CPU::executeInstruction(Instruction &instruction) {
 
         
     }
+    /*
     executedInstructionsCount++;
     if (timer.elapsed() > 1000) {
         std::cout << executedInstructionsCount << " i/s" << std::endl;
         executedInstructionsCount = 0;
         timer.reset();
     }
-
+    */
+    
     PC += instruction.getLength();             
     instruction.execute(*this, instructionData); 
 }
@@ -242,7 +244,9 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
             _apu->Write(address & 0x1F, value);
         }
 	} else if (address == 0x4014) { // OAM DMA.
-		if (write) dmaOam(value);
+		if (write) {
+            dmaOam(value);
+        }
 	} else if (address == 0x4015) {
         if(write) {
             _apu->Write(0x15,value);

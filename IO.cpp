@@ -9,7 +9,7 @@ IO::IO() : joypadBits{0,0}, joypadIndex{0,0} {
 
 void IO::Init() {
     //Initialize SDL
-    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0 ) {
+    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0 ) {
         std::cout << "SDL could not initialize! SDL_Error: " <<  SDL_GetError() << std::endl;
     } else {
         //Create window
@@ -79,12 +79,13 @@ void IO::PutPixel(unsigned px,unsigned py, unsigned pixel, int offset) {
 void IO::FlushScanline(unsigned py) {
     if(py == 239) {
         SDL_UpdateWindowSurface(window);
+        /*
         frameCount++;
         if (timer.elapsed() > 1000) {
             std::cout << frameCount << " fps" << std::endl;
             frameCount = 0;
             timer.reset();
-        }
+        }*/
     } 
 }
 
