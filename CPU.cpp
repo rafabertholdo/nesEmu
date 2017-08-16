@@ -25,7 +25,7 @@ CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) , totalCycles(29781)  { //2k of r
     if (testing) {
         _testLogFile = std::ifstream("build/nestest.log.txt");
     }
-    
+	remainingCycles = totalCycles;
     Flags.raw = 0x24;
     SP = 0xFD;
     reset = false;
@@ -213,7 +213,7 @@ void CPU::run() {
         auto instructionCode = read(PC);        
         bool willExecuteInstruction = handleInterruptions();
 
-        if (willExecuteInstruction) {
+        if (willExecuteInstruction) {			
             executeInstruction(*instructionVector.at(instructionCode));           
         }   
         reset = false;

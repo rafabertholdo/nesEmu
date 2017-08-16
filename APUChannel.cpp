@@ -21,14 +21,14 @@ APUChannel::~APUChannel(){
 
 }
  
-int APUChannel::tick(unsigned channelNumber) {
+int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 noisePeriods[], bool &dmcIrq) {
     APUChannel& ch = *this;
-    if (!_apu->ChannelsEnabled[channelNumber]) {
+    if (!channelsEnabled[channelNumber]) {
         return channelNumber == 4 ? 64 : 8;
     }
     int wl = (ch.reg.WaveLength + 1) * (channelNumber >= 2 ? 1 : 2);
     if (channelNumber == 3) {
-        wl = _apu->NoisePeriods[ch.reg.NoiseFreq];
+        wl = noisePeriods[ch.reg.NoiseFreq];
     }
     int volume = ch.length_counter ? ch.reg.EnvDecayDisable ? ch.reg.FixedVolume : ch.envelope : 0;
     // Sample may change at wavelen intervals.
@@ -76,7 +76,7 @@ int APUChannel::tick(unsigned channelNumber) {
                     --ch.length_counter;
                 }
                 else // Otherwise, disable channel or issue IRQ
-                    _apu->ChannelsEnabled[4] = ch.reg.IRQenable && (_cpu->intr = _apu->DMC_IRQ = true);
+					channelsEnabled[4] = ch.reg.IRQenable && (_cpu->intr = dmcIrq = true);
             }
             if(ch.phase != 0) // Update the signal if sample buffer nonempty
             {

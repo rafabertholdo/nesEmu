@@ -2,12 +2,14 @@
 #include "Utils.h"
 #include "RegBit.h"
 #include "APUChannel.h"
+#include <array>
 
 class APU : public std::enable_shared_from_this<APU> {    
     std::shared_ptr<CPU> _cpu;
     
     int currentSample;	
-    int amplitude = 100;
+    int amplitude = 100;	
+	int APU::channelTick(unsigned channelNumber);
 public:
     APU(const std::shared_ptr<CPU> &cpu);
     ~APU();
@@ -20,7 +22,7 @@ public:
     bool PeriodicIRQ = false, DMC_IRQ = false;
     static bool count(int& v, int reset);
 
-    std::vector<APUChannel> channels;
+    APUChannel channels[5];
 
     struct { short lo, hi; } hz240counter = { 0,0 };
 

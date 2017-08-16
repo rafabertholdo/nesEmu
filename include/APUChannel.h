@@ -29,6 +29,6 @@ public:
     } reg;
 
     // Function for updating the wave generators and taking the sample for each channel.    
-    int tick(unsigned c);
+    int tick(unsigned c, bool channelsEnabled[], const u16 noisePeriods[], bool &dmcIrq);
 };
    

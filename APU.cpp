@@ -3,6 +3,7 @@
 #include "Blip_Buffer.h"
 #include "Sync_Audio.h"
 
+
 const u8 APU::LengthCounters[32] = { 10,254,20, 2,40, 4,80, 6,160, 8,60,10,14,12,26,14,
                                12, 16,24,18,48,20,96,22,192,24,72,26,16,28,32,30 };
 
@@ -26,7 +27,11 @@ static Blip_Synth<blip_med_quality,127> synthDmc;
 const int buf_size = 10000;
 static blip_sample_t samples[buf_size];
 
-APU::APU(const std::shared_ptr<CPU> &cpu) {
+APU::APU(const std::shared_ptr<CPU> &cpu) : channels { APUChannel(nullptr, cpu) ,
+	APUChannel(nullptr, _cpu)  ,
+	APUChannel(nullptr, _cpu)  ,
+	APUChannel(nullptr, _cpu)  ,
+	APUChannel(nullptr, _cpu) } {
     _cpu = cpu;    
 
     currentSample = 0;
@@ -38,8 +43,9 @@ APU::~APU() {
 
 void APU::init() {
     for(int i=0;i<5;i++){
-        channels.push_back(APUChannel(shared_from_this(), _cpu));
-    }
+        channels[i] = APUChannel(shared_from_this(), _cpu);
+    }	
+
     // Setup buffer
 	blipBuffer.clock_rate(clock_rate);
 	blipBuffer.set_sample_rate(sample_rate, 1000 / frame_rate);	
@@ -64,7 +70,7 @@ void APU::init() {
 	audio.start(sample_rate);
 }
 
-bool APU::count(int& value, int reset) { 
+inline bool APU::count(int& value, int reset) { 
     return --value < 0 ? (value=reset) , true : false; 
 }
 
@@ -160,38 +166,41 @@ void APU::tick() { // Invoked at CPU's rate.
         }
         // Some events are invoked at 96 Hz or 120 Hz rate. Others, 192 Hz or 240 Hz.
         bool HalfTick = (hz240counter.hi&5)==1, FullTick = hz240counter.hi < 4;
-        for(unsigned c=0; c<4; ++c) {
-            APUChannel& ch = channels[c];
-            int wl = ch.reg.WaveLength;
+		unsigned c = 0;
+        for(APUChannel& channel : channels) {            
+            int wl = channel.reg.WaveLength;
             // Length tick (all channels except DMC, but different disable bit for triangle wave)
-            if(HalfTick && ch.length_counter && !(c==2 ? ch.reg.LinearCounterDisable : ch.reg.LengthCounterDisable))
-                ch.length_counter -= 1;
+			if (HalfTick && channel.length_counter && !(c == 2 ? (bool)channel.reg.LinearCounterDisable : (bool)channel.reg.LengthCounterDisable)) {
+				channel.length_counter -= 1;
+			}
             // Sweep tick (square waves only)
-            if(HalfTick && c < 2 && count(ch.sweep_delay, ch.reg.SweepRate)) {
-                if(wl >= 8 && ch.reg.SweepEnable && ch.reg.SweepShift)
-                {
-                    int s = wl >> ch.reg.SweepShift, d[4] = {s, s, ~s, -s};
-                    wl += d[ch.reg.SweepDecrease*2 + c];
-                    if(wl < 0x800) ch.reg.WaveLength = wl;
+            if (HalfTick && c < 2 && count(channel.sweep_delay, channel.reg.SweepRate)) {
+                if(wl >= 8 && channel.reg.SweepEnable && channel.reg.SweepShift) {
+                    int s = wl >> channel.reg.SweepShift, d[4] = {s, s, ~s, -s};
+                    wl += d[channel.reg.SweepDecrease*2 + c];
+					if (wl < 0x800) {
+						channel.reg.WaveLength = wl;
+					}
                 }
             }
             // Linear tick (triangle wave only)
             if(FullTick && c == 2) {
-                ch.linear_counter = ch.reg.LinearCounterDisable
-                ? ch.reg.LinearCounterInit
-                : (ch.linear_counter > 0 ? ch.linear_counter - 1 : 0);
+				channel.linear_counter = channel.reg.LinearCounterDisable
+                ? channel.reg.LinearCounterInit
+                : (channel.linear_counter > 0 ? channel.linear_counter - 1 : 0);
             }
             // Envelope tick (square and noise channels)
-            if(FullTick && c != 2 && count(ch.env_delay, ch.reg.EnvDecayRate)) {
-                if(ch.envelope > 0 || ch.reg.EnvDecayLoopEnable) {
-                    ch.envelope = (ch.envelope-1) & 15;
+            if(FullTick && c != 2 && count(channel.env_delay, channel.reg.EnvDecayRate)) {
+                if(channel.envelope > 0 || channel.reg.EnvDecayLoopEnable) {
+					channel.envelope = (channel.envelope-1) & 15;
                 }
-            }
+            }			
+			c++;
         }
     }
     // Mix the audio: Get the momentary sample from each channel and mix them.
     
-    #define channelTick(channelNumber) channels[channelNumber].tick(channelNumber == 1 ? 0 : channelNumber)
+    //#define channelTick(channelNumber) channels[channelNumber].tick(channelNumber == 1 ? 0 : channelNumber, &channelsEnabled, &noisePeriods)
     /*
     auto v = [](float m, float n, float d) { 
         return n != 0.f ? m/n : d; 
@@ -203,21 +212,26 @@ void APU::tick() { // Invoked at CPU's rate.
       );
     */    
 
-	if (currentSample <= cyclesPerFrame) {                
-        synthSquare1.update(currentSample, channelTick(0));
-        synthSquare2.update(currentSample, channelTick(1));
-        synthTriangle.update(currentSample, channelTick(2));
-        synthNoise.update(currentSample, channelTick(3));
-        synthDmc.update(currentSample, channelTick(4));        
+	
+	if (currentSample <= cyclesPerFrame) {	
+		synthSquare1.update(currentSample, channelTick(0));
+		synthSquare2.update(currentSample, channelTick(1));
+		synthTriangle.update(currentSample, channelTick(2));
+		synthNoise.update(currentSample, channelTick(3));
+		synthDmc.update(currentSample, channelTick(4));
 
         currentSample++;        
     } 
-
+	
     if (currentSample == cyclesPerFrame) {        
         blipBuffer.end_frame(cyclesPerFrame);
         long count = blipBuffer.read_samples(samples, buf_size);
         audio.write(samples, count);
         currentSample = 0;
-    }
-    #undef s   
+    }	
+    //#undef s   
+}
+
+int APU::channelTick(unsigned channelNumber) {
+	return channels[channelNumber].tick(channelNumber == 1 ? 0 : channelNumber, ChannelsEnabled, NoisePeriods, DMC_IRQ);
 }
