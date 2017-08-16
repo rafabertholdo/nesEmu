@@ -12,7 +12,7 @@
 
 using namespace std;
 
-CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) , totalCycles(29781)  { //2k of ram      
+CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) , totalCycles(29780)  { //2k of ram      
     CPU::io = io;
     
     instructions.resize(0x100);

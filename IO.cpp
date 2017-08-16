@@ -79,13 +79,13 @@ void IO::PutPixel(unsigned px,unsigned py, unsigned pixel, int offset) {
 void IO::FlushScanline(unsigned py) {
     if(py == 239) {
         SDL_UpdateWindowSurface(window);
-        /*
+        
         frameCount++;
         if (timer.elapsed() > 1000) {
             std::cout << frameCount << " fps" << std::endl;
             frameCount = 0;
             timer.reset();
-        }*/
+        }
     } 
 }
 

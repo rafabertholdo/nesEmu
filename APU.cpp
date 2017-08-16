@@ -13,7 +13,7 @@ const u16 APU::DMCperiods[16] = { 428,380,340,320,286,254,226,214,190,160,142,12
 const long sample_rate = 96000;    // 44.1 kHz sample rate
 const double clock_rate = 1789773; // 1 MHz clock rate
 const int frame_rate = 60;         // 60 frames of sound per second
-const int cyclesPerFrame = 29781;
+const int cyclesPerFrame = clock_rate / frame_rate;
 
 static Sync_Audio audio;
 static Blip_Buffer blipBuffer;
@@ -70,7 +70,7 @@ void APU::init() {
 	audio.start(sample_rate);
 }
 
-inline bool APU::count(int& value, int reset) { 
+inline bool count(int& value, int reset) { 
     return --value < 0 ? (value=reset) , true : false; 
 }
 

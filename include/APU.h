@@ -9,7 +9,7 @@ class APU : public std::enable_shared_from_this<APU> {
     
     int currentSample;	
     int amplitude = 100;	
-	int APU::channelTick(unsigned channelNumber);
+	int channelTick(unsigned channelNumber);
 public:
     APU(const std::shared_ptr<CPU> &cpu);
     ~APU();
@@ -20,7 +20,7 @@ public:
 
     bool FiveCycleDivider = false, IRQdisable = true, ChannelsEnabled[5] = { false };
     bool PeriodicIRQ = false, DMC_IRQ = false;
-    static bool count(int& v, int reset);
+    //inline static bool count(int& v, int reset);
 
     APUChannel channels[5];
 

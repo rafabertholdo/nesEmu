@@ -20,6 +20,10 @@ APUChannel::APUChannel(const shared_ptr<APU> &apu, const shared_ptr<CPU> &cpu) {
 APUChannel::~APUChannel(){
 
 }
+
+inline bool count(int& value, int reset) { 
+    return --value < 0 ? (value=reset) , true : false; 
+}
  
 int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 noisePeriods[], bool &dmcIrq) {
     APUChannel& ch = *this;
@@ -33,7 +37,7 @@ int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 n
     int volume = ch.length_counter ? ch.reg.EnvDecayDisable ? ch.reg.FixedVolume : ch.envelope : 0;
     // Sample may change at wavelen intervals.
     auto& sample = ch.level;
-    if(!APU::count(ch.wave_counter, wl)) {
+    if(!count(ch.wave_counter, wl)) {
         return sample;
     }
 
