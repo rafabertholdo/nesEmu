@@ -5,7 +5,7 @@ APUChannel::APUChannel(const shared_ptr<APU> &apu, const shared_ptr<CPU> &cpu) {
     _apu = apu;
     _cpu = cpu;
 
-    length_counter = 0;
+    m_lengthCounter = 0;
     linear_counter = 0;
     address = 0;
     envelope = 0;
@@ -21,6 +21,15 @@ APUChannel::~APUChannel(){
 
 }
 
+const int& APUChannel::lengthCounter() const { 
+    return m_lengthCounter; 
+}
+
+void APUChannel::lengthCounter(const int& lengthCounter) { 
+    m_lengthCounter = lengthCounter; 
+} 
+
+
 inline bool count(int& value, int reset) { 
     return --value < 0 ? (value=reset) , true : false; 
 }
@@ -34,7 +43,7 @@ int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 n
     if (channelNumber == 3) {
         wl = noisePeriods[ch.reg.NoiseFreq];
     }
-    int volume = ch.length_counter ? ch.reg.EnvDecayDisable ? ch.reg.FixedVolume : ch.envelope : 0;
+    int volume = ch.lengthCounter() ? ch.reg.EnvDecayDisable ? ch.reg.FixedVolume : ch.envelope : 0;
     // Sample may change at wavelen intervals.
     auto& sample = ch.level;
     if(!count(ch.wave_counter, wl)) {
@@ -48,7 +57,7 @@ int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 n
             }
             return sample = (0xF33C0C04u & (1u << (++ch.phase % 8 + ch.reg.DutyCycle * 8))) ? volume : 0;
         case 2: // Triangle wave
-            if (ch.length_counter && ch.linear_counter && wl >= 3) {
+            if (ch.lengthCounter() && ch.linear_counter && wl >= 3) {
                 ++ch.phase;
             }
             return sample = (ch.phase & 15) ^ ((ch.phase & 16) ? 15 : 0);
@@ -63,12 +72,12 @@ int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 n
             // hold = 8 bit value, phase = number of bits buffered
             if (ch.phase == 0) // Nothing in sample buffer?
             {
-                if(!ch.length_counter && ch.reg.LoopEnabled) // Loop?
+                if(!ch.lengthCounter() && ch.reg.LoopEnabled) // Loop?
                 {
-                    ch.length_counter = ch.reg.PCMlength*16 + 1;
+                    ch.lengthCounter(ch.reg.PCMlength * 16 + 1);
                     ch.address        = (ch.reg.reg0 | 0x300) << 6;
                 }
-                if(ch.length_counter > 0) // Load next 8 bits if available
+                if(ch.lengthCounter() > 0) // Load next 8 bits if available
                 {
                     // Note: Re-entrant! But not recursive, because even
                     // the shortest wave length is greater than the read time.
@@ -77,7 +86,7 @@ int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 n
                         for(unsigned t=0; t<3; ++t) _cpu->read(u16(ch.address) | 0x8000); // timing
                     ch.hold  = _cpu->read(u16(ch.address++) | 0x8000); // Fetch byte
                     ch.phase = 8;
-                    --ch.length_counter;
+                    ch.lengthCounter(ch.lengthCounter() - 1);
                 }
                 else // Otherwise, disable channel or issue IRQ
 					channelsEnabled[4] = ch.reg.IRQenable && (_cpu->intr = dmcIrq = true);

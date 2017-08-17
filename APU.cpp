@@ -78,7 +78,7 @@ void APU::write(u8 index, u8 value) {
         case 3:
             ch.reg.reg3 = value;
             if(_channelsEnabled[index/4]) {
-                ch.length_counter = _lengthCounters[ch.reg.LengthCounterInit];
+                ch.lengthCounter(_lengthCounters[ch.reg.LengthCounterInit]);
             }
             ch.linear_counter = ch.reg.LinearCounterInit;
             ch.env_delay      = ch.reg.EnvDecayRate;
@@ -97,7 +97,7 @@ void APU::write(u8 index, u8 value) {
             break;
         case 0x13: 
             ch.reg.reg1 = value; 
-            ch.length_counter = ch.reg.PCMlength * 16 + 1; 
+            ch.lengthCounter(ch.reg.PCMlength * 16 + 1); 
             break; // sample length
         case 0x11: ch.linear_counter = value & 0x7F; break; // dac value
         case 0x15: //channel enabler
@@ -106,9 +106,9 @@ void APU::write(u8 index, u8 value) {
             }
             for(unsigned c=0; c<5; ++c) {
                 if(!_channelsEnabled[c]) {
-                    _channels[c].length_counter = 0;
-                } else if (c == 4 && _channels[c].length_counter == 0) {
-                    _channels[c].length_counter = ch.reg.PCMlength * 16 + 1;
+                    _channels[c].lengthCounter(0);
+                } else if (c == 4 && _channels[c].lengthCounter()) {
+                    _channels[c].lengthCounter(ch.reg.PCMlength * 16 + 1);
                 }
             }
             break;
@@ -125,7 +125,7 @@ void APU::write(u8 index, u8 value) {
 u8 APU::read() {
     u8 result = 0;
     for(unsigned c=0; c<5; ++c) {
-        result |= (_channels[c].length_counter ? 1 << c : 0);
+        result |= (_channels[c].lengthCounter() ? 1 << c : 0);
     }
     if(_periodicIRQ) {
         result |= 0x40; 
@@ -156,9 +156,9 @@ void APU::tick() { // Invoked at CPU's rate.
         for(APUChannel& channel : _channels) {            
             int wl = channel.reg.WaveLength;
             // Length tick (all channels except DMC, but different disable bit for triangle wave)
-			if (halfTick && channel.length_counter && 
+			if (halfTick && channel.lengthCounter() && 
                 !(c == 2 ? (bool)channel.reg.LinearCounterDisable : (bool)channel.reg.LengthCounterDisable)) {
-				channel.length_counter -= 1;
+				channel.lengthCounter(channel.lengthCounter() - 1);
 			}
             // Sweep tick (square waves only)
             if (halfTick && c < 2 && count(channel.sweep_delay, channel.reg.SweepRate)) {

@@ -8,11 +8,15 @@ class APU;
 class APUChannel {
     std::shared_ptr<APU> _apu;
     std::shared_ptr<CPU> _cpu;
+    int m_lengthCounter;
 public:
     APUChannel(const shared_ptr<APU> &apu, const shared_ptr<CPU> &cpu);
     ~APUChannel();
 
-    int length_counter, linear_counter, address, envelope;
+    const int& lengthCounter() const;
+    void lengthCounter(const int& _lengthCounter);
+
+    int linear_counter, address, envelope;
     int sweep_delay, env_delay, wave_counter, hold, phase, level;
     union // Per-channel register file
     {
