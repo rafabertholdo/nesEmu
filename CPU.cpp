@@ -241,7 +241,7 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
 		return ppu->access(address & 7, value, write);
 	} else if (address < 0x4014) { //APU address 0x4000 ... 0x4013
 		if(write) {
-            _apu->Write(address & 0x1F, value);
+            _apu->write(address & 0x1F, value);
         }
 	} else if (address == 0x4014) { // OAM DMA.
 		if (write) {
@@ -249,9 +249,9 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
         }
 	} else if (address == 0x4015) {
         if(write) {
-            _apu->Write(0x15,value);
+            _apu->write(0x15,value);
         } else {
-            return _apu->Read(); 
+            return _apu->read(); 
         }
     } else if (address == 0x4016) { // Joypad 0.
 		if (write) { 
@@ -261,7 +261,7 @@ uint_least8_t CPU::memAccess(const uint_least16_t &address, const uint_least8_t 
 		}
 	} else if (address == 0x4017) { // Joypad 1.
 		if (write) {
-			_apu->Write(0x17,value);
+			_apu->write(0x17,value);
 		} else {
             io->JoyRead(1);
         }
