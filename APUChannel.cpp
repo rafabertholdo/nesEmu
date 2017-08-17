@@ -6,10 +6,10 @@ APUChannel::APUChannel(const shared_ptr<APU> &apu, const shared_ptr<CPU> &cpu) {
     _cpu = cpu;
 
     m_lengthCounter = 0;
-    linear_counter = 0;
-    address = 0;
-    envelope = 0;
-    sweep_delay = 0;
+    m_linearCounter = 0;
+    m_address = 0;
+    m_envelope = 0;
+    m_sweepDelay = 0;
     env_delay = 0; 
     wave_counter = 0;
     hold = 0;
@@ -29,6 +29,37 @@ void APUChannel::lengthCounter(const int& lengthCounter) {
     m_lengthCounter = lengthCounter; 
 } 
 
+const int& APUChannel::linearCounter() const { 
+    return m_linearCounter; 
+}
+
+void APUChannel::linearCounter(const int& linearCounter) { 
+    m_linearCounter = linearCounter; 
+} 
+
+const int& APUChannel::address() const { 
+    return m_address; 
+}
+
+void APUChannel::address(const int& address) { 
+    m_address = address; 
+} 
+
+const int& APUChannel::envelope() const { 
+    return m_envelope; 
+}
+
+void APUChannel::envelope(const int& envelope) { 
+    m_envelope = envelope; 
+} 
+
+const int& APUChannel::sweepDelay() const { 
+    return m_sweepDelay; 
+}
+
+void APUChannel::sweepDelay(const int& sweepDelay) { 
+    m_sweepDelay = sweepDelay; 
+} 
 
 inline bool count(int& value, int reset) { 
     return --value < 0 ? (value=reset) , true : false; 
@@ -43,7 +74,7 @@ int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 n
     if (channelNumber == 3) {
         wl = noisePeriods[ch.reg.NoiseFreq];
     }
-    int volume = ch.lengthCounter() ? ch.reg.EnvDecayDisable ? ch.reg.FixedVolume : ch.envelope : 0;
+    int volume = m_lengthCounter ? ch.reg.EnvDecayDisable ? ch.reg.FixedVolume : m_envelope : 0;
     // Sample may change at wavelen intervals.
     auto& sample = ch.level;
     if(!count(ch.wave_counter, wl)) {
@@ -57,7 +88,7 @@ int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 n
             }
             return sample = (0xF33C0C04u & (1u << (++ch.phase % 8 + ch.reg.DutyCycle * 8))) ? volume : 0;
         case 2: // Triangle wave
-            if (ch.lengthCounter() && ch.linear_counter && wl >= 3) {
+            if (m_lengthCounter && m_linearCounter && wl >= 3) {
                 ++ch.phase;
             }
             return sample = (ch.phase & 15) ^ ((ch.phase & 16) ? 15 : 0);
@@ -72,31 +103,37 @@ int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 n
             // hold = 8 bit value, phase = number of bits buffered
             if (ch.phase == 0) // Nothing in sample buffer?
             {
-                if(!ch.lengthCounter() && ch.reg.LoopEnabled) // Loop?
+                if(!m_lengthCounter && ch.reg.LoopEnabled) // Loop?
                 {
-                    ch.lengthCounter(ch.reg.PCMlength * 16 + 1);
-                    ch.address        = (ch.reg.reg0 | 0x300) << 6;
+                    m_lengthCounter = ch.reg.PCMlength * 16 + 1;
+                    m_address       = (ch.reg.reg0 | 0x300) << 6;
                 }
-                if(ch.lengthCounter() > 0) // Load next 8 bits if available
+                if(m_lengthCounter > 0) // Load next 8 bits if available
                 {
                     // Note: Re-entrant! But not recursive, because even
                     // the shortest wave length is greater than the read time.
                     // TODO: proper clock
                     if(ch.reg.WaveLength>20)
-                        for(unsigned t=0; t<3; ++t) _cpu->read(u16(ch.address) | 0x8000); // timing
-                    ch.hold  = _cpu->read(u16(ch.address++) | 0x8000); // Fetch byte
+                        for(unsigned t=0; t<3; ++t) _cpu->read(u16(m_address) | 0x8000); // timing
+                    ch.hold  = _cpu->read(u16(m_address++) | 0x8000); // Fetch byte
                     ch.phase = 8;
-                    ch.lengthCounter(ch.lengthCounter() - 1);
+                    m_lengthCounter--;
                 }
                 else // Otherwise, disable channel or issue IRQ
 					channelsEnabled[4] = ch.reg.IRQenable && (_cpu->intr = dmcIrq = true);
             }
             if(ch.phase != 0) // Update the signal if sample buffer nonempty
             {
-                int v = ch.linear_counter;
-                if(ch.hold & (0x80 >> --ch.phase)) v += 2; else v -= 2;
-                if(v >= 0 && v <= 0x7F) ch.linear_counter = v;
+                int linearCounter = m_linearCounter;
+                if(ch.hold & (0x80 >> --ch.phase)) {
+                    linearCounter += 2; 
+                } else {
+                    linearCounter -= 2;
+                }
+                if(linearCounter >= 0 && linearCounter <= 0x7F) {
+                    m_linearCounter = linearCounter;
+                }
             }
-            return sample = ch.linear_counter;
+            return sample = m_linearCounter;
     }
 }

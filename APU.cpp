@@ -19,10 +19,10 @@ Blip_Synth<blip_med_quality,15> APU::_synthNoise;
 Blip_Synth<blip_med_quality,127> APU::_synthDmc;
 
 APU::APU(const std::shared_ptr<CPU> &cpu) : _channels { APUChannel(nullptr, cpu) ,
-	APUChannel(nullptr, _cpu)  ,
-	APUChannel(nullptr, _cpu)  ,
-	APUChannel(nullptr, _cpu)  ,
-	APUChannel(nullptr, _cpu) } { 
+	APUChannel(nullptr, cpu)  ,
+	APUChannel(nullptr, cpu)  ,
+	APUChannel(nullptr, cpu)  ,
+	APUChannel(nullptr, cpu) } { 
     _cpu = cpu;
     _currentSample = 0;
 }
@@ -37,19 +37,19 @@ void APU::init() {
 	_blipBuffer.set_sample_rate(_sampleRate, 1000 / _frameRate);	
 	
 	// Setup synth
-	_synthSquare1.volume(1.00);
+	_synthSquare1.volume(0.50);
 	_synthSquare1.output(&_blipBuffer);
 
-    _synthSquare2.volume(1.00);
+    _synthSquare2.volume(0.50);
 	_synthSquare2.output(&_blipBuffer);
 
-    _synthTriangle.volume(1.00);
+    _synthTriangle.volume(0.50);
 	_synthTriangle.output(&_blipBuffer);
 
-    _synthNoise.volume(1.00);
+    _synthNoise.volume(0.50);
 	_synthNoise.output(&_blipBuffer);
 
-    _synthDmc.volume(1.00);
+    _synthDmc.volume(0.50);
 	_synthDmc.output(&_blipBuffer);
 	
 	// Start audio
@@ -66,13 +66,13 @@ void APU::write(u8 index, u8 value) {
     {
         case 0: 
             if(ch.reg.LinearCounterDisable) {
-                ch.linear_counter = value & 0x7F; 
+                ch.linearCounter(value & 0x7F); 
             }
             ch.reg.reg0 = value; 
             break;
         case 1: 
             ch.reg.reg1 = value; 
-            ch.sweep_delay = ch.reg.SweepRate; 
+            ch.sweepDelay(ch.reg.SweepRate); 
             break;
         case 2: ch.reg.reg2 = value; break;
         case 3:
@@ -80,9 +80,9 @@ void APU::write(u8 index, u8 value) {
             if(_channelsEnabled[index/4]) {
                 ch.lengthCounter(_lengthCounters[ch.reg.LengthCounterInit]);
             }
-            ch.linear_counter = ch.reg.LinearCounterInit;
+            ch.linearCounter(ch.reg.LinearCounterInit);
             ch.env_delay      = ch.reg.EnvDecayRate;
-            ch.envelope       = 15;
+            ch.envelope(15);
             if(index < 8) {
                 ch.phase = 0;
             }
@@ -93,13 +93,13 @@ void APU::write(u8 index, u8 value) {
             break;
         case 0x12: 
             ch.reg.reg0 = value; 
-            ch.address = (ch.reg.reg0 | 0x300) << 6; 
+            ch.address((ch.reg.reg0 | 0x300) << 6); 
             break;
         case 0x13: 
             ch.reg.reg1 = value; 
             ch.lengthCounter(ch.reg.PCMlength * 16 + 1); 
             break; // sample length
-        case 0x11: ch.linear_counter = value & 0x7F; break; // dac value
+        case 0x11: ch.linearCounter(value & 0x7F); break; // dac value
         case 0x15: //channel enabler
             for(unsigned c=0; c<5; ++c) {
                 _channelsEnabled[c] = value & (1 << c);
@@ -161,7 +161,10 @@ void APU::tick() { // Invoked at CPU's rate.
 				channel.lengthCounter(channel.lengthCounter() - 1);
 			}
             // Sweep tick (square waves only)
-            if (halfTick && c < 2 && count(channel.sweep_delay, channel.reg.SweepRate)) {
+            int sweepDelay = channel.sweepDelay();
+            bool countResult = count(sweepDelay, channel.reg.SweepRate);
+            channel.sweepDelay(sweepDelay);
+            if (halfTick && c < 2 && countResult) {
                 if(wl >= 8 && channel.reg.SweepEnable && channel.reg.SweepShift) {
                     int s = wl >> channel.reg.SweepShift, d[4] = {s, s, ~s, -s};
                     wl += d[channel.reg.SweepDecrease*2 + c];
@@ -172,14 +175,14 @@ void APU::tick() { // Invoked at CPU's rate.
             }
             // Linear tick (triangle wave only)
             if(fullTick && c == 2) {
-				channel.linear_counter = channel.reg.LinearCounterDisable
-                ? channel.reg.LinearCounterInit
-                : (channel.linear_counter > 0 ? channel.linear_counter - 1 : 0);
+				channel.linearCounter(channel.reg.LinearCounterDisable ?
+                                      channel.reg.LinearCounterInit : 
+                                      (channel.linearCounter() > 0 ? channel.linearCounter() - 1 : 0));
             }
             // Envelope tick (square and noise channels)
             if(fullTick && c != 2 && count(channel.env_delay, channel.reg.EnvDecayRate)) {
-                if(channel.envelope > 0 || channel.reg.EnvDecayLoopEnable) {
-					channel.envelope = (channel.envelope-1) & 15;
+                if(channel.envelope() > 0 || channel.reg.EnvDecayLoopEnable) {
+					channel.envelope((channel.envelope()-1) & 15);
                 }
             }			
 			c++;

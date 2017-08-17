@@ -8,16 +8,32 @@ class APU;
 class APUChannel {
     std::shared_ptr<APU> _apu;
     std::shared_ptr<CPU> _cpu;
+    
     int m_lengthCounter;
+    int m_linearCounter;
+    int m_address;
+    int m_envelope;
+    int m_sweepDelay;
 public:
     APUChannel(const shared_ptr<APU> &apu, const shared_ptr<CPU> &cpu);
     ~APUChannel();
 
     const int& lengthCounter() const;
-    void lengthCounter(const int& _lengthCounter);
+    void lengthCounter(const int& lengthCounter);
 
-    int linear_counter, address, envelope;
-    int sweep_delay, env_delay, wave_counter, hold, phase, level;
+    const int& linearCounter() const;
+    void linearCounter(const int& linearCounter);
+
+    const int& address() const;
+    void address(const int& address);
+
+    const int& envelope() const;
+    void envelope(const int& envelope);
+
+    const int& sweepDelay() const;
+    void sweepDelay(const int& sweepDelay);
+    
+    int env_delay, wave_counter, hold, phase, level;
     union // Per-channel register file
     {
         // 4000, 4004, 400C, 4012:            // 4001, 4005, 4013:            // 4002, 4006, 400A, 400E:
