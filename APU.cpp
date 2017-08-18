@@ -81,7 +81,7 @@ void APU::write(u8 index, u8 value) {
                 ch.lengthCounter(_lengthCounters[ch.reg.LengthCounterInit]);
             }
             ch.linearCounter(ch.reg.LinearCounterInit);
-            ch.env_delay      = ch.reg.EnvDecayRate;
+            ch.envDelay(ch.reg.EnvDecayRate);
             ch.envelope(15);
             if(index < 8) {
                 ch.phase = 0;
@@ -180,7 +180,11 @@ void APU::tick() { // Invoked at CPU's rate.
                                       (channel.linearCounter() > 0 ? channel.linearCounter() - 1 : 0));
             }
             // Envelope tick (square and noise channels)
-            if(fullTick && c != 2 && count(channel.env_delay, channel.reg.EnvDecayRate)) {
+            int envDelay = channel.envDelay();
+            countResult = count(envDelay, channel.reg.EnvDecayRate);
+            channel.envDelay(envDelay);
+
+            if(fullTick && c != 2 && countResult) {
                 if(channel.envelope() > 0 || channel.reg.EnvDecayLoopEnable) {
 					channel.envelope((channel.envelope()-1) & 15);
                 }

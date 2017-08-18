@@ -14,6 +14,7 @@ class APUChannel {
     int m_address;
     int m_envelope;
     int m_sweepDelay;
+    int m_envDelay;    
 public:
     APUChannel(const shared_ptr<APU> &apu, const shared_ptr<CPU> &cpu);
     ~APUChannel();
@@ -32,8 +33,11 @@ public:
 
     const int& sweepDelay() const;
     void sweepDelay(const int& sweepDelay);
+
+    const int& envDelay() const;
+    void envDelay(const int& envDelay);
     
-    int env_delay, wave_counter, hold, phase, level;
+    int wave_counter, hold, phase, level;
     union // Per-channel register file
     {
         // 4000, 4004, 400C, 4012:            // 4001, 4005, 4013:            // 4002, 4006, 400A, 400E:

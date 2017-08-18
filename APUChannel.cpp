@@ -10,7 +10,7 @@ APUChannel::APUChannel(const shared_ptr<APU> &apu, const shared_ptr<CPU> &cpu) {
     m_address = 0;
     m_envelope = 0;
     m_sweepDelay = 0;
-    env_delay = 0; 
+    m_envDelay = 0; 
     wave_counter = 0;
     hold = 0;
     phase = 0;
@@ -59,6 +59,14 @@ const int& APUChannel::sweepDelay() const {
 
 void APUChannel::sweepDelay(const int& sweepDelay) { 
     m_sweepDelay = sweepDelay; 
+} 
+
+const int& APUChannel::envDelay() const { 
+    return m_envDelay; 
+}
+
+void APUChannel::envDelay(const int& envDelay) { 
+    m_envDelay = envDelay; 
 } 
 
 inline bool count(int& value, int reset) { 
