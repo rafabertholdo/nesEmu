@@ -1,59 +1,59 @@
 #include "APU.h"
 #include <iostream>
 
-const u8 APU::_lengthCounters[32] = { 10,254,20, 2,40, 4,80, 6,160, 8,60,10,14,12,26,14,
-                               12, 16,24,18,48,20,96,22,192,24,72,26,16,28,32,30 };
+const u8 APU::m_LengthCounters[32] = { 10,254,20, 2,40, 4,80, 6,160, 8,60,10,14,12,26,14,
+                                      12, 16,24,18,48,20,96,22,192,24,72,26,16,28,32,30 };
+const u16 APU::m_noisePeriods[16] = { 2,4,8,16,32,48,64,80,101,127,190,254,381,508,1017,2034 };
+const u16 APU::m_DMCperiods[16] = { 428,380,340,320,286,254,226,214,190,160,142,128,106,84,72,54 };                               
+const long APU::m_sampleRate = 96000;    // 44.1 kHz sample rate
+const double APU::m_clockRate = 1789773; // 1.7 MHz clock rate
+const int APU::m_frameRate = 60;         // 60 frames of sound per second
+const int APU::m_cyclesPerFrame = APU::m_clockRate / APU::m_frameRate;
 
-const u16 APU::_noisePeriods[16] = { 2,4,8,16,32,48,64,80,101,127,190,254,381,508,1017,2034 };
-const u16 APU::_DMCperiods[16] = { 428,380,340,320,286,254,226,214,190,160,142,128,106,84,72,54 };                               
-const long APU::_sampleRate = 96000;    // 44.1 kHz sample rate
-const double APU::_clockRate = 1789773; // 1 MHz clock rate
-const int APU::_frameRate = 60;         // 60 frames of sound per second
-const int APU::_cyclesPerFrame = APU::_clockRate / APU::_frameRate;
-Sync_Audio APU::_audio;
-Blip_Buffer APU::_blipBuffer;
-Blip_Synth<blip_good_quality,15> APU::_synthSquare1;
-Blip_Synth<blip_good_quality,15> APU::_synthSquare2;
-Blip_Synth<blip_good_quality,15> APU::_synthTriangle;
-Blip_Synth<blip_med_quality,15> APU::_synthNoise;
-Blip_Synth<blip_med_quality,127> APU::_synthDmc;
+Sync_Audio APU::m_audio;
+Blip_Buffer APU::m_blipBuffer;
+Blip_Synth<blip_good_quality,15> APU::m_synthSquare1;
+Blip_Synth<blip_good_quality,15> APU::m_synthSquare2;
+Blip_Synth<blip_good_quality,15> APU::m_synthTriangle;
+Blip_Synth<blip_med_quality,15> APU::m_synthNoise;
+Blip_Synth<blip_med_quality,127> APU::m_synthDmc;
 
-APU::APU(const std::shared_ptr<CPU> &cpu) : _channels { APUChannel(cpu),
+APU::APU(const std::shared_ptr<CPU> &cpu) : m_channels { APUChannel(cpu),
     APUChannel(cpu),
     APUChannel(cpu),
     APUChannel(cpu),
     APUChannel(cpu) } { 
     _cpu = cpu;
-    _currentSample = 0;
+    m_currentSample = 0;
 }
 
 APU::~APU() {
-    _audio.stop();	
+    m_audio.stop();	
 }
 
 void APU::init() {
     // Setup buffer
-	_blipBuffer.clock_rate(_clockRate);
-	_blipBuffer.set_sample_rate(_sampleRate, 1000 / _frameRate);	
+	m_blipBuffer.clock_rate(m_clockRate);
+	m_blipBuffer.set_sample_rate(m_sampleRate, 1000 / m_frameRate);	
 	
 	// Setup synth
-	_synthSquare1.volume(0.50);
-	_synthSquare1.output(&_blipBuffer);
+	m_synthSquare1.volume(0.50);
+	m_synthSquare1.output(&m_blipBuffer);
 
-    _synthSquare2.volume(0.50);
-	_synthSquare2.output(&_blipBuffer);
+    m_synthSquare2.volume(0.50);
+	m_synthSquare2.output(&m_blipBuffer);
 
-    _synthTriangle.volume(0.50);
-	_synthTriangle.output(&_blipBuffer);
+    m_synthTriangle.volume(0.50);
+	m_synthTriangle.output(&m_blipBuffer);
 
-    _synthNoise.volume(0.50);
-	_synthNoise.output(&_blipBuffer);
+    m_synthNoise.volume(0.50);
+	m_synthNoise.output(&m_blipBuffer);
 
-    _synthDmc.volume(0.50);
-	_synthDmc.output(&_blipBuffer);
+    m_synthDmc.volume(0.50);
+	m_synthDmc.output(&m_blipBuffer);
 	
 	// Start audio
-	_audio.start(_sampleRate);
+	m_audio.start(m_sampleRate);
 }
 
 inline bool count(int& value, int reset) { 
@@ -61,11 +61,10 @@ inline bool count(int& value, int reset) {
 }
 
 void APU::write(u8 index, u8 value) {
-    APUChannel& ch = _channels[(index/4) % 5];
-    switch(index<0x10 ? index%4 : index)
-    {
+    APUChannel& ch = m_channels[(index/4) % 5];
+    switch (index<0x10 ? index%4 : index) {
         case 0: 
-            if(ch.m_reg.LinearCounterDisable) {
+            if (ch.m_reg.LinearCounterDisable) {
                 ch.linearCounter(value & 0x7F); 
             }
             ch.m_reg.reg0 = value; 
@@ -77,8 +76,8 @@ void APU::write(u8 index, u8 value) {
         case 2: ch.m_reg.reg2 = value; break;
         case 3:
             ch.m_reg.reg3 = value;
-            if(_channelsEnabled[index/4]) {
-                ch.lengthCounter(_lengthCounters[ch.m_reg.LengthCounterInit]);
+            if (m_channelsEnabled[index/4]) {
+                ch.lengthCounter(m_LengthCounters[ch.m_reg.LengthCounterInit]);
             }
             ch.linearCounter(ch.m_reg.LinearCounterInit);
             ch.envDelay(ch.m_reg.EnvDecayRate);
@@ -89,7 +88,7 @@ void APU::write(u8 index, u8 value) {
             break;
         case 0x10: 
             ch.m_reg.reg3 = value; 
-            ch.m_reg.WaveLength = _DMCperiods[value&0x0F]; 
+            ch.m_reg.WaveLength = m_DMCperiods[value&0x0F]; 
             break;
         case 0x12: 
             ch.m_reg.reg0 = value; 
@@ -101,59 +100,59 @@ void APU::write(u8 index, u8 value) {
             break; // sample length
         case 0x11: ch.linearCounter(value & 0x7F); break; // dac value
         case 0x15: //channel enabler
-            for(unsigned c=0; c<5; ++c) {
-                _channelsEnabled[c] = value & (1 << c);
+            for (unsigned c=0; c<5; ++c) {
+                m_channelsEnabled[c] = value & (1 << c);
             }
-            for(unsigned c=0; c<5; ++c) {
-                if(!_channelsEnabled[c]) {
-                    _channels[c].lengthCounter(0);
-                } else if (c == 4 && _channels[c].lengthCounter()) {
-                    _channels[c].lengthCounter(ch.m_reg.PCMlength * 16 + 1);
+            for (unsigned c=0; c<5; ++c) {
+                if (!m_channelsEnabled[c]) {
+                    m_channels[c].lengthCounter(0);
+                } else if (c == 4 && m_channels[c].lengthCounter()) {
+                    m_channels[c].lengthCounter(ch.m_reg.PCMlength * 16 + 1);
                 }
             }
             break;
         case 0x17:
-            _IRQdisable       = value & 0x40;
-            _fiveCycleDivider = value & 0x80;
-            _hz240counter     = { 0,0 };
-            if(_IRQdisable) {
-                _periodicIRQ = _DMC_IRQ = false;
+            m_IRQdisable       = value & 0x40;
+            m_fiveCycleDivider = value & 0x80;
+            m_hz240counter     = { 0,0 };
+            if (m_IRQdisable) {
+                m_periodicIRQ = m_DMC_IRQ = false;
             }
     }
 }
 
 u8 APU::read() {
     u8 result = 0;
-    for(unsigned c=0; c<5; ++c) {
-        result |= (_channels[c].lengthCounter() ? 1 << c : 0);
+    for (unsigned c=0; c<5; ++c) {
+        result |= (m_channels[c].lengthCounter() ? 1 << c : 0);
     }
-    if(_periodicIRQ) {
+    if (m_periodicIRQ) {
         result |= 0x40; 
     } 
-    _periodicIRQ = false;
-    if(_DMC_IRQ) {
+    m_periodicIRQ = false;
+    if (m_DMC_IRQ) {
         result |= 0x80;
     }     
-    _DMC_IRQ = false;
+    m_DMC_IRQ = false;
     _cpu->intr = false;
     return result;
 }
 
 void APU::tick() { // Invoked at CPU's rate. 
     // Divide CPU clock by 7457.5 to get a 240 Hz, which controls certain events.
-    if((_hz240counter.lo += 2) >= 14915) {
-        _hz240counter.lo -= 14915;
-        if(++_hz240counter.hi >= 4+_fiveCycleDivider) {
-            _hz240counter.hi = 0;
+    if((m_hz240counter.lo += 2) >= 14915) {
+        m_hz240counter.lo -= 14915;
+        if(++m_hz240counter.hi >= 4+m_fiveCycleDivider) {
+            m_hz240counter.hi = 0;
         }
         // 60 Hz interval: IRQ. IRQ is not invoked in five-cycle mode (48 Hz).
-        if(!_IRQdisable && !_fiveCycleDivider && _hz240counter.hi==0){
-            _cpu->intr = _periodicIRQ = true;
+        if(!m_IRQdisable && !m_fiveCycleDivider && m_hz240counter.hi==0){
+            _cpu->intr = m_periodicIRQ = true;
         }
         // Some events are invoked at 96 Hz or 120 Hz rate. Others, 192 Hz or 240 Hz.
-        bool halfTick = (_hz240counter.hi&5)==1, fullTick = _hz240counter.hi < 4;
+        bool halfTick = (m_hz240counter.hi&5)==1, fullTick = m_hz240counter.hi < 4;
 		unsigned channelNumber = 0;
-        for(APUChannel& channel : _channels) {            
+        for(APUChannel& channel : m_channels) {            
             int wl = channel.m_reg.WaveLength;
             // Length tick (all channels except DMC, but different disable bit for triangle wave)
 			if (halfTick && channel.lengthCounter() && 
@@ -193,24 +192,25 @@ void APU::tick() { // Invoked at CPU's rate.
         }
     }
 
-	if (_currentSample <= _cyclesPerFrame) {	
-		_synthSquare1.update(_currentSample, channelTick(0));
-		_synthSquare2.update(_currentSample, channelTick(1));
-		_synthTriangle.update(_currentSample, channelTick(2));
-		_synthNoise.update(_currentSample, channelTick(3));
-		_synthDmc.update(_currentSample, channelTick(4));
+    //synthesize all channels
+	if (m_currentSample <= m_cyclesPerFrame) {	
+		m_synthSquare1.update(m_currentSample, channelTick(0));
+		m_synthSquare2.update(m_currentSample, channelTick(1));
+		m_synthTriangle.update(m_currentSample, channelTick(2));
+		m_synthNoise.update(m_currentSample, channelTick(3));
+		m_synthDmc.update(m_currentSample, channelTick(4));
 
-        _currentSample++;        
+        m_currentSample++;        
     } 
 	
-    if (_currentSample == _cyclesPerFrame) {        
-        _blipBuffer.end_frame(_cyclesPerFrame);
-        long count = _blipBuffer.read_samples(_samples, BUFFER_SIZE);
-        _audio.write(_samples, count);
-        _currentSample = 0;
+    if (m_currentSample == m_cyclesPerFrame) {        
+        m_blipBuffer.end_frame(m_cyclesPerFrame);
+        long count = m_blipBuffer.read_samples(m_samples, m_BufferSize);
+        m_audio.write(m_samples, count);
+        m_currentSample = 0;
     }
 }
 
 int APU::channelTick(unsigned channelNumber) {
-	return _channels[channelNumber].tick(channelNumber == 1 ? 0 : channelNumber, _channelsEnabled, _noisePeriods, _DMC_IRQ);
+	return m_channels[channelNumber].tick(channelNumber == 1 ? 0 : channelNumber, m_channelsEnabled, m_noisePeriods, m_DMC_IRQ);
 }
