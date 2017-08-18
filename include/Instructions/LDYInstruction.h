@@ -4,14 +4,18 @@
 #include "Instruction.h"
 #include "Addressing.h"
 
+/*
+LDY - Load Y Register
+
+Y,Z,N = M
+
+Loads a byte of memory into the Y register setting the zero and negative flags as appropriate.
+*/
 class LDYInstruction : public Instruction {    
 public:
-    using Instruction::Instruction;
-    uint_least16_t action(CPU& cpu, const uint_least16_t &value) override;
-    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
-    static void createInstructions2(vector<Instruction> &instructions);
+    using Instruction::Instruction;    
+    static void createInstructions(InstructionArray &instructions);             
     static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);    
 };
-
 
 #endif

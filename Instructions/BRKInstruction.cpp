@@ -1,4 +1,5 @@
 #include "Instructions/BRKInstruction.h"
+#include "CPU.h"
 #include <iostream>
 #include <iomanip>
 
@@ -8,20 +9,12 @@ using namespace std;
 namespace
 {
     Instruction::Registrar<BRKInstruction> registrar("BRKInstruction");
-    Instruction::Registrar2<BRKInstruction> registrar2("BRKInstruction");
 }
 */
 
-void BRKInstruction::createInstructions(vector<unique_ptr<Instruction>> &insctructions) {    
+void BRKInstruction::createInstructions(InstructionArray &insctructions) {    
     auto opcode = 0x00;    
-    insctructions.at(opcode) = make_unique<BRKInstruction>(implict, opcode, "BRK");
-}
-
-void BRKInstruction::createInstructions2(vector<Instruction> &insctructions) {    
-    auto opcode = 0x00;    
-    auto instruction = BRKInstruction(implict, opcode, "BRK");
-    instruction.setLambda(BRKInstruction::sharedAction);
-    insctructions.at(opcode) = instruction;
+    insctructions[opcode] = Instruction(implict, opcode, "BRK", BRKInstruction::sharedAction);
 }
 
 uint_least16_t BRKInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {        
@@ -32,8 +25,4 @@ uint_least16_t BRKInstruction::sharedAction(CPU& cpu, const uint_least16_t &valu
     cpu.Flags.InterruptDisabled = 1;        
     
     return cpu.PC = cpu.getBrkVectorValue();
-}
-
-uint_least16_t BRKInstruction::action(CPU& cpu, const uint_least16_t &value) {        
-    return BRKInstruction::sharedAction(cpu, value);
 }

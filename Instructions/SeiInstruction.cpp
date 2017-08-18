@@ -1,23 +1,15 @@
 #include "Instructions/SEIInstruction.h"
+#include "CPU.h"
 #include <iostream>
 #include <iomanip>
 
 using namespace std;
 
-namespace
-{
+namespace {
     Instruction::Registrar<SEIInstruction> registrar("SEIInstruction");
-    Instruction::Registrar2<SEIInstruction> registrar2("SEIInstruction");
 }
 
-void SEIInstruction::createInstructions(vector<unique_ptr<Instruction>> &insctructions) {    
+void SEIInstruction::createInstructions(InstructionArray &insctructions) {    
     auto opcode = 0x78;    
-    insctructions.at(opcode) = make_unique<SEIInstruction>(implict, opcode, "SEI", AffectFlags::InterruptDisabled);
-}
-
-void SEIInstruction::createInstructions2(vector<Instruction> &insctructions) {    
-    auto opcode = 0x78;    
-    auto instruction = SEIInstruction(implict, opcode, "SEI", AffectFlags::InterruptDisabled);
-    instruction.setLambda(SetInstruction::sharedAction);
-    insctructions.at(opcode) = instruction;
+    insctructions[opcode] = Instruction(implict, opcode, "SEI", SetInstruction::sharedAction, AffectFlags::InterruptDisabled);
 }

@@ -1,4 +1,5 @@
 #include "Instructions/BVCInstruction.h"
+#include "CPU.h"
 #include <iostream>
 #include <iomanip>
 
@@ -6,20 +7,12 @@ using namespace std;
 
 namespace
 {
-    Instruction::Registrar<BVCInstruction> registrar("BVCInstruction");
-    Instruction::Registrar2<BVCInstruction> registrar2("BVCInstruction");
+    Instruction::Registrar<BVCInstruction> registrar("BVCInstruction");    
 }
 
-void BVCInstruction::createInstructions(vector<unique_ptr<Instruction>> &insctructions) {    
-    auto opcode = 0x50;    
-    insctructions.at(opcode) = make_unique<BVCInstruction>(relative, opcode, "BVC");
-}
-
-void BVCInstruction::createInstructions2(vector<Instruction> &insctructions) {    
-    auto opcode = 0x50;    
-    auto instruction = BVCInstruction(relative, opcode, "BVC");
-    instruction.setLambda(BVCInstruction::sharedAction);
-    insctructions.at(opcode) = instruction;
+void BVCInstruction::createInstructions(InstructionArray &insctructions) {    
+    auto opcode = 0x50;        
+    insctructions[opcode] = Instruction(relative, opcode, "BVC", BVCInstruction::sharedAction);
 }
 
 uint_least16_t BVCInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
@@ -28,8 +21,4 @@ uint_least16_t BVCInstruction::sharedAction(CPU& cpu, const uint_least16_t &valu
         cpu.PC = value;
     }
     return cpu.PC;
-}
-
-uint_least16_t BVCInstruction::action(CPU& cpu, const uint_least16_t &value) {
-    return BVCInstruction::sharedAction(cpu, value);
 }

@@ -1,19 +1,25 @@
 #ifndef INSTRUCTION_H
 #define INSTRUCTION_H
 
-#include "CPU.h"
 #include "Addressing.h"
 #include "RegBit.h"
 #include <unordered_map>
 #include <functional>
 #include <tuple>
+#include <map>
+#include <string>
+
+using namespace std;
 
 class CPU; //forward declaration
 
-typedef uint_least16_t(*getAddressPointer)(CPU&, const uint_least16_t&);
-typedef uint_least16_t(*actionPointer)(CPU&, const uint_least16_t&);
+typedef u16(*getAddressFunctionPointer_t)(CPU&, const u16&);
+typedef u16(*actionFunctionPointer_t)(CPU&, const u16&);
 
-enum class AffectFlags : uint_least8_t {
+class Instruction;
+using InstructionArray = array<Instruction, 256>;
+
+enum class AffectFlags : u8 {
     None = 0,
     Carry = 1,
     Zero = 2,
@@ -24,16 +30,14 @@ enum class AffectFlags : uint_least8_t {
 };
 
 inline AffectFlags operator|(AffectFlags a, AffectFlags b) {
-    return static_cast<AffectFlags>(static_cast<uint_least8_t>(a) | static_cast<uint_least8_t>(b));
+    return static_cast<AffectFlags>(static_cast<u8>(a) | static_cast<u8>(b));
 }
 
-class Instruction {    
-    using create_f = void(std::vector<unique_ptr<Instruction>> &instrucitons);
-    using create_f2 = void(std::vector<Instruction> &instrucitons);
+class Instruction {        
+    using create_f = void(InstructionArray &instrucitons);
     
-    union 
-    {
-        uint_least8_t raw;
+    union {
+        u8 raw;
         RegBit<0> Carry; // carry
         RegBit<1> Zero; // zero
         RegBit<2> InterruptDisabled; // interrupt enable/disable
@@ -41,97 +45,70 @@ class Instruction {
         // 4,5 (0x10,0x20) don't exist
         RegBit<6> Overflow; // overflow
         RegBit<7> Negative; // negative
-    } _affectedFlags;
+    } m_affectedFlags;
 
-    static std::unordered_map<std::string, create_f *> & registry();    
-    static std::unordered_map<std::string, create_f2 *> & registry2();        
-    static const std::map<AddressingMode, 
-		std::tuple<u8, getAddressPointer>> addressingModes;
-    static std::map<AddressingMode,
-		std::tuple<u8, getAddressPointer>> createAddressingMap();
-    void changeFlags(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
+    static unordered_map<string, create_f *> & registry();        
+    static const map<AddressingMode, 
+		tuple<u8, getAddressFunctionPointer_t>> addressingModes;
+    static map<AddressingMode,
+		tuple<u8, getAddressFunctionPointer_t>> createAddressingMap();
+    void changeFlags(CPU& cpu, const u16 &value, const u16 &actionValue);
 protected:
-    uint_least8_t _opcode;
-    string _menmonic;
-    bool _readsFromMemory;    
-    AddressingMode _addressing;    
-    uint_least8_t _length;
-    actionPointer _lambda;
-    getAddressPointer _addressingLambda;    
+    u8 m_opcode;
+    string m_menmonic;
+    bool m_readsFromMemory;        
+    u8 m_length;
+    actionFunctionPointer_t m_actionFunctionPointer;
+    getAddressFunctionPointer_t m_getAddressFunctionPointer;    
 
 public:    
     Instruction();
     Instruction(const AddressingMode &addressingMode, 
-                const uint_least8_t &opcode,                 
+                const u8 &opcode,                 
                 const string &menmonic,
+                const actionFunctionPointer_t &m_actionFunctionPointer,
                 const AffectFlags &&affectedFlags = AffectFlags::None,
                 const bool &readsFromMemory = false);
-    
-    Instruction(const AddressingMode &addressingMode, 
-                const uint_least8_t &opcode,                 
-                const uint_least8_t &length,                 
-                const string &menmonic,
-                const AffectFlags &&affectedFlags = AffectFlags::None,
-                const bool &readsFromMemory = false);
-
     ~Instruction();    
 
-    static void registrate(std::string const & name, create_f * fp);
-    static void registrate2(std::string const & name, create_f2 * fp);    
-    //static std::vector<std::shared_ptr<Instruction>> instantiate(std::string const & name);
-    static void instantiateAll(std::vector<unique_ptr<Instruction>> &instructions);    
-    static void instantiateAll(std::vector<Instruction> &instructions);    
+    static void registrate(const string &name, create_f *fp);        
+    static void instantiateAll(InstructionArray &instructions);    
 
     template <typename D>
     struct Registrar
     {
-        explicit Registrar(std::string const & name)
+        explicit Registrar(const string &name)
         {
             Instruction::registrate(name, &D::createInstructions);
         }        
-    };
+    };    
 
-    template <typename D>
-    struct Registrar2
-    {
-        explicit Registrar2(std::string const & name)
-        {
-            Instruction::registrate2(name, &D::createInstructions2);
-        }        
-    };
-
-    uint_least8_t getOpcode() const;
-    uint_least8_t getLength() const;
-    string getMenmonic() const;
-    bool readsFromMemory() const;
-    void setReadsFromMemory(bool readsFromMemory, const AddressingMode &addressingMode);
-    void setLambda(actionPointer lambda);
-    void setAddressingLambda(getAddressPointer lambda);
-
+    const u8& opcode() const;
+    const u8& length() const;
+    const string& menmonic() const;
+    const bool& readsFromMemory() const;
+    void readsFromMemory(const bool &readsFromMemory, const AddressingMode &addressingMode);
     
-    void execute(CPU& cpu,  const uint_least16_t &instructionData);
-    void printAddress(CPU& cpu,  const uint_least16_t &instructionData) const;
-    virtual uint_least16_t action(CPU& cpu,  const uint_least16_t &value);    
-    virtual void updateCarry(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
-    virtual void updateZero(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
-    virtual void updateInterruptDisabled(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
-    virtual void updateDecimalMode(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
-    virtual void updateOverflow(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
-    virtual void updateNegative(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue);
+    void execute(CPU& cpu,  const u16 &instructionData);    
+    virtual u16 action(CPU& cpu,  const u16 &value);    
+    virtual void updateCarry(CPU& cpu, const u16 &value, const u16 &actionValue);
+    virtual void updateZero(CPU& cpu, const u16 &value, const u16 &actionValue);
+    virtual void updateInterruptDisabled(CPU& cpu, const u16 &value, const u16 &actionValue);
+    virtual void updateDecimalMode(CPU& cpu, const u16 &value, const u16 &actionValue);
+    virtual void updateOverflow(CPU& cpu, const u16 &value, const u16 &actionValue);
+    virtual void updateNegative(CPU& cpu, const u16 &value, const u16 &actionValue);
 };
 
 class ClearInstruction : public Instruction {
 public:
     using Instruction::Instruction;
-    static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);
-    uint_least16_t action(CPU& cpu, const uint_least16_t &value);
+    static u16 sharedAction(CPU& cpu, const u16 &value);
 };
 
 class SetInstruction : public Instruction {
 public:
     using Instruction::Instruction;
-    static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);
-    uint_least16_t action(CPU& cpu, const uint_least16_t &value);
+    static u16 sharedAction(CPU& cpu, const u16 &value);
 };
 
 #endif

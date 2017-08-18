@@ -3,14 +3,16 @@
 
 #include "Instruction.h"
 
+/*
+SRE - LSR + EOR
+
+Shift right one bit in memory, then EOR accumulator with memory
+*/
 class SREInstruction : public Instruction {    
 public:    
-    using Instruction::Instruction;
-    uint_least16_t action(CPU& cpu, const uint_least16_t &value) override;
-    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
-    static void createInstructions2(vector<Instruction> &instructions);  
+    using Instruction::Instruction;    
+    static void createInstructions(InstructionArray &instructions);               
     static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);      
 };
-
 
 #endif

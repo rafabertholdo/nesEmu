@@ -3,11 +3,18 @@
 
 #include "Instruction.h"
 
+/*
+CLV - Clear Overflow Flag
+
+V = 0
+
+Clears the overflow flag.
+*/
 class CLVInstruction : public ClearInstruction {    
 public:    
     using ClearInstruction::ClearInstruction;
-    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
-    static void createInstructions2(vector<Instruction> &instructions);    
+    static void createInstructions(InstructionArray &instructions);         
+        
 };
 
 

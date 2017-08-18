@@ -1,22 +1,23 @@
 #ifndef CPU_H
 #define CPU_H
 
+
 #include <memory>
 #include <vector>
 #include <map>
 #include <bitset>
+
+#include <fstream>
+
 #include "ROM.h"
 #include "IO.h"
 #include "Instruction.h"
+#include <array>
 #include "RegBit.h"
 #include "Addressing.h"
-#include <functional>
-#include <fstream>
-#include <thread>
 #include "Timer.h"
 
 using namespace std;
-class Instruction; //forward declaration
 
 class PPU;
 class APU;
@@ -40,16 +41,13 @@ class CPU {
     bool testing;
     Timer timer;
     void test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic);
-    vector<Instruction> instructions;  
-    vector<unique_ptr<Instruction>> instructionVector;    
+    InstructionArray instructions;          
     
     void executeInstruction(Instruction &instruction);
     uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    
     void identify(const vector<uint_least8_t> &instructionData, const Instruction &instruction);    
     void dmaOam(const uint_least8_t &value);
-    bool handleInterruptions();
-
-    std::unique_ptr<std::thread> thread;
+    bool handleInterruptions();    
 public:
     
     //registers

@@ -3,14 +3,16 @@
 
 #include "Instruction.h"
 
+/*
+PLA - Pull Accumulator
+
+Pulls an 8 bit value from the stack and into the accumulator. The zero and negative flags are set as appropriate.
+*/
 class PLAInstruction : public Instruction {    
 public:    
-    using Instruction::Instruction;
-    uint_least16_t action(CPU& cpu, const uint_least16_t &value) override;
-    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
-    static void createInstructions2(vector<Instruction> &instructions);   
+    using Instruction::Instruction;    
+    static void createInstructions(InstructionArray &instructions);                
     static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);     
 };
-
 
 #endif

@@ -3,12 +3,17 @@
 
 #include "Instruction.h"
 
+/*
+CLD - Clear Decimal Mode
+
+D = 0
+
+Sets the decimal mode flag to zero.
+*/
 class CLDInstruction : public ClearInstruction {    
 public:    
     using ClearInstruction::ClearInstruction;
-    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
-    static void createInstructions2(vector<Instruction> &instructions);         
+    static void createInstructions(InstructionArray &instructions);                      
 };
-
 
 #endif

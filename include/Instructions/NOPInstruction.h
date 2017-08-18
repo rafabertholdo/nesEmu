@@ -3,14 +3,16 @@
 
 #include "Instruction.h"
 
+/*
+NOP - No Operation
+
+The NOP instruction causes no changes to the processor other than the normal incrementing of the program counter to the next instruction.
+*/
 class NOPInstruction : public Instruction {    
 public:    
-    using Instruction::Instruction;
-    uint_least16_t action(CPU& cpu, const uint_least16_t &value) override;
-    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
-    static void createInstructions2(vector<Instruction> &instructions);    
+    using Instruction::Instruction;    
+    static void createInstructions(InstructionArray &instructions);                 
     static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);    
 };
-
 
 #endif

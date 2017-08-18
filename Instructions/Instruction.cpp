@@ -1,14 +1,14 @@
 #include "Instruction.h"
+#include "CPU.h"
 #include "../Utils.cpp"
 #include <iostream>
 #include <iomanip>
 
 using namespace std;
 
+map<AddressingMode, tuple<u8, getAddressFunctionPointer_t>> Instruction::createAddressingMap() {
 
-std::map<AddressingMode, std::tuple<u8, getAddressPointer>> Instruction::createAddressingMap() {
-
-	std::map<AddressingMode, std::tuple<u8, getAddressPointer>> map = {
+	map<AddressingMode, tuple<u8, getAddressFunctionPointer_t>> map = {
 	{implict     , { ImplictAddressing::length     , ImplictAddressing::getAddress     } },
 	{accumulator , { AccumulatorAddressing::length , AccumulatorAddressing::getAddress } },
     {immediate   , { ImmediateAddressing::length   , ImmediateAddressing::getAddress   } },
@@ -26,202 +26,144 @@ std::map<AddressingMode, std::tuple<u8, getAddressPointer>> Instruction::createA
 	return map;
 }
 
-const std::map<AddressingMode, std::tuple<u8, getAddressPointer>>Instruction::addressingModes  =  Instruction::createAddressingMap();
+const map<AddressingMode, tuple<u8, getAddressFunctionPointer_t>>Instruction::addressingModes  =  Instruction::createAddressingMap();
 
 Instruction::Instruction() {
 
 }
 
 Instruction::Instruction(const AddressingMode &addressingMode,
-                         const uint_least8_t &opcode,                          
+                         const u8 &opcode,                          
                          const string &menmonic,
+                         const actionFunctionPointer_t &actionFunctionPointer,
                          const AffectFlags &&affectedFlags,                         
                          const bool &readsFromMemory) {
 	
 	auto addressingWrapper = Instruction::addressingModes.at(addressingMode);
-    setAddressingLambda(get<1>(addressingWrapper));
-    _addressing = addressingMode;
-    _opcode = opcode;
-    _length = get<0>(addressingWrapper);
-    _menmonic = menmonic;
-    _affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
-    setReadsFromMemory(readsFromMemory, addressingMode);
-}
-
-Instruction::Instruction(const AddressingMode &addressingMode, 
-                         const uint_least8_t &opcode,                 
-                         const uint_least8_t &length,                 
-                         const string &menmonic,
-                         const AffectFlags &&affectedFlags,
-                         const bool &readsFromMemory) {
-	auto addressingWrapper = Instruction::addressingModes.at(addressingMode);
-	setAddressingLambda(get<1>(addressingWrapper));
-    _addressing = addressingMode;
-    _opcode = opcode;
-	_length = get<0>(addressingWrapper);
-    _menmonic = menmonic;
-    _affectedFlags.raw = static_cast<uint_least8_t>(affectedFlags);
-    setReadsFromMemory(readsFromMemory, addressingMode);
+    m_getAddressFunctionPointer = get<1>(addressingWrapper);    
+    m_actionFunctionPointer = actionFunctionPointer;
+    m_opcode = opcode;
+    m_length = get<0>(addressingWrapper);
+    m_menmonic = menmonic;
+    m_affectedFlags.raw = static_cast<u8>(affectedFlags);
+    Instruction::readsFromMemory(readsFromMemory, addressingMode);
 }
 
 Instruction::~Instruction() {
     
 }
 
-std::unordered_map<std::string, Instruction::create_f *> & Instruction::registry() {
-    static std::unordered_map<std::string, Instruction::create_f *> impl;
+unordered_map<string, Instruction::create_f *> & Instruction::registry() {
+    static unordered_map<string, Instruction::create_f *> impl;
     return impl;
 }
 
-std::unordered_map<std::string, Instruction::create_f2 *> & Instruction::registry2() {
-    static std::unordered_map<std::string, Instruction::create_f2 *> impl;
-    return impl;
+void Instruction::registrate(const string &name, create_f *functionPointer) {
+    registry()[name] = functionPointer;
 }
 
-void Instruction::registrate(std::string const & name, create_f * fp) {
-    registry()[name] = fp;
-}
-
-void Instruction::registrate2(std::string const & name, create_f2 * fp) {
-    registry2()[name] = fp;
-}
-
-/*
-std::vector<std::shared_ptr<Instruction>> Instruction::instantiate(std::string const & name) {
-    std::vector<std::shared_ptr<Instruction>> empty;
-    auto it = registry().find(name);
-    return it == registry().end() ? empty : (it->second)();
-}
-*/
-
-void Instruction::instantiateAll(std::vector<std::unique_ptr<Instruction>> &instructions) {    
-    for(auto it = registry().begin(); it != registry().end(); ++it) { 
-        (it->second)(instructions);
-    }    
-}
-
-void Instruction::instantiateAll(std::vector<Instruction> &instructions) {
-     for(auto it = registry2().begin(); it != registry2().end(); ++it) { 
+void Instruction::instantiateAll(InstructionArray &instructions) {
+     for(auto it = registry().begin(); it != registry().end(); ++it) { 
          (it->second)(instructions);
      }        
  }
 
-uint_least8_t Instruction::getOpcode() const {
-    return _opcode;
+const u8& Instruction::opcode() const {
+    return m_opcode;
 }
 
-string Instruction::getMenmonic() const {
-    return _menmonic;
+const string& Instruction::menmonic() const {
+    return m_menmonic;
 }
 
-bool Instruction::readsFromMemory() const {
-    return _readsFromMemory;
+const bool& Instruction::readsFromMemory() const {
+    return m_readsFromMemory;
 }
 
-void Instruction::setReadsFromMemory(bool readsFromMemory, const AddressingMode &addressingMode) {
-    addressingMode == immediate ? _readsFromMemory = false : _readsFromMemory = readsFromMemory;
+void Instruction::readsFromMemory(const bool &readsFromMemory, const AddressingMode &addressingMode) {
+    m_readsFromMemory = addressingMode == immediate ? false : readsFromMemory;
 }
 
-void Instruction::setLambda(actionPointer lambda) {
-    _lambda = lambda;
+const u8& Instruction::length() const {    
+    return m_length;
 }
 
-void Instruction::setAddressingLambda(getAddressPointer lambda) {
-    _addressingLambda = lambda;
+u16 Instruction::action(CPU& cpu,  const u16 &instructionData) {
+    return m_actionFunctionPointer(cpu, instructionData);
 }
 
-uint_least8_t Instruction::getLength() const {
-    //return _addressing->length;
-    return _length;
-}
-
-void Instruction::printAddress(CPU& cpu,  const uint_least16_t &instructionData) const {
-    //u16 instructionValue = _addressing->getAddress(cpu, instructionData);
-    //_addressing->printAddress(instructionValue);
-}
-
-uint_least16_t Instruction::action(CPU& cpu,  const uint_least16_t &instructionData) {
-    return _lambda(cpu, instructionData);
-}
-
-void Instruction::execute(CPU& cpu,  const uint_least16_t &instructionData) {        
-	u16 instructionValue = _addressingLambda(cpu, instructionData);
+void Instruction::execute(CPU& cpu,  const u16 &instructionData) {        
+    if (!m_getAddressFunctionPointer) {
+        int a =0 ;
+    }
+	u16 instructionValue = m_getAddressFunctionPointer(cpu, instructionData);
     
-    if (_readsFromMemory) {
+    if (m_readsFromMemory) {
         instructionValue = cpu.read(instructionValue);
     }
     auto actionValue = action(cpu, instructionValue);
     changeFlags(cpu, instructionValue, actionValue);
 }
 
-void Instruction::changeFlags(CPU& cpu,  const uint_least16_t &value, const uint_least16_t &actionValue) {
-    if (_affectedFlags.raw) {
-        if (_affectedFlags.Zero) {
+void Instruction::changeFlags(CPU& cpu,  const u16 &value, const u16 &actionValue) {
+    if (m_affectedFlags.raw) {
+        if (m_affectedFlags.Zero) {
             updateZero(cpu, value, actionValue);
         }
         
-        if (_affectedFlags.Negative) {
+        if (m_affectedFlags.Negative) {
             updateNegative(cpu, value, actionValue);
         }
 
-        if (_affectedFlags.Carry) {
+        if (m_affectedFlags.Carry) {
             updateCarry(cpu, value, actionValue);
         }
 
-        if (_affectedFlags.DecimalMode) {
+        if (m_affectedFlags.DecimalMode) {
             updateDecimalMode(cpu, value, actionValue);
         }
 
-		if (_affectedFlags.Overflow) {
+		if (m_affectedFlags.Overflow) {
 			updateOverflow(cpu, value, actionValue);
 		}
 
-		if (_affectedFlags.InterruptDisabled) {
+		if (m_affectedFlags.InterruptDisabled) {
 			updateInterruptDisabled(cpu, value, actionValue);
 		}
     }
 }
 
-void Instruction::updateCarry(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+void Instruction::updateCarry(CPU& cpu, const u16 &value, const u16 &actionValue) {
     cpu.Flags.Carry = actionValue > 0;
 }
 
-void Instruction::updateZero(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+void Instruction::updateZero(CPU& cpu, const u16 &value, const u16 &actionValue) {
     cpu.Flags.Zero = !actionValue;
 }
 
-void Instruction::updateInterruptDisabled(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+void Instruction::updateInterruptDisabled(CPU& cpu, const u16 &value, const u16 &actionValue) {
 	cpu.Flags.InterruptDisabled = actionValue > 0;
 }
 
-void Instruction::updateDecimalMode(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
+void Instruction::updateDecimalMode(CPU& cpu, const u16 &value, const u16 &actionValue) {
     cpu.Flags.DecimalMode = actionValue > 0;
 }
 
-void Instruction::updateOverflow(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {	
+void Instruction::updateOverflow(CPU& cpu, const u16 &value, const u16 &actionValue) {	
 	cpu.Flags.Overflow = actionValue > 0;
 }
 
-void Instruction::updateNegative(CPU& cpu, const uint_least16_t &value, const uint_least16_t &actionValue) {
-    std::bitset<8> set(actionValue);
+void Instruction::updateNegative(CPU& cpu, const u16 &value, const u16 &actionValue) {
+    bitset<8> set(actionValue);
     cpu.Flags.Negative = set.test(7);
 }
 
-uint_least16_t ClearInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
+u16 ClearInstruction::sharedAction(CPU& cpu, const u16 &value) {    
     cpu.tick();
     return 0;
 }
 
-uint_least16_t ClearInstruction::action(CPU& cpu, const uint_least16_t &value) {    
-    return ClearInstruction::sharedAction(cpu, value);
-}
-
-uint_least16_t SetInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
+u16 SetInstruction::sharedAction(CPU& cpu, const u16 &value) {
     cpu.tick();
     return 1;
 }
-
-uint_least16_t SetInstruction::action(CPU& cpu, const uint_least16_t &value) {
-    return SetInstruction::sharedAction(cpu, value);
-}
-

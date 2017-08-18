@@ -3,14 +3,18 @@
 
 #include "Instruction.h"
 
+/*
+DEY - Decrement Y Register
+
+Y,Z,N = Y-1
+
+Subtracts one from the Y register setting the zero and negative flags as appropriate.
+*/
 class DEYInstruction : public Instruction {    
 public:    
-    using Instruction::Instruction;
-    uint_least16_t action(CPU& cpu, const uint_least16_t &value) override;
-    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
-    static void createInstructions2(vector<Instruction> &instructions);    
+    using Instruction::Instruction;    
+    static void createInstructions(InstructionArray &instructions);                 
     static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);    
 };
-
 
 #endif

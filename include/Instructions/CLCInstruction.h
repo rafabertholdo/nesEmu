@@ -3,12 +3,17 @@
 
 #include "Instruction.h"
 
+/*
+CLC - Clear Carry Flag
+
+C = 0
+
+Set the carry flag to zero.
+*/
 class CLCInstruction : public ClearInstruction {    
 public:    
     using ClearInstruction::ClearInstruction;
-    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
-    static void createInstructions2(vector<Instruction> &instructions);        
+    static void createInstructions(InstructionArray &instructions);            
 };
-
 
 #endif

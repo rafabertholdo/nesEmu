@@ -43,6 +43,7 @@
         "regex": "cpp",
         "__functional_base": "cpp",
         "thread": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "array": "cpp"
     }
 }

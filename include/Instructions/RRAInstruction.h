@@ -3,14 +3,16 @@
 
 #include "Instruction.h"
 
+/*
+RRA - ROR + ADC
+
+Rotate one bit right in memory, then add memory to accumulator
+*/
 class RRAInstruction : public Instruction {    
 public:
-    using Instruction::Instruction;
-    uint_least16_t action(CPU& cpu, const uint_least16_t &value) override;
-    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
-    static void createInstructions2(vector<Instruction> &instructions);
+    using Instruction::Instruction;    
+    static void createInstructions(InstructionArray &instructions);             
     static uint_least16_t sharedAction(CPU& cpu, const uint_least16_t &value);    
 };
-
 
 #endif

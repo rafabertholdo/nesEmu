@@ -3,11 +3,18 @@
 
 #include "Instruction.h"
 
+/*
+SED - Set Decimal Flag
+
+D = 1
+
+Set the decimal mode flag to one.
+*/
 class SEDInstruction : public SetInstruction {    
 public:
     using SetInstruction::SetInstruction;
-    static void createInstructions(vector<unique_ptr<Instruction>> &instructions);         
-    static void createInstructions2(vector<Instruction> &instructions);    
+    static void createInstructions(InstructionArray &instructions);         
+        
 };
 
 #endif
