@@ -13,13 +13,9 @@
 using namespace std;
 
 CPU::CPU(const shared_ptr<IO> &io): RAM(0x800) , totalCycles(29780)  { //2k of ram      
-    CPU::io = io;
+    CPU::io = io;  
     
-    instructions.resize(0x100);
-    Instruction::instantiateAll(instructions);
-    
-    instructionVector.resize(0x100);    
-    Instruction::instantiateAll(instructionVector);    
+    Instruction::instantiateAll(instructions);       
     
     testing = false;
     if (testing) {
@@ -100,7 +96,7 @@ void CPU::test(const string &line, const vector<uint_least8_t> &instructionData,
 void CPU::identify(const vector<uint_least8_t> &instructionData, const Instruction &instruction) {
     Utils<uint_least16_t>::printHex(PC);
     cout << "  ";
-    Utils<uint_least8_t>::printHex(instruction.getOpcode());        
+    Utils<uint_least8_t>::printHex(instruction.opcode());        
     cout << " ";
 
     int verboseData = 7;
@@ -110,8 +106,7 @@ void CPU::identify(const vector<uint_least8_t> &instructionData, const Instructi
         verboseData -= 3;
     }
     cout << std::setw(verboseData) << std::setfill(' ') << " ";    
-    std::cout << instruction.getMenmonic() << " ";
-    instruction.printAddress(*this, Utils<u8>::getLittleEndianValue(instructionData));
+    std::cout << instruction.menmonic() << " ";    
     dumpRegs();
 }
 
@@ -163,9 +158,9 @@ bool CPU::handleInterruptions() {
 
 void CPU::executeInstruction(Instruction &instruction) {
     u16 instructionData = 0;
-    auto length = instruction.getLength();
+    auto length = instruction.length();
     if (length > 1) {
-        instructionData = read(PC+1, instruction.getLength() - 1);            
+        instructionData = read(PC+1, instruction.length() - 1);            
     }
     
     if (testing) {               
@@ -179,14 +174,14 @@ void CPU::executeInstruction(Instruction &instruction) {
         }
         
         vector<u8> instructionDataVector;
-        if (instruction.getLength() > 1) {
-            for(int i=0;i<instruction.getLength() - 1;i++) {
+        if (instruction.length() > 1) {
+            for(int i=0;i<instruction.length() - 1;i++) {
                 instructionDataVector.push_back(read(PC+1 +i));
             }
         }
 
         identify(instructionDataVector, instruction);   
-        test(line, instructionDataVector, instruction.getMenmonic());   
+        test(line, instructionDataVector, instruction.menmonic());   
 
         
     }
@@ -199,7 +194,7 @@ void CPU::executeInstruction(Instruction &instruction) {
     }
     */
     
-    PC += instruction.getLength();             
+    PC += instruction.length();             
     instruction.execute(*this, instructionData); 
 }
 
@@ -214,7 +209,7 @@ void CPU::run() {
         bool willExecuteInstruction = handleInterruptions();
 
         if (willExecuteInstruction) {			
-            executeInstruction(*instructionVector.at(instructionCode));           
+            executeInstruction(instructions[instructionCode]);           
         }   
         reset = false;
     }	
