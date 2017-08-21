@@ -20,11 +20,16 @@
 class PPU;
 class APU;
 
+static constexpr int kMaxPrgRomSize = 0x80000; //500kb
+
 class CPU {
     std::vector<uint_least8_t> RAM;
-    std::ifstream _testLogFile;
+    
+    std::array<u32, PRG_PAGES> m_prgMap;
+    std::array<u8, kMaxPrgRomSize> m_prg; 
 
-    std::shared_ptr<ROM> rom;
+    std::ifstream _testLogFile;
+    
     std::shared_ptr<PPU> ppu;
     std::shared_ptr<IO> io;
     std::shared_ptr<APU> _apu;
@@ -46,6 +51,7 @@ class CPU {
     void identify(const std::vector<uint_least8_t> &instructionData, const Instruction &instruction);    
     void dmaOam(const uint_least8_t &value);
     bool handleInterruptions();    
+    uint_least8_t prgAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);
 public:
     
     //registers
@@ -73,7 +79,6 @@ public:
     uint_least8_t read(const uint_least16_t &address);
     u16 read(const uint_least16_t &address, const uint_least8_t &length);
     void write(const uint_least16_t &address, const uint_least8_t &value);
-    //uint_least8_t& memoryAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    
 
     void push(const uint_least8_t &value);
     uint_least8_t pop();

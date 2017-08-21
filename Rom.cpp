@@ -45,10 +45,18 @@ const std::array<u32, CHR_PAGES>& ROM::chrMap() const {
     return m_chrMap;
 }
 
+const std::vector<u8>& ROM::prg() const {
+    return m_prg;
+}
+
+const std::array<u32, PRG_PAGES>& ROM::prgMap() const {
+    return m_prgMap;
+}
+
 void ROM::loadProgramData() {
      int prgStart = HEADER_SIZE;
      int prgEnd = prgStart + prgROMSize;        
-     prg = vector<u8>(&data[prgStart], &data[prgEnd]);
+     m_prg = vector<u8>(&data[prgStart], &data[prgEnd]);
 
      if (chrROMSize) {
          int chrEnd = prgEnd + chrROMSize;
@@ -56,7 +64,7 @@ void ROM::loadProgramData() {
      }       
      
      init();
-     std::cout << "prg size: " << prg.size() << std::endl;
+     std::cout << "prg size: " << m_prg.size() << std::endl;
      std::cout << "chr size: " << m_chr.size() << std::endl;
  }
 
@@ -82,44 +90,19 @@ bool ROM::readFile(const char* filename) {
     return false;
 }
 
-uint_least8_t ROM::prgAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write) {
-    //0x8000 - 0xBFFF
-    //0xC000 - 0xFFFF
-
-    if (address >= PRG_START) {
-        auto page = (address / PRG_GRANULARITY) % PRG_PAGES;
-        auto pageOffset = address % PRG_GRANULARITY;
-        return prg[prgMap[page] + pageOffset];
-    } else {
-        //TODO: PRG RAM
-        // return prgRam[addr - 0x6000];
-        return 0;
-    }   
-}
-
-template<unsigned npages,unsigned char*(&b)[npages], std::vector<u8>& r, unsigned granu>
-static void SetPages(unsigned size, unsigned baseaddr, unsigned index)
-{
-    for(unsigned v = r.size() + index * size,
-                 p = baseaddr / granu;
-                 p < (baseaddr + size) / granu && p < npages;
-                 ++p, v += granu)
-        b[p] = &r[v % r.size()];
-} 
-
 void ROM::init() {
-    map_prg(64, 0, 0);
+    mapPrg(64, 0, 0);
     mapChr(8, 0, 0);
 }
 
 /* PRG mapping functions */
-void ROM::map_prg(int pageKBs, int slot, int bank) {
+void ROM::mapPrg(int pageKBs, int slot, int bank) {
     if (bank < 0) {
         bank = (prgROMSize / (0x400 * pageKBs)) + bank;
     }
 
     for (int i = 0; i < (pageKBs / 8); i++) {
-        prgMap[(pageKBs / 8) * slot + i] = (pageKBs * 0x400 * bank + 0x2000 * i) % prgROMSize;
+        m_prgMap[(pageKBs / 8) * slot + i] = (pageKBs * 0x400 * bank + 0x2000 * i) % prgROMSize;
     }
 }
 
@@ -128,10 +111,4 @@ void ROM::mapChr(int pageKBs, int slot, int bank) {
     for (int i = 0; i < pageKBs; i++) {
         m_chrMap[pageKBs * slot + i] = (pageKBs * 0x400 * bank + 0x400 * i) % chrROMSize;
     }
-}
-
-uint_least8_t& ROM::chrAccess(const uint_least16_t &address) {
-    auto page = address / CHR_GRANULARITY;
-    auto pageOffset = address % CHR_GRANULARITY;
-    return m_chr[(m_chrMap[page] + pageOffset)];
 }

@@ -18,8 +18,7 @@ class ROM;
 
 class PPU {
     std::shared_ptr<IO> io;
-    std::shared_ptr<CPU> cpu;    
-    std::shared_ptr<ROM> rom;    
+    std::shared_ptr<CPU> cpu;        
 
     std::array<u32, CHR_PAGES> m_chrMap;
     std::array<u8, kMaxChrRomSize> m_chr; 

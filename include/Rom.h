@@ -15,7 +15,7 @@ static const unsigned PRG_START = 0x8000;
 
 class ROM {        
     std::vector<u8> data;
-    std::vector<u8> prg;    
+    std::vector<u8> m_prg;    
     std::vector<u8> m_chr;    
     
     u16 prgROMSize;
@@ -24,25 +24,25 @@ class ROM {
 
     u8 ctrlbyte;
     u8 mappernum;     
-    u32 prgMap[PRG_PAGES];
+
+    std::array<u32, PRG_PAGES> m_prgMap = {0};
     std::array<u32, CHR_PAGES> m_chrMap = {0};
 
     void loadProgramData();
     bool readFile(const char* filename);
-public:      
-    
+public:          
     ROM(const char* filePath);
-    ~ROM();
-
-    void map_prg(int pageKBs, int slot, int bank);    
-    u8 prgAccess(const u16 &address, const u8 &value, const bool &write);
-    u8& chrAccess(const u16 &address);
-
-    void mapChr(int pageKBs, int slot, int bank);   
-    
+    ~ROM();  
     void init();
+
+    void mapPrg(int pageKBs, int slot, int bank);    
+    void mapChr(int pageKBs, int slot, int bank);       
+    
     const std::vector<u8>& chr() const;
     const std::array<u32, CHR_PAGES>& chrMap() const;
+
+    const std::vector<u8>& prg() const;
+    const std::array<u32, PRG_PAGES>& prgMap() const;
 };
 
 #endif
