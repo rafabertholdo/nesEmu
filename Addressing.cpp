@@ -2,6 +2,8 @@
 #include "CPU.h"
 #include "Utils.cpp"
 
+using namespace std;
+
 bool cross(u16 a, u8 i) { 
     return ((a+i) & 0xFF00) != ((a & 0xFF00)); 
 }

@@ -2,7 +2,6 @@
 #define ADDRESSING_H
 
 #include "Utils.h"
-using namespace std;
 
 enum AddressingMode {     
     immediate,

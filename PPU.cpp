@@ -2,10 +2,14 @@
 #include <iostream>
 #include <memory>
 
-PPU::PPU(const std::shared_ptr<IO> &io, const std::shared_ptr<CPU> cpu, const std::shared_ptr<ROM> rom) {
+using namespace std;
+
+PPU::PPU(const std::shared_ptr<IO> &io, const std::shared_ptr<CPU> cpu, const std::shared_ptr<ROM> &rom) {
     PPU::io = io;
-    PPU::cpu = cpu;
-    PPU::rom = rom;
+    PPU::cpu = cpu;   
+    auto chr = rom->chr();
+    std::copy_n(chr.begin(), chr.size(), m_chr.begin());    
+    m_chrMap = rom->chrMap();
 }
 
 PPU::~PPU() {
@@ -16,12 +20,14 @@ PPU::~PPU() {
 u8& PPU::memoryMap(int address) {
     address &= 0x3FFF; //if (addess > 0x#FFF) address -= 0x3FFF;
     
-	if (address < 0x2000) {// CHR-ROM/RAM. 0x0000 ... 0x1FFF
-		return rom->chrAccess(address);
+    if (address < 0x2000) { // CHR-ROM/RAM. 0x0000 ... 0x1FFF        
+        auto page = address / CHR_GRANULARITY;
+        auto pageOffset = address % CHR_GRANULARITY;
+        return m_chr[(m_chrMap[page] + pageOffset)];
 	} else if (address < 0x3F00) { // Nametables .0x2000 ... 0x3EFF:
 		auto page = (address >> 10) & 3;
 		auto offset = address & 0x3FF;
-		return rom->nameTable[page][offset]; 
+		return nameTable[page][offset]; 
 	} else { // Palettes:  0x3F00 ... 0x3FFF		
 		if (address % 4 == 0 ) {
 			address &= 0x0F;
@@ -40,8 +46,7 @@ uint_least8_t PPU::access(uint_least16_t index, uint_least8_t value, bool write)
         refreshOpenBus(value);
     }
 
-    switch(index) // Which port from $200x?
-    {
+    switch(index) { // Which port from $200x?
             case 0: 
                 if(write) { 
                     reg.sysctrl = value; 

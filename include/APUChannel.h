@@ -34,7 +34,7 @@ public:
         RegBit<7,1,u32> LinearCounterDisable;                                 RegBit<31,1,u32> IRQenable;
     } m_reg;
 
-    APUChannel(const shared_ptr<CPU> &cpu);
+    APUChannel(const std::shared_ptr<CPU> &cpu);
     ~APUChannel();
 
     const int& lengthCounter() const;

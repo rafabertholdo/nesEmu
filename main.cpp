@@ -21,12 +21,13 @@ int main(int argc, char *argv[]) {
     auto io = make_shared<IO>();
     auto rom = make_shared<ROM>(argv[1]);
     auto cpu = make_shared<CPU>(io);
-    auto ppu = make_shared<PPU>(io,cpu,rom);
+    auto ppu = make_shared<PPU>(io, cpu, rom);
     auto apu = make_shared<APU>(cpu);
+
     apu->init();
     cpu->setPPU(ppu);
     cpu->setAPU(apu);
-    cpu->loadRom(rom);
+    cpu->loadRom(rom);    
 
     // Framerate control:
     u32 frameStart, frameTime;

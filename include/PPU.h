@@ -1,12 +1,15 @@
 #ifndef PPU_H
 #define PPU_H
 
+#include <vector>
+#include <array>
 #include "RegBit.h"
 #include "Utils.h"
 #include "IO.h"
-#include <vector>
 #include "CPU.h"
 #include "ROM.h"
+
+static constexpr int kMaxChrRomSize = 0x80000; //500kb
 
 enum class Mirroring { VERTICAL, HORIZONTAL };
 
@@ -15,9 +18,15 @@ class ROM;
 
 class PPU {
     std::shared_ptr<IO> io;
-    std::shared_ptr<CPU> cpu;
-    std::shared_ptr<ROM> rom;
-    
+    std::shared_ptr<CPU> cpu;    
+    std::shared_ptr<ROM> rom;    
+
+    std::array<u32, CHR_PAGES> m_chrMap;
+    std::array<u8, kMaxChrRomSize> m_chr; 
+
+    unsigned char CIRAM[0x800];
+    unsigned char *nameTable[4] = { CIRAM+0x0000, CIRAM+0x0400, CIRAM+0x0000, CIRAM+0x0400 }; //Vertical mirroring: $2000 equals $2800 and $2400 equals $2C00
+
     union regtype // PPU register file
     {
         u32 value;
@@ -59,15 +68,15 @@ class PPU {
     int read_buffer=0, open_bus=0, open_bus_decay_timer=0;
     bool even_odd_toggle=false, offset_toggle=false;
 
-    u8& memoryMap(int i);    
+    u8& memoryMap(int i);        
 public:
-    PPU(const std::shared_ptr<IO> &io, const std::shared_ptr<CPU> cpu, const std::shared_ptr<ROM> rom);
+    PPU(const std::shared_ptr<IO> &io, const std::shared_ptr<CPU> cpu, const std::shared_ptr<ROM> &rom);
     ~PPU();
     void rendering_tick();
     void render_pixel();
     void tick();    
     // External I/O: read or write
-    uint_least8_t access(uint_least16_t index, uint_least8_t v, bool write);       
+    uint_least8_t access(uint_least16_t index, uint_least8_t v, bool write);    
 };
 
 #endif

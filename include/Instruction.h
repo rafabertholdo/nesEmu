@@ -9,15 +9,13 @@
 #include <map>
 #include <string>
 
-using namespace std;
-
 class CPU; //forward declaration
 
 typedef u16(*getAddressFunctionPointer_t)(CPU&, const u16&);
 typedef u16(*actionFunctionPointer_t)(CPU&, const u16&);
 
 class Instruction;
-using InstructionArray = array<Instruction, 256>;
+using InstructionArray = std::array<Instruction, 256>;
 
 enum class AffectFlags : u8 {
     None = 0,
@@ -47,15 +45,15 @@ class Instruction {
         RegBit<7> Negative; // negative
     } m_affectedFlags;
 
-    static unordered_map<string, create_f *> & registry();        
-    static const map<AddressingMode, 
-		tuple<u8, getAddressFunctionPointer_t>> addressingModes;
-    static map<AddressingMode,
-		tuple<u8, getAddressFunctionPointer_t>> createAddressingMap();
+    static std::unordered_map<std::string, create_f *> & registry();        
+    static const std::map<AddressingMode, 
+		std::tuple<u8, getAddressFunctionPointer_t>> addressingModes;
+    static std::map<AddressingMode,
+		std::tuple<u8, getAddressFunctionPointer_t>> createAddressingMap();
     void changeFlags(CPU& cpu, const u16 &value, const u16 &actionValue);
 protected:
     u8 m_opcode;
-    string m_menmonic;
+    std::string m_menmonic;
     bool m_readsFromMemory;        
     u8 m_length;
     actionFunctionPointer_t m_actionFunctionPointer;
@@ -65,19 +63,19 @@ public:
     Instruction();
     Instruction(const AddressingMode &addressingMode, 
                 const u8 &opcode,                 
-                const string &menmonic,
+                const std::string &menmonic,
                 const actionFunctionPointer_t &m_actionFunctionPointer,
                 const AffectFlags &&affectedFlags = AffectFlags::None,
                 const bool &readsFromMemory = false);
     ~Instruction();    
 
-    static void registrate(const string &name, create_f *fp);        
+    static void registrate(const std::string &name, create_f *fp);        
     static void instantiateAll(InstructionArray &instructions);    
 
     template <typename D>
     struct Registrar
     {
-        explicit Registrar(const string &name)
+        explicit Registrar(const std::string &name)
         {
             Instruction::registrate(name, &D::createInstructions);
         }        
@@ -85,7 +83,7 @@ public:
 
     const u8& opcode() const;
     const u8& length() const;
-    const string& menmonic() const;
+    const std::string& menmonic() const;
     const bool& readsFromMemory() const;
     void readsFromMemory(const bool &readsFromMemory, const AddressingMode &addressingMode);
     

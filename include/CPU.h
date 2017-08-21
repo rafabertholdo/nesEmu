@@ -17,19 +17,17 @@
 #include "Addressing.h"
 #include "Timer.h"
 
-using namespace std;
-
 class PPU;
 class APU;
 
 class CPU {
-    vector<uint_least8_t> RAM;
+    std::vector<uint_least8_t> RAM;
     std::ifstream _testLogFile;
 
-    shared_ptr<ROM> rom;
-    shared_ptr<PPU> ppu;
-    shared_ptr<IO> io;
-    shared_ptr<APU> _apu;
+    std::shared_ptr<ROM> rom;
+    std::shared_ptr<PPU> ppu;
+    std::shared_ptr<IO> io;
+    std::shared_ptr<APU> _apu;
     u32 tickCount;
     double executedInstructionsCount = 0;
     
@@ -40,12 +38,12 @@ class CPU {
 
     bool testing;
     Timer timer;
-    void test(const string &line, const vector<uint_least8_t> &instructionData, const string &menmonic);
+    void test(const std::string &line, const std::vector<uint_least8_t> &instructionData, const std::string &menmonic);
     InstructionArray instructions;          
     
     void executeInstruction(Instruction &instruction);
     uint_least8_t memAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    
-    void identify(const vector<uint_least8_t> &instructionData, const Instruction &instruction);    
+    void identify(const std::vector<uint_least8_t> &instructionData, const Instruction &instruction);    
     void dmaOam(const uint_least8_t &value);
     bool handleInterruptions();    
 public:
@@ -68,10 +66,10 @@ public:
     uint_least16_t PC; //program counter
     bool reset=true, nmi=false, nmi_edge_detected=false, intr=false;
 
-    CPU(const shared_ptr<IO> &io);
+    CPU(const std::shared_ptr<IO> &io);
     CPU(const CPU &cpu);  // copy constructor
     ~CPU();
-    void loadRom(const shared_ptr<ROM> &rom);
+    void loadRom(const std::shared_ptr<ROM> &rom);
     uint_least8_t read(const uint_least16_t &address);
     u16 read(const uint_least16_t &address, const uint_least8_t &length);
     void write(const uint_least16_t &address, const uint_least8_t &value);
@@ -87,8 +85,8 @@ public:
     u16 getResetVectorValue();
     u16 getBrkVectorValue();
 
-    void setPPU(const shared_ptr<PPU> &ppu);
-    void setAPU(const shared_ptr<APU> &apu);
+    void setPPU(const std::shared_ptr<PPU> &ppu);
+    void setAPU(const std::shared_ptr<APU> &apu);
     void tick();
 };
 

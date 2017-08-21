@@ -1,6 +1,8 @@
 #include "APUChannel.h"
 #include "APU.h"
 
+using namespace std;
+
 APUChannel::APUChannel(const shared_ptr<CPU> &cpu) {
     m_cpu = cpu;
 
@@ -24,7 +26,7 @@ const int& APUChannel::lengthCounter() const {
     return m_lengthCounter; 
 }
 
-void APUChannel::lengthCounter(const int& lengthCounter) { 
+void APUChannel::lengthCounter(const int &lengthCounter) { 
     m_lengthCounter = lengthCounter; 
 } 
 
@@ -32,7 +34,7 @@ const int& APUChannel::linearCounter() const {
     return m_linearCounter; 
 }
 
-void APUChannel::linearCounter(const int& linearCounter) { 
+void APUChannel::linearCounter(const int &linearCounter) { 
     m_linearCounter = linearCounter; 
 } 
 
@@ -40,7 +42,7 @@ const int& APUChannel::address() const {
     return m_address; 
 }
 
-void APUChannel::address(const int& address) { 
+void APUChannel::address(const int &address) { 
     m_address = address; 
 } 
 
@@ -48,7 +50,7 @@ const int& APUChannel::envelope() const {
     return m_envelope; 
 }
 
-void APUChannel::envelope(const int& envelope) { 
+void APUChannel::envelope(const int &envelope) { 
     m_envelope = envelope; 
 } 
 
@@ -56,7 +58,7 @@ const int& APUChannel::sweepDelay() const {
     return m_sweepDelay; 
 }
 
-void APUChannel::sweepDelay(const int& sweepDelay) { 
+void APUChannel::sweepDelay(const int &sweepDelay) { 
     m_sweepDelay = sweepDelay; 
 } 
 
@@ -64,11 +66,11 @@ const int& APUChannel::envDelay() const {
     return m_envDelay; 
 }
 
-void APUChannel::envDelay(const int& envDelay) { 
+void APUChannel::envDelay(const int &envDelay) { 
     m_envDelay = envDelay; 
 } 
 
-void APUChannel::phase(const int& phase) { 
+void APUChannel::phase(const int &phase) { 
     m_phase = phase; 
 } 
 

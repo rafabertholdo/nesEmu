@@ -5,33 +5,44 @@
 #include <memory>
 #include <vector>
 #include "Utils.h"
-
-using namespace std;
+#include <array>
 
 // An unsigned char can store 1 Bytes (8bits) of data (0-255)
 static const u8 HEADER_SIZE = 16;
-static const unsigned CHR_Granularity = 0x0400, CHR_Pages = 0x2000  / CHR_Granularity;
-static const unsigned PRG_Granularity = 0x2000, PRG_Pages = 0x10000 / PRG_Granularity;    
-static const unsigned PRG_Start = 0x8000;
+static const unsigned CHR_GRANULARITY = 0x0400, CHR_PAGES = 0x2000  / CHR_GRANULARITY; //8 pages
+static const unsigned PRG_GRANULARITY = 0x2000, PRG_PAGES = 0x10000 / PRG_GRANULARITY; //8 pages
+static const unsigned PRG_START = 0x8000;
 
 class ROM {        
-    class impl;
-    unique_ptr<impl> pimpl;
-public:  
-    unsigned char CIRAM[0x800];
-    u32 prgMap[PRG_Pages];
-    u32 chrMap[CHR_Pages];
+    std::vector<u8> data;
+    std::vector<u8> prg;    
+    std::vector<u8> m_chr;    
+    
+    u16 prgROMSize;
+    u16 prgRAMSize;
+    u16 chrROMSize;
 
-    void map_prg(int pageKBs, int slot, int bank);
-    void map_chr(int pageKBs, int slot, int bank);
+    u8 ctrlbyte;
+    u8 mappernum;     
+    u32 prgMap[PRG_PAGES];
+    std::array<u32, CHR_PAGES> m_chrMap = {0};
 
-    unsigned char *nameTable[4] = { CIRAM+0x0000, CIRAM+0x0400, CIRAM+0x0000, CIRAM+0x0400 }; //Vertical mirroring: $2000 equals $2800 and $2400 equals $2C00
-
+    void loadProgramData();
+    bool readFile(const char* filename);
+public:      
+    
     ROM(const char* filePath);
     ~ROM();
-    uint_least8_t prgAccess(const uint_least16_t &address, const uint_least8_t &value, const bool &write);    
-    uint_least8_t& chrAccess(const uint_least16_t &address);
+
+    void map_prg(int pageKBs, int slot, int bank);    
+    u8 prgAccess(const u16 &address, const u8 &value, const bool &write);
+    u8& chrAccess(const u16 &address);
+
+    void mapChr(int pageKBs, int slot, int bank);   
+    
     void init();
+    const std::vector<u8>& chr() const;
+    const std::array<u32, CHR_PAGES>& chrMap() const;
 };
 
 #endif
