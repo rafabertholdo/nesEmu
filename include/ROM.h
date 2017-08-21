@@ -33,7 +33,6 @@ class ROM {
 public:          
     ROM(const char* filePath);
     ~ROM();  
-
     void init();
 
     void mapPrg(int pageKBs, int slot, int bank);    
