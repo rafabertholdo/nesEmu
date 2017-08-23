@@ -16,6 +16,10 @@ APUChannel::APUChannel(const shared_ptr<CPU> &cpu) {
     m_hold = 0;
     m_phase = 0;
     m_level = 0;
+    m_reg.reg0 = 0;
+    m_reg.reg1 = 0;
+    m_reg.reg2 = 0;
+    m_reg.reg3 = 0;
 }
 
 APUChannel::~APUChannel(){

@@ -10,6 +10,32 @@ PPU::PPU(const std::shared_ptr<IO> &io, const std::shared_ptr<CPU> cpu, const st
     auto chr = rom->chr();
     std::copy_n(chr.begin(), chr.size(), m_chr.begin());    
     m_chrMap = rom->chrMap();
+    reg.value = 0;
+    scroll.raw = 0;
+    vaddr.raw = 0;
+
+    pat_addr = 0;
+    sprinpos = 0; 
+    sproutpos = 0;
+    sprrenpos = 0;
+    sprtmp = 0;
+    tileattr = 0;
+    tilepat = 0;
+    ioaddr = 0;
+    bg_shift_pat = 0;
+    bg_shift_attr = 0;
+
+    scanline = 241;
+    x = 0;
+    scanline_end = 341;
+    VBlankState = 0;
+    cycle_counter = 0;
+    read_buffer = 0;
+    open_bus = 0;
+    open_bus_decay_timer = 0;
+    even_odd_toggle = false;
+    offset_toggle = false;
+
 }
 
 PPU::~PPU() {

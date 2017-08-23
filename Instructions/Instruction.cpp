@@ -92,11 +92,8 @@ u16 Instruction::action(CPU& cpu,  const u16 &instructionData) {
     return m_actionFunctionPointer(cpu, instructionData);
 }
 
-void Instruction::execute(CPU& cpu,  const u16 &instructionData) {        
-    if (!m_getAddressFunctionPointer) {
-        int a =0 ;
-    }
-	u16 instructionValue = m_getAddressFunctionPointer(cpu, instructionData);
+void Instruction::execute(CPU& cpu,  const u16 &instructionData) {            
+    u16 instructionValue = m_getAddressFunctionPointer(cpu, instructionData);    
     
     if (m_readsFromMemory) {
         instructionValue = cpu.read(instructionValue);

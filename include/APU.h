@@ -35,6 +35,7 @@ class APU : public std::enable_shared_from_this<APU> {
 
     APUChannel m_channels[5];
     int m_currentSample;	
+    int m_sampleTickCounter;
 	int channelTick(unsigned channelNumber);
     
     struct { 

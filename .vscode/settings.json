@@ -44,6 +44,7 @@
         "__functional_base": "cpp",
         "thread": "cpp",
         "chrono": "cpp",
-        "array": "cpp"
+        "array": "cpp",
+        "future": "cpp"
     }
 }

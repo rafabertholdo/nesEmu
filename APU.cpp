@@ -1,11 +1,16 @@
 #include "APU.h"
 #include <iostream>
+#include <thread>
+#include <future>
+#include <array>
+
+using namespace std;
 
 const u8 APU::m_LengthCounters[32] = { 10,254,20, 2,40, 4,80, 6,160, 8,60,10,14,12,26,14,
                                       12, 16,24,18,48,20,96,22,192,24,72,26,16,28,32,30 };
 const u16 APU::m_noisePeriods[16] = { 2,4,8,16,32,48,64,80,101,127,190,254,381,508,1017,2034 };
 const u16 APU::m_DMCperiods[16] = { 428,380,340,320,286,254,226,214,190,160,142,128,106,84,72,54 };                               
-const long APU::m_sampleRate = 96000;    // 44.1 kHz sample rate
+const long APU::m_sampleRate = 96000;    // 96.0 kHz sample rate
 const double APU::m_clockRate = 1789773; // 1.7 MHz clock rate
 const int APU::m_frameRate = 60;         // 60 frames of sound per second
 const int APU::m_cyclesPerFrame = APU::m_clockRate / APU::m_frameRate;
@@ -25,6 +30,7 @@ APU::APU(const std::shared_ptr<CPU> &cpu) : m_channels { APUChannel(cpu),
     APUChannel(cpu) } { 
     _cpu = cpu;
     m_currentSample = 0;
+    m_sampleTickCounter = 0;
 }
 
 APU::~APU() {
@@ -138,21 +144,32 @@ u8 APU::read() {
     return result;
 }
 
+int affTick(APUChannel &channel, int channelNumber, bool channelsEnabled[], const u16 noisePeriods[], bool &dmcIrq) {
+	return channel.tick(channelNumber == 1 ? 0 : channelNumber, channelsEnabled, noisePeriods, dmcIrq);
+}
+
+/*
+int affTick(APUChannel &channel, int channelNumber, bool channelsEnabled[], const u16 noisePeriods[], bool &dmcIrq) {
+	return channel.tick(channelNumber == 1 ? 0 : channelNumber, channelsEnabled, noisePeriods, dmcIrq);
+}
+*/
+
 void APU::tick() { // Invoked at CPU's rate. 
     // Divide CPU clock by 7457.5 to get a 240 Hz, which controls certain events.
-    if((m_hz240counter.lo += 2) >= 14915) {
+    if ((m_hz240counter.lo += 2) >= 14915) {
         m_hz240counter.lo -= 14915;
-        if(++m_hz240counter.hi >= 4+m_fiveCycleDivider) {
+        if (++m_hz240counter.hi >= 4 + m_fiveCycleDivider) {
             m_hz240counter.hi = 0;
         }
         // 60 Hz interval: IRQ. IRQ is not invoked in five-cycle mode (48 Hz).
-        if(!m_IRQdisable && !m_fiveCycleDivider && m_hz240counter.hi==0){
+        if (!m_IRQdisable && !m_fiveCycleDivider && m_hz240counter.hi==0){
             _cpu->intr = m_periodicIRQ = true;
         }
         // Some events are invoked at 96 Hz or 120 Hz rate. Others, 192 Hz or 240 Hz.
         bool halfTick = (m_hz240counter.hi&5)==1, fullTick = m_hz240counter.hi < 4;
-		unsigned channelNumber = 0;
-        for(APUChannel& channel : m_channels) {            
+        unsigned channelNumber = 0;
+        #pragma omp parallel for
+        for (APUChannel& channel : m_channels) {            
             int wl = channel.m_reg.WaveLength;
             // Length tick (all channels except DMC, but different disable bit for triangle wave)
 			if (halfTick && channel.lengthCounter() && 
@@ -193,14 +210,15 @@ void APU::tick() { // Invoked at CPU's rate.
     }
 
     //synthesize all channels
-	if (m_currentSample <= m_cyclesPerFrame) {	
-		m_synthSquare1.update(m_currentSample, channelTick(0));
+	if (m_currentSample <= m_cyclesPerFrame) {
+        
+        m_synthSquare1.update(m_currentSample, channelTick(0));
 		m_synthSquare2.update(m_currentSample, channelTick(1));
 		m_synthTriangle.update(m_currentSample, channelTick(2));
 		m_synthNoise.update(m_currentSample, channelTick(3));
 		m_synthDmc.update(m_currentSample, channelTick(4));
-
-        m_currentSample++;        
+        
+        ++m_currentSample;
     } 
 	
     if (m_currentSample == m_cyclesPerFrame) {        
