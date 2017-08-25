@@ -29,6 +29,7 @@ map<AddressingMode, tuple<u8, getAddressFunctionPointer_t>> Instruction::createA
 const map<AddressingMode, tuple<u8, getAddressFunctionPointer_t>>Instruction::addressingModes  =  Instruction::createAddressingMap();
 
 Instruction::Instruction() {
+	m_getAddressFunctionPointer = 0;
 
 }
 
@@ -49,8 +50,13 @@ Instruction::Instruction(const AddressingMode &addressingMode,
     Instruction::readsFromMemory(readsFromMemory, addressingMode);
 }
 
-Instruction::~Instruction() {
-    
+Instruction::~Instruction() {	
+	m_getAddressFunctionPointer = 0;
+	m_actionFunctionPointer = 0;
+	m_opcode = 0;
+	m_length = 0;
+	m_menmonic = "";
+	m_affectedFlags.raw = 0;
 }
 
 unordered_map<string, Instruction::create_f *> & Instruction::registry() {
