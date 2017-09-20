@@ -24,15 +24,15 @@ static const u8 kResetInstructionOpcode = 0x22;
 static const u8 kNMIInstructionOpcode = 0x12;
 static const u8 kBRKInstructionOpcode = 0x02;
 
-CPU::CPU(const shared_ptr<IO> &io): m_RAM(kRamSize) , m_totalCycles(kCyclesPerFrame)  { //2k of ram      
-    m_io = io;  
+CPU::CPU()
+    : m_RAM(kRamSize) , //2k of ram
+      m_totalCycles(kCyclesPerFrame) 
+    //  m_testLogFile(std::ifstream(kTestLogFile)) 
+    { 
     
     Instruction::instantiateAll(m_instructions);       
     
-    m_testing = false;
-    if (m_testing) {
-        m_testLogFile = std::ifstream(kTestLogFile);
-    }
+    m_testing = false;    
 
 	m_remainingCycles = m_totalCycles;
     Flags.raw = kInitialFlags;
@@ -47,6 +47,7 @@ CPU::CPU(const shared_ptr<IO> &io): m_RAM(kRamSize) , m_totalCycles(kCyclesPerFr
     Y=0;    
 }
 
+/*
 CPU::CPU(const CPU &cpu): m_totalCycles(kCyclesPerFrame) {
     A = cpu.A;
     X = cpu.X;
@@ -54,7 +55,7 @@ CPU::CPU(const CPU &cpu): m_totalCycles(kCyclesPerFrame) {
     SP = cpu.SP;
     Flags.raw = cpu.Flags.raw;
     PC = cpu.PC;
-}
+}*/
 
 CPU::~CPU() {
 
@@ -72,10 +73,10 @@ u16 CPU::getBrkVectorValue() {
     return read(kBrkVectorAddress, 2); //brk vector
 }
 
-void CPU::loadRom(const shared_ptr<ROM> &rom) {
-    auto prg = rom->prg();
+void CPU::loadRom(const ROM &rom) {
+    auto prg = rom.prg();
     std::copy_n(prg.begin(), prg.size(), m_prg.begin());    
-    m_prgMap = rom->prgMap();
+    m_prgMap = rom.prgMap();
 
     if (m_testing) {
         PC = 0xC000;    
@@ -94,11 +95,12 @@ void CPU::executeInstruction(Instruction &instruction) {
     if (m_testing) {               
         string line;
         if (m_testing) {        
+            /*
             if (m_testLogFile.is_open()) {
                 getline(m_testLogFile,line);
             } else { 
                 cout << "Unable to open file"; 
-            }       
+            } */      
         }
         
         vector<u8> instructionDataVector;
@@ -178,15 +180,15 @@ u8 CPU::memAccess(const u16 &address, const u8 &value, const bool &write) {
         }
     } else if (address == 0x4016) { // Joypad 0.
 		if (write) { 
-			m_io->JoyStrobe(value);        
+			IO::instance().JoyStrobe(value);        
 		} else { 
-			return m_io->JoyRead(0);        
+			return IO::instance().JoyRead(0);        
 		}
 	} else if (address == 0x4017) { // Joypad 1.
 		if (write) {
 			m_apu->write(0x17,value);
 		} else {
-            m_io->JoyRead(1);
+            IO::instance().JoyRead(1);
         }
 	} else { // ROM prg access 0x4018 ... 0xFFFF
 		return prgAccess(address, value, write);
@@ -223,18 +225,18 @@ u8 CPU::pop() {
     return topElement;
 }
 
-void CPU::setPPU(const shared_ptr<PPU> &ppu) {
-    m_ppu = ppu;
+void CPU::setPPU(PPU &ppu) {
+    m_ppu = &ppu;
 }
-void CPU::setAPU(const shared_ptr<APU> &apu) {
-    m_apu = apu;
+void CPU::setAPU(APU &apu) {
+    m_apu = &apu;
 }
 
 void CPU::tick() {    
     for(unsigned n=0; n<3; ++n) {
         m_ppu->tick();
     }
-    m_apu->tick();
+    //m_apu->tick();
     
     m_remainingCycles--;    
 }

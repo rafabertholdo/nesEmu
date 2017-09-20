@@ -7,7 +7,6 @@
 #include "Sync_Audio.h"
 
 class APU : public std::enable_shared_from_this<APU> {    
-    std::shared_ptr<CPU> _cpu;
     static const u8 m_LengthCounters[32];
     static const u16 m_noisePeriods[16];
     static const u16 m_DMCperiods[16];
@@ -43,7 +42,7 @@ class APU : public std::enable_shared_from_this<APU> {
         short hi; 
     }m_hz240counter = { 0,0 };
 public:
-    APU(const std::shared_ptr<CPU> &cpu);
+    APU();
     ~APU();
 
     void write(u8 index, u8 value);

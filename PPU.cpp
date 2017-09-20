@@ -4,12 +4,10 @@
 
 using namespace std;
 
-PPU::PPU(const std::shared_ptr<IO> &io, const std::shared_ptr<CPU> cpu, const std::shared_ptr<ROM> &rom) {
-    PPU::io = io;
-    PPU::cpu = cpu;   
-    auto chr = rom->chr();
+PPU::PPU(const ROM &rom) {        
+    auto chr = rom.chr();
     std::copy_n(chr.begin(), chr.size(), m_chr.begin());    
-    m_chrMap = rom->chrMap();
+    m_chrMap = rom.chrMap();
     reg.value = 0;
     scroll.raw = 0;
     vaddr.raw = 0;
@@ -286,7 +284,7 @@ void PPU::render_pixel() {
         }
     }
     pixel = palette[ (attr*4 + pixel) & 0x1F ] & (reg.Grayscale ? 0x30 : 0x3F);
-    io->PutPixel(x, scanline, pixel | (reg.EmpRGB << 6), cycle_counter);
+    IO::instance().PutPixel(x, scanline, pixel | (reg.EmpRGB << 6), cycle_counter);
 }
 
 // PPU::tick() -- This function is called 3 times per each CPU cycle.
@@ -323,7 +321,7 @@ void PPU::tick()
     {
         case -5: reg.status = 0; break;
         case 2: reg.InVBlank = true; break;
-        case 0: cpu->nmi = reg.InVBlank && reg.NMIenabled; break;
+        case 0: CPU::instance().nmi = reg.InVBlank && reg.NMIenabled; break;
     }
     if(VBlankState != 0) VBlankState += (VBlankState < 0 ? 1 : -1);
     if(open_bus_decay_timer) if(!--open_bus_decay_timer) open_bus = 0;
@@ -339,7 +337,7 @@ void PPU::tick()
     if(++x >= scanline_end)
     {
         // Begin new scanline
-        io->FlushScanline(scanline);
+        IO::instance().FlushScanline(scanline);
         scanline_end = 341;
         x            = 0;
         // Does something special happen on the new scanline?

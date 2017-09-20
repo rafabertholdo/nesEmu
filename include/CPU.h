@@ -22,10 +22,9 @@ class APU;
 
 static constexpr int kMaxPrgRomSize = 0x80000; //500kb
 
-class CPU {
-    std::shared_ptr<PPU> m_ppu;
-    std::shared_ptr<IO> m_io;
-    std::shared_ptr<APU> m_apu;
+class CPU {        
+    PPU *m_ppu;
+    APU *m_apu;
 
     std::vector<u8> m_RAM;    
     std::array<u32, PRG_PAGES> m_prgMap;
@@ -42,7 +41,7 @@ class CPU {
 
     bool m_testing;
     Timer m_timer;    
-    std::ifstream m_testLogFile;     
+    //std::ifstream m_testLogFile;     
     
     void executeInstruction(Instruction &instruction);
     u8 memAccess(const u16 &address, const u8 &value, const bool &write);    
@@ -78,9 +77,16 @@ public:
     bool nmiEdgeDetected;
     bool intr;
 
-    CPU(const std::shared_ptr<IO> &io);
-    CPU(const CPU &cpu);  // copy constructor
+    CPU();
     ~CPU();
+
+    CPU(CPU const&)             = delete;
+    void operator=(CPU const&)  = delete;
+    
+    inline static CPU& instance() {
+        static CPU theInstance;
+        return theInstance;
+    }
     
     u8 read(const u16 &address);
     u16 read(const u16 &address, const u8 &length);
@@ -95,9 +101,9 @@ public:
     u16 getResetVectorValue();
     u16 getBrkVectorValue();
 
-    void loadRom(const std::shared_ptr<ROM> &rom);
-    void setPPU(const std::shared_ptr<PPU> &ppu);
-    void setAPU(const std::shared_ptr<APU> &apu);
+    void loadRom(const ROM &rom);
+    void setPPU(PPU &ppu);
+    void setAPU(APU &apu);
     void tick();
 };
 

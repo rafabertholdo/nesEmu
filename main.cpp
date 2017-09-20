@@ -18,13 +18,13 @@ int main(int argc, char *argv[]) {
   if ( argc != 2 ) {
     cout << "usage: " << argv[0] << " <filename>\n";
   } else {    
-    auto io = make_shared<IO>();
-    auto rom = make_shared<ROM>(argv[1]);
-    auto cpu = make_shared<CPU>(io);
-    auto ppu = make_shared<PPU>(io, cpu, rom);
-    auto apu = make_shared<APU>(cpu);
+    auto io = &IO::instance();
+    auto cpu = &CPU::instance();
+    auto rom = ROM(argv[1]);
+    auto ppu = PPU(rom);
+    auto apu = APU();
 
-    apu->init();
+    apu.init();
     cpu->setPPU(ppu);
     cpu->setAPU(apu);
     cpu->loadRom(rom);    
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
                   break;
           }            
       }
-      cpu->run();  
+      CPU::instance().run();  
       // Wait to mantain framerate:
       frameTime = SDL_GetTicks() - frameStart;
       if (frameTime < DELAY) {

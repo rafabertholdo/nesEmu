@@ -45,6 +45,7 @@
         "thread": "cpp",
         "chrono": "cpp",
         "array": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "streambuf": "cpp"
     }
 }

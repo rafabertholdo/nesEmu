@@ -16,10 +16,7 @@ enum class Mirroring { VERTICAL, HORIZONTAL };
 class CPU;
 class ROM;
 
-class PPU {
-    std::shared_ptr<IO> io;
-    std::shared_ptr<CPU> cpu;        
-
+class PPU {    
     std::array<u32, CHR_PAGES> m_chrMap;
     std::array<u8, kMaxChrRomSize> m_chr; 
 
@@ -69,7 +66,7 @@ class PPU {
 
     u8& memoryMap(int i);        
 public:
-    PPU(const std::shared_ptr<IO> &io, const std::shared_ptr<CPU> cpu, const std::shared_ptr<ROM> &rom);
+    PPU(const ROM &rom);
     ~PPU();
     void rendering_tick();
     void render_pixel();

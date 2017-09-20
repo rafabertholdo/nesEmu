@@ -3,11 +3,9 @@
 #include <cmath>
 #include "Utils.cpp"
 
-IO::IO() : joypadBits{0,0}, joypadIndex{0,0} {
-    Init();
-}
+using namespace std;
 
-void IO::Init() {
+IO::IO() : joypadBits{0,0}, joypadIndex{0,0} {
     //Initialize SDL
     if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0 ) {
         std::cout << "SDL could not initialize! SDL_Error: " <<  SDL_GetError() << std::endl;
@@ -20,7 +18,7 @@ void IO::Init() {
             //Get window surface
             screenSurface = SDL_GetWindowSurface(window);
         }
-    }       
+    }  
 }
 
 IO::~IO() {
@@ -110,9 +108,9 @@ u8 IO::JoyRead(const u8 &gamePort) {
 }
 
 void IO::JoyButtonPress(const u8 &gamePort, const JoypadButton &button) {
-    joypadBits[gamePort] |= 1 << button;
+    this->joypadBits[gamePort] |= 1 << button;
 }
 
 void IO::JoyButtonRelease(const u8 &gamePort, const JoypadButton &button) {
-    joypadBits[gamePort] &= ~(1 << button);
+    this->joypadBits[gamePort] &= ~(1 << button);
 }

@@ -19,6 +19,10 @@
         {            
             "taskName": "cmake",            
             "args": ["cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug .."]     
+        },        
+        {            
+            "taskName": "cmake xcode",            
+            "args": ["cmake -G 'Xcode' -DCMAKE_BUILD_TYPE=Debug .."]     
         },
         {
             "taskName": "make",

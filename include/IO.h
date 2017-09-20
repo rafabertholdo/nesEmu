@@ -35,7 +35,15 @@ class IO {
 public:
     IO();
     ~IO();
-    void Init();
+    
+    IO(IO const&)              = delete;
+    void operator=(IO const&)  = delete;
+    
+    inline static IO& instance() {
+        static IO theInstance;
+        return theInstance;
+    }
+    
     void PutPixel(unsigned px,unsigned py, unsigned pixel, int offset);
     void FlushScanline(unsigned py);
     

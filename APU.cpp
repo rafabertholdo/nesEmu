@@ -23,12 +23,19 @@ Blip_Synth<blip_good_quality,15> APU::m_synthTriangle;
 Blip_Synth<blip_med_quality,15> APU::m_synthNoise;
 Blip_Synth<blip_med_quality,127> APU::m_synthDmc;
 
-APU::APU(const std::shared_ptr<CPU> &cpu) : m_channels { APUChannel(cpu),
-    APUChannel(cpu),
-    APUChannel(cpu),
-    APUChannel(cpu),
-    APUChannel(cpu) } { 
-    _cpu = cpu;
+int square1RawBuffer[1789773/60];
+int square2RawBuffer[1789773/60];
+int triangleRawBuffer[1789773/60];
+int noiseRawBuffer[1789773/60];
+int dmcRawBuffer[1789773/60];
+
+APU::APU() : 
+    m_channels { APUChannel(),
+    APUChannel(),
+    APUChannel(),
+    APUChannel(),
+    APUChannel() } { 
+    
     m_currentSample = 0;
     m_sampleTickCounter = 0;
 }
@@ -140,19 +147,9 @@ u8 APU::read() {
         result |= 0x80;
     }     
     m_DMC_IRQ = false;
-    _cpu->intr = false;
+    CPU::instance().intr = false;
     return result;
 }
-
-int affTick(APUChannel &channel, int channelNumber, bool channelsEnabled[], const u16 noisePeriods[], bool &dmcIrq) {
-	return channel.tick(channelNumber == 1 ? 0 : channelNumber, channelsEnabled, noisePeriods, dmcIrq);
-}
-
-/*
-int affTick(APUChannel &channel, int channelNumber, bool channelsEnabled[], const u16 noisePeriods[], bool &dmcIrq) {
-	return channel.tick(channelNumber == 1 ? 0 : channelNumber, channelsEnabled, noisePeriods, dmcIrq);
-}
-*/
 
 void APU::tick() { // Invoked at CPU's rate. 
     // Divide CPU clock by 7457.5 to get a 240 Hz, which controls certain events.
@@ -163,7 +160,7 @@ void APU::tick() { // Invoked at CPU's rate.
         }
         // 60 Hz interval: IRQ. IRQ is not invoked in five-cycle mode (48 Hz).
         if (!m_IRQdisable && !m_fiveCycleDivider && m_hz240counter.hi==0){
-            _cpu->intr = m_periodicIRQ = true;
+            CPU::instance().intr = m_periodicIRQ = true;
         }
         // Some events are invoked at 96 Hz or 120 Hz rate. Others, 192 Hz or 240 Hz.
         bool halfTick = (m_hz240counter.hi&5)==1, fullTick = m_hz240counter.hi < 4;
@@ -207,8 +204,8 @@ void APU::tick() { // Invoked at CPU's rate.
             }			
 			channelNumber++;
         }
-    }
-
+    }    
+    
     //synthesize all channels
 	if (m_currentSample <= m_cyclesPerFrame) {
         

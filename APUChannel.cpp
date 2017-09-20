@@ -3,9 +3,7 @@
 
 using namespace std;
 
-APUChannel::APUChannel(const shared_ptr<CPU> &cpu) {
-    m_cpu = cpu;
-
+APUChannel::APUChannel() {
     m_lengthCounter = 0;
     m_linearCounter = 0;
     m_address = 0;
@@ -132,15 +130,15 @@ int APUChannel::tick(unsigned channelNumber, bool channelsEnabled[], const u16 n
                     // TODO: proper clock
                     if(m_reg.WaveLength>20) {
                         for(unsigned t=0; t<3; ++t) {
-                            m_cpu->read(u16(m_address) | 0x8000); // timing
+                            CPU::instance().read(u16(m_address) | 0x8000); // timing
                         }
                     }
-                    m_hold  = m_cpu->read(u16(m_address++) | 0x8000); // Fetch byte
+                    m_hold  = CPU::instance().read(u16(m_address++) | 0x8000); // Fetch byte
                     m_phase = 8;
                     m_lengthCounter--;
                 }
                 else // Otherwise, disable channel or issue IRQ
-					channelsEnabled[4] = m_reg.IRQenable && (m_cpu->intr = dmcIrq = true);
+					channelsEnabled[4] = m_reg.IRQenable && (CPU::instance().intr = dmcIrq = true);
             }
             if(m_phase != 0) // Update the signal if sample buffer nonempty
             {

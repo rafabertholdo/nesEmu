@@ -6,8 +6,6 @@
 class APU;
 
 class APUChannel {
-    std::shared_ptr<CPU> m_cpu;
-    
     int m_lengthCounter;
     int m_linearCounter;
     int m_address;
@@ -34,7 +32,7 @@ public:
         RegBit<7,1,u32> LinearCounterDisable;                                 RegBit<31,1,u32> IRQenable;
     } m_reg;
 
-    APUChannel(const std::shared_ptr<CPU> &cpu);
+    APUChannel();
     ~APUChannel();
 
     const int& lengthCounter() const;
