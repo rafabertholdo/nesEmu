@@ -17,7 +17,9 @@ void RTSInstruction::createInstructions(InstructionArray &insctructions) {
 uint_least16_t RTSInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {        
     cpu.tick();
     cpu.tick();
-    cpu.PC = cpu.pop() + (cpu.pop() << 8) + 1;
+	auto first = cpu.pop();
+	auto second = cpu.pop();
+    cpu.PC = first + (second << 8) + 1;
     cpu.tick();
     return cpu.PC;
 }
