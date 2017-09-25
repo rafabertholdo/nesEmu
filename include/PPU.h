@@ -17,8 +17,8 @@ class CPU;
 class ROM;
 
 class PPU {    
-    std::array<u32, CHR_PAGES> m_chrMap;
-    std::array<u8, kMaxChrRomSize> m_chr; 
+    //std::array<u8, kMaxChrRomSize> m_chr; 
+    //std::array<u32, CHR_PAGES> m_chrMap;
 
     unsigned char CIRAM[0x800];
     unsigned char *nameTable[4] = { CIRAM+0x0000, CIRAM+0x0400, CIRAM+0x0000, CIRAM+0x0400 }; //Vertical mirroring: $2000 equals $2800 and $2400 equals $2C00
@@ -66,7 +66,7 @@ class PPU {
 
     u8& memoryMap(int i);        
 public:
-    PPU(const ROM &rom);
+    PPU();
     ~PPU();
     void rendering_tick();
     void render_pixel();

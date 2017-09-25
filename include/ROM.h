@@ -14,6 +14,8 @@ static const unsigned PRG_GRANULARITY = 0x2000, PRG_PAGES = 0x10000 / PRG_GRANUL
 static const unsigned PRG_START = 0x8000;
 
 class ROM {        
+    static ROM& theInstance;
+
     std::vector<u8> data;
     std::vector<u8> m_prg;    
     std::vector<u8> m_chr;    
@@ -32,16 +34,25 @@ class ROM {
     bool readFile(const char* filename);
 public:          
     ROM(const char* filePath);
-    ~ROM();  
+    ~ROM();
+    
+    ROM(ROM const&)             = delete;
+    void operator=(ROM const&)  = delete;
+
+    inline static ROM& loadROM(const char* filePath = 0) {
+        static ROM theInstance(filePath);
+        return theInstance;
+    }
+
     void init();
 
     void mapPrg(int pageKBs, int slot, int bank);    
     void mapChr(int pageKBs, int slot, int bank);       
     
-    const std::vector<u8>& chr() const;
+    std::vector<u8>& chr();
     const std::array<u32, CHR_PAGES>& chrMap() const;
 
-    const std::vector<u8>& prg() const;
+    std::vector<u8>& prg();
     const std::array<u32, PRG_PAGES>& prgMap() const;
 };
 

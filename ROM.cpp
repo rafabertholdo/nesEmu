@@ -37,7 +37,7 @@ ROM::~ROM(){
     
 }
 
-const std::vector<u8>& ROM::chr() const {
+std::vector<u8>& ROM::chr() {
     return m_chr;
 }
 
@@ -45,7 +45,7 @@ const std::array<u32, CHR_PAGES>& ROM::chrMap() const {
     return m_chrMap;
 }
 
-const std::vector<u8>& ROM::prg() const {
+std::vector<u8>& ROM::prg() {
     return m_prg;
 }
 

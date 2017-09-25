@@ -4,10 +4,11 @@
 
 using namespace std;
 
-PPU::PPU(const ROM &rom) {        
-    auto chr = rom.chr();
-    std::copy_n(chr.begin(), chr.size(), m_chr.begin());    
-    m_chrMap = rom.chrMap();
+PPU::PPU() {   
+    //ROM& rom = ROM::loadROM();     
+    //auto chr = rom.chr();
+    //std::copy_n(chr.begin(), chr.size(), m_chr.begin());    
+    //m_chrMap = rom.chrMap();
     reg.value = 0;
     scroll.raw = 0;
     vaddr.raw = 0;
@@ -47,7 +48,10 @@ u8& PPU::memoryMap(int address) {
     if (address < 0x2000) { // CHR-ROM/RAM. 0x0000 ... 0x1FFF        
         auto page = address / CHR_GRANULARITY;
         auto pageOffset = address % CHR_GRANULARITY;
-        return m_chr[(m_chrMap[page] + pageOffset)];
+        ROM& rom = ROM::loadROM();
+        auto& chr = rom.chr();
+        auto& chrMap = rom.chrMap();
+        return chr[(chrMap[page] + pageOffset)];
 	} else if (address < 0x3F00) { // Nametables .0x2000 ... 0x3EFF:
 		auto page = (address >> 10) & 3;
 		auto offset = address & 0x3FF;

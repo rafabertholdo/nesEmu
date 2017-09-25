@@ -27,8 +27,6 @@ class CPU {
     APU *m_apu;
 
     std::vector<u8> m_RAM;    
-    std::array<u32, PRG_PAGES> m_prgMap;
-    std::array<u8, kMaxPrgRomSize> m_prg; 
 
     InstructionArray m_instructions;    
     
@@ -51,6 +49,7 @@ class CPU {
     int elapsed();
     void test(const std::string &line, const std::vector<u8> &instructionData, const std::string &menmonic);    
     void dumpRegs();
+    //std::ostream& operator <<(std::ostream& stream, const CPU& cpu);
 public:
 
     //registers

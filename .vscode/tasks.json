@@ -1,10 +1,10 @@
 {
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
-    "version": "0.1.0",    
+    "version": "0.1.0",
     "command": "sh",
     "args": ["-c"],
-    "isShellCommand": true,    
+    "isShellCommand": true,
     "showOutput": "always",
     "suppressTaskName":true,
     "options": {
@@ -14,20 +14,20 @@
         {
             "command": "cmake",
             "taskName": "cmake windows",
-            "args": ["-G 'Visual Studio 15 2017 Win64' -DCMAKE_BUILD_TYPE=Debug .."]     
+            "args": ["-G 'Visual Studio 15 2017 Win64' -DCMAKE_BUILD_TYPE=Debug .."]
         },
-        {            
-            "taskName": "cmake",            
-            "args": ["cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug .."]     
-        },        
-        {            
-            "taskName": "cmake xcode",            
-            "args": ["cmake -G 'Xcode' -DCMAKE_BUILD_TYPE=Debug .."]     
+        {
+            "taskName": "cmake",
+            "args": ["cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug .."]
+        },
+        {
+            "taskName": "cmake xcode",
+            "args": ["cmake -G 'Xcode' -DCMAKE_BUILD_TYPE=Debug .."]
         },
         {
             "taskName": "make",
             "args": ["make -j 8"],
-            "isBuildCommand": true            
+            "isBuildCommand": true
         }
     ]
 }

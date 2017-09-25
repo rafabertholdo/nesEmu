@@ -45,6 +45,12 @@ CPU::CPU()
     A=0;
     X=0;
     Y=0;    
+
+    if (m_testing) {
+        PC = 0xC000;    
+    } else {
+        PC = getResetVectorValue();
+    }
 }
 
 /*
@@ -72,18 +78,6 @@ u16 CPU::getResetVectorValue() {
 u16 CPU::getBrkVectorValue() {
     return read(kBrkVectorAddress, 2); //brk vector
 }
-
-void CPU::loadRom(const ROM &rom) {
-    auto prg = rom.prg();
-    std::copy_n(prg.begin(), prg.size(), m_prg.begin());    
-    m_prgMap = rom.prgMap();
-
-    if (m_testing) {
-        PC = 0xC000;    
-    } else {
-        PC = getResetVectorValue();
-    }
-}   
 
 void CPU::executeInstruction(Instruction &instruction) {
     u16 instructionData = 0;
@@ -248,7 +242,10 @@ u8 CPU::prgAccess(const u16 &address, const u8 &value, const bool &write) {
     if (address >= PRG_START) {
         auto page = (address / PRG_GRANULARITY) % PRG_PAGES;
         auto pageOffset = address % PRG_GRANULARITY;
-        return m_prg[m_prgMap[page] + pageOffset];
+        ROM& rom = ROM::loadROM();
+        auto& prg = rom.prg();
+        auto& prgMap = rom.prgMap();
+        return prg[prgMap[page] + pageOffset];
     } else {
         //TODO: PRG m_RAM
         // return prgRam[addr - 0x6000];
