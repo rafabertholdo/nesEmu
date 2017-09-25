@@ -32,71 +32,71 @@ $ ./nesemu YOUR_ROM_FILE.nes
 
 Right now the emulator is only compatible to mapper 0 games and [Vertical Mirroring](https://wiki.nesdev.com/w/index.php/Mirroring).
 
-110 in 1 Menu
-58 In 1 Menu
-Arkanoid
-Astro Robo Sasa
-Back to the Future
-Baltron
-Bokosuka Wars
-Challenger
-Dig Dug 2 (J)
-Dough Boy
-Field Combat
-Flappy
-Four Card Games
-Golf
-Gomoku Narabe
-Gyrodine
-Hyper Olympic
-Hyper Olympic - Tonosoma Edition
-Hyper Sports
-Ice Hockey
-Ice Hockey (disk coversion)
-Ikki
-Jewelry
-Joust
-Karateka
-Kinniku Man
-Kung-Fu
-Lode Runner (J)
-Lunar Ball
-Macross
-Mappy
-Mario Bros
-Ninja Kun
-Obake no Qtarou
-Onyanko Town
-Othello (J)
-Pac-Land
-Penguin Kun Wars
-Poo-Yan
-Popeye
-Popeye Eigo Asobi
-Portpia Renzoku Satsujin Jiken
-Pyramid
-Raid on Bungling Bay (J)
-Robot Gyro (Gyromite)
-Seicross
-Seicross (J)
-Space Invaders
-Spartan X
-Spelunker (J)
-Spy Vs. Spy (J)
-Sqoon (J)
-Star Force (J)
-Star Gate
-Super Dynamix Badminton
-Super Mario Bros
-Super Mario Bros (PAL)
-Tennis
-Tower of Druaga, The
-Urban Champion
-Volguard 2
-Wild Gunman
-Yie-Ar Kung-Fu
-Yo Nin Uti Majyan
-Zippy Race
+* 110 in 1 Menu
+* 58 In 1 Menu
+* Arkanoid
+* Astro Robo Sasa
+* Back to the Future
+* Baltron
+* Bokosuka Wars
+* Challenger
+* Dig Dug 2 (J)
+* Dough Boy
+* Field Combat
+* Flappy
+* Four Card Games
+* Golf
+* Gomoku Narabe
+* Gyrodine
+* Hyper Olympic
+* Hyper Olympic - Tonosoma Edition
+* Hyper Sports
+* Ice Hockey
+* Ice Hockey (disk coversion)
+* Ikki
+* Jewelry
+* Joust
+* Karateka
+* Kinniku Man
+* Kung-Fu
+* Lode Runner (J)
+* Lunar Ball
+* Macross
+* Mappy
+* Mario Bros
+* Ninja Kun
+* Obake no Qtarou
+* Onyanko Town
+* Othello (J)
+* Pac-Land
+* Penguin Kun Wars
+* Poo-Yan
+* Popeye
+* Popeye Eigo Asobi
+* Portpia Renzoku Satsujin Jiken
+* Pyramid
+* Raid on Bungling Bay (J)
+* Robot Gyro (Gyromite)
+* Seicross
+* Seicross (J)
+* Space Invaders
+* Spartan X
+* Spelunker (J)
+* Spy Vs. Spy (J)
+* Sqoon (J)
+* Star Force (J)
+* Star Gate
+* Super Dynamix Badminton
+* Super Mario Bros
+* Super Mario Bros (PAL)
+* Tennis
+* Tower of Druaga, The
+* Urban Champion
+* Volguard 2
+* Wild Gunman
+* Yie-Ar Kung-Fu
+* Yo Nin Uti Majyan
+* Zippy Race
 
 
 >Programing is moving zeros and ones for one place to another.
