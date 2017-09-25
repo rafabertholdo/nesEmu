@@ -2,8 +2,8 @@
 
 NESEmu is as cross-platform Nintendo emulator writen in c++14.
 
-### How to compile and run. ###
-#### OSX ####
+## How to compile and run. ##
+### OSX ###
  * Download and instal [XCode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12)
  * Download and install [CMake](https://cmake.org/download/)
  * Download and install [Visual Studio Code](https://code.visualstudio.com/Download) (optional)
@@ -12,27 +12,32 @@ NESEmu is as cross-platform Nintendo emulator writen in c++14.
  *  ```brew install sdl2```
  *  ```mkdir build```
 
-##### Compile on Terminal #####
+#### Compile on Terminal ####
 ```sh
 $ cd build
 $ cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug ..
 $ make -j 8
 ```
-##### Compile on Visual Studio Code #####
+#### Compile on Visual Studio Code ####
 * task -> run task -> cmake
 * ⌘ + shift + b
-* Press F5 to run in debug mode
 
-##### run #####
+#### run ####
 * Copy the rom to the build directory
+
+#### terminal ####
 
 ```sh
 $ ./nesemu YOUR_ROM_FILE.nes
 ```
 
+#### Visual Studio Code ####
+* Edit the property args in the file launch.json to "build/YOUR_ROM_FILE.nes"
+* Hit F5
+
 ## ROM Compatibility ##
 
-Right now the emulator is only compatible to mapper 0 games and [Vertical Mirroring](https://wiki.nesdev.com/w/index.php/Mirroring).
+Right now the emulator is only compatible to NTSC mapper 0 games and [Vertical Mirroring](https://wiki.nesdev.com/w/index.php/Mirroring).
 
 * 110 in 1 Menu
 * 58 In 1 Menu
@@ -90,7 +95,6 @@ Right now the emulator is only compatible to mapper 0 games and [Vertical Mirror
 * Star Gate
 * Super Dynamix Badminton
 * Super Mario Bros
-* Super Mario Bros (PAL)
 * Tennis
 * Tower of Druaga, The
 * Urban Champion
