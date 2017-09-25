@@ -15,7 +15,7 @@ NESEmu is as cross-platform Nintendo emulator writen in c++14.
 #### Compile on Terminal ####
 ```sh
 $ cd build
-$ cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug ..
+$ cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release ..
 $ make -j 8
 ```
 #### Compile on Visual Studio Code ####
