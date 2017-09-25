@@ -16,10 +16,7 @@ enum class Mirroring { VERTICAL, HORIZONTAL };
 class CPU;
 class ROM;
 
-class PPU {    
-    //std::array<u8, kMaxChrRomSize> m_chr; 
-    //std::array<u32, CHR_PAGES> m_chrMap;
-
+class PPU {
     unsigned char CIRAM[0x800];
     unsigned char *nameTable[4] = { CIRAM+0x0000, CIRAM+0x0400, CIRAM+0x0000, CIRAM+0x0400 }; //Vertical mirroring: $2000 equals $2800 and $2400 equals $2C00
 
@@ -64,15 +61,23 @@ class PPU {
     int read_buffer=0, open_bus=0, open_bus_decay_timer=0;
     bool even_odd_toggle=false, offset_toggle=false;
 
-    u8& memoryMap(int i);        
+    u8& memoryMap(int i);
 public:
     PPU();
     ~PPU();
+    PPU(PPU const&)             = delete;
+    void operator=(PPU const&)  = delete;
+
+    inline static PPU& instance() {
+        static PPU theInstance;
+        return theInstance;
+    }
+
     void rendering_tick();
     void render_pixel();
-    void tick();    
+    void tick();
     // External I/O: read or write
-    uint_least8_t access(uint_least16_t index, uint_least8_t v, bool write);    
+    uint_least8_t access(uint_least16_t index, uint_least8_t v, bool write);
 };
 
 #endif

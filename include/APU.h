@@ -6,7 +6,7 @@
 #include "Blip_Buffer.h"
 #include "Sync_Audio.h"
 
-class APU : public std::enable_shared_from_this<APU> {    
+class APU : public std::enable_shared_from_this<APU> {
     static const u8 m_LengthCounters[32];
     static const u16 m_noisePeriods[16];
     static const u16 m_DMCperiods[16];
@@ -33,21 +33,29 @@ class APU : public std::enable_shared_from_this<APU> {
     bool m_DMC_IRQ = false;
 
     APUChannel m_channels[5];
-    int m_currentSample;	
+    int m_currentSample;
     int m_sampleTickCounter;
-	int channelTick(unsigned channelNumber);
-    
-    struct { 
+
+    struct {
         short lo;
-        short hi; 
+        short hi;
     }m_hz240counter = { 0,0 };
+
+	int channelTick(unsigned channelNumber);
+    void init();
 public:
     APU();
     ~APU();
+    APU(APU const&)             = delete;
+    void operator=(APU const&)  = delete;
+
+    inline static APU& instance() {
+        static APU theInstance;
+        return theInstance;
+    }
 
     void write(u8 index, u8 value);
     u8 read();
     void tick();
-    void init();
 };
-   
+

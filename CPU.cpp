@@ -1,4 +1,4 @@
-#include "CPU.h" 
+#include "CPU.h"
 #include "PPU.h"
 #include "APU.h"
 #include "Utils.cpp"
@@ -26,42 +26,27 @@ static const u8 kBRKInstructionOpcode = 0x02;
 
 CPU::CPU()
     : m_RAM(kRamSize) , //2k of ram
-      m_totalCycles(kCyclesPerFrame) 
-    //  m_testLogFile(std::ifstream(kTestLogFile)) 
-    { 
-    
-    Instruction::instantiateAll(m_instructions);       
-    
-    m_testing = false;    
+      m_totalCycles(kCyclesPerFrame)
+    //  m_testLogFile(std::ifstream(kTestLogFile))
+    {
+
+    Instruction::instantiateAll(m_instructions);
+
+    m_testing = false;
 
 	m_remainingCycles = m_totalCycles;
     Flags.raw = kInitialFlags;
     SP = kInitialStackPointer;
-    m_reset = false;    
+    m_reset = true;
     nmi = false;
     nmiEdgeDetected = false;
-    intr = false;    
+    intr = false;
     m_executedInstructionsCount = 0;
     A=0;
     X=0;
-    Y=0;    
-
-    if (m_testing) {
-        PC = 0xC000;    
-    } else {
-        PC = getResetVectorValue();
-    }
+    Y=0;
+    PC = 0;
 }
-
-/*
-CPU::CPU(const CPU &cpu): m_totalCycles(kCyclesPerFrame) {
-    A = cpu.A;
-    X = cpu.X;
-    Y = cpu.Y;
-    SP = cpu.SP;
-    Flags.raw = cpu.Flags.raw;
-    PC = cpu.PC;
-}*/
 
 CPU::~CPU() {
 
@@ -83,20 +68,20 @@ void CPU::executeInstruction(Instruction &instruction) {
     u16 instructionData = 0;
     auto length = instruction.length();
     if (length > 1) {
-        instructionData = read(PC+1, instruction.length() - 1);            
+        instructionData = read(PC+1, instruction.length() - 1);
     }
-    
-    if (m_testing) {               
+
+    if (m_testing) {
         string line;
-        if (m_testing) {        
+        if (m_testing) {
             /*
             if (m_testLogFile.is_open()) {
                 getline(m_testLogFile,line);
-            } else { 
-                cout << "Unable to open file"; 
-            } */      
+            } else {
+                cout << "Unable to open file";
+            } */
         }
-        
+
         vector<u8> instructionDataVector;
         if (instruction.length() > 1) {
             for(int i=0;i<instruction.length() - 1;i++) {
@@ -104,39 +89,43 @@ void CPU::executeInstruction(Instruction &instruction) {
             }
         }
 
-        identify(instructionDataVector, instruction);   
-        test(line, instructionDataVector, instruction.menmonic());           
+        identify(instructionDataVector, instruction);
+        test(line, instructionDataVector, instruction.menmonic());
     }
-    
-    PC += instruction.length();             
-    instruction.execute(*this, instructionData); 
+
+    PC += instruction.length();
+    instruction.execute(*this, instructionData);
 }
 
-void CPU::run() {   
+void CPU::run() {
     bool quit = false;
-    
+
     m_remainingCycles += m_totalCycles;
     while(m_remainingCycles > 0) {
 
-        auto instructionCode = read(PC);                
-        
-        bool nmiNow = nmi;        
-        if(m_reset)  {                  
-            instructionCode = kResetInstructionOpcode;
-        } else if(nmiNow && !nmiEdgeDetected) {             
+        auto instructionCode = read(PC);
+
+        bool nmiNow = nmi;
+        if(m_reset)  {
+            if (m_testing) {
+                PC = getResetVectorValue();
+            } else {
+                instructionCode = kResetInstructionOpcode;
+            }
+        } else if(nmiNow && !nmiEdgeDetected) {
             instructionCode = kNMIInstructionOpcode;
-        } else if(intr && !Flags.InterruptDisabled) {             
+        } else if(intr && !Flags.InterruptDisabled) {
             instructionCode = kBRKInstructionOpcode;
         }
 
-        if(!nmiNow) { 
+        if(!nmiNow) {
             nmiEdgeDetected = false;
-        } 
-        
-        executeInstruction(m_instructions[instructionCode]);                      
-        
+        }
+
+        executeInstruction(m_instructions[instructionCode]);
+
         m_reset = false;
-    }	
+    }
 }
 
 void CPU::dmaOam(const u8 &value) {
@@ -148,7 +137,7 @@ void CPU::dmaOam(const u8 &value) {
 u8 CPU::memAccess(const u16 &address, const u8 &value, const bool &write) {
     // Memory writes are turned into reads while reset is being signalled
     if(m_reset && write) return memAccess(address, 0, false);
-    
+
     tick();
 	if (address < 0x2000) {  // m_RAM 0x0000 ... 0x1FFF
 		u8& reference = m_RAM[address & 0x7FF];
@@ -157,10 +146,10 @@ u8 CPU::memAccess(const u16 &address, const u8 &value, const bool &write) {
 		}
 		reference = value;
 	} else if (address < 0x4000) { //PPU 0x2000 ... 0x3FFF
-		return m_ppu->access(address & 7, value, write);
+		return PPU::instance().access(address & 7, value, write);
 	} else if (address < 0x4014) { //APU address 0x4000 ... 0x4013
 		if(write) {
-            m_apu->write(address & 0x1F, value);
+            APU::instance().write(address & 0x1F, value);
         }
 	} else if (address == 0x4014) { // OAM DMA.
 		if (write) {
@@ -168,19 +157,19 @@ u8 CPU::memAccess(const u16 &address, const u8 &value, const bool &write) {
         }
 	} else if (address == 0x4015) {
         if(write) {
-            m_apu->write(0x15,value);
+            APU::instance().write(0x15,value);
         } else {
-            return m_apu->read(); 
+            return APU::instance().read();
         }
     } else if (address == 0x4016) { // Joypad 0.
-		if (write) { 
-			IO::instance().JoyStrobe(value);        
-		} else { 
-			return IO::instance().JoyRead(0);        
+		if (write) {
+			IO::instance().JoyStrobe(value);
+		} else {
+			return IO::instance().JoyRead(0);
 		}
 	} else if (address == 0x4017) { // Joypad 1.
 		if (write) {
-			m_apu->write(0x17,value);
+			APU::instance().write(0x17,value);
 		} else {
             IO::instance().JoyRead(1);
         }
@@ -200,7 +189,7 @@ u16 CPU::read(const u16 &address, const u8 &length) {
     for (u8 i = 0; i < length; i++) {
         result |= read(address+i) << (i * 8); //read little endian value
     }
-    
+
     return result;
 }
 
@@ -219,20 +208,13 @@ u8 CPU::pop() {
     return topElement;
 }
 
-void CPU::setPPU(PPU &ppu) {
-    m_ppu = &ppu;
-}
-void CPU::setAPU(APU &apu) {
-    m_apu = &apu;
-}
-
-void CPU::tick() {    
+void CPU::tick() {
     for(unsigned n=0; n<3; ++n) {
-        m_ppu->tick();
+        PPU::instance().tick();
     }
-    //m_apu->tick();
-    
-    m_remainingCycles--;    
+    APU::instance().tick();
+
+    m_remainingCycles--;
 }
 
 u8 CPU::prgAccess(const u16 &address, const u8 &value, const bool &write) {
@@ -250,7 +232,7 @@ u8 CPU::prgAccess(const u16 &address, const u8 &value, const bool &write) {
         //TODO: PRG m_RAM
         // return prgRam[addr - 0x6000];
         return 0;
-    }   
+    }
 }
 
 void CPU::dumpRegs() {
@@ -265,22 +247,22 @@ void CPU::dumpRegs() {
     Utils<u8>::printHex(Flags.raw);
     std::cout << " SP:";
     Utils<u8>::printHex(SP);
-    //std::cout << " CYC:" << std::setw(3) << std::setfill(' ') << static_cast<int>(0) << std::endl; 
+    //std::cout << " CYC:" << std::setw(3) << std::setfill(' ') << static_cast<int>(0) << std::endl;
 	cout << std::endl;
 }
 
 void CPU::test(const string &line, const vector<u8> &instructionData, const string &menmonic) {
-    std::regex rgx("(.{4})\\s*(.{9}).(.{3})\\s(.{28})A:(.{2})\\sX:(.{2})\\sY:(.{2})\\sP:(.{2})\\sSP:(.{2})\\sCYC:(.*)");            
+    std::regex rgx("(.{4})\\s*(.{9}).(.{3})\\s(.{28})A:(.{2})\\sX:(.{2})\\sY:(.{2})\\sP:(.{2})\\sSP:(.{2})\\sCYC:(.*)");
     std::smatch matches;
 
-    if(std::regex_search(line, matches, rgx)) {       
+    if(std::regex_search(line, matches, rgx)) {
 
 		auto expectedPC = stoul(matches[1].str(),nullptr,16);
         string expectedData =  matches[2].str();
-        
+
         string expectedInstruction = matches[3].str();
-        string expectedInstructionData = matches[4].str();                
-        auto expectedA = stoul(matches[5].str(),nullptr,16);                
+        string expectedInstructionData = matches[4].str();
+        auto expectedA = stoul(matches[5].str(),nullptr,16);
 		auto expectedX = stoul(matches[6].str(),nullptr,16);
 		auto expectedY = stoul(matches[7].str(),nullptr,16);
 		auto expectedP = stoul(matches[8].str(),nullptr,16);
@@ -301,7 +283,7 @@ void CPU::test(const string &line, const vector<u8> &instructionData, const stri
 void CPU::identify(const vector<u8> &instructionData, const Instruction &instruction) {
     Utils<u16>::printHex(PC);
     cout << "  ";
-    Utils<u8>::printHex(instruction.opcode());        
+    Utils<u8>::printHex(instruction.opcode());
     cout << " ";
 
     int verboseData = 7;
@@ -310,7 +292,7 @@ void CPU::identify(const vector<u8> &instructionData, const Instruction &instruc
         cout << " ";
         verboseData -= 3;
     }
-    cout << std::setw(verboseData) << std::setfill(' ') << " ";    
-    std::cout << instruction.menmonic() << " ";    
+    cout << std::setw(verboseData) << std::setfill(' ') << " ";
+    std::cout << instruction.menmonic() << " ";
     dumpRegs();
 }

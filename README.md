@@ -105,4 +105,4 @@ Right now the emulator is only compatible to NTSC mapper 0 games and [Vertical M
 * Zippy Race
 
 
->Programing is moving zeros and ones for one place to another.
+>Programming is moving zeros and ones from one place to another.

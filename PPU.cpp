@@ -5,10 +5,6 @@
 using namespace std;
 
 PPU::PPU() {   
-    //ROM& rom = ROM::loadROM();     
-    //auto chr = rom.chr();
-    //std::copy_n(chr.begin(), chr.size(), m_chr.begin());    
-    //m_chrMap = rom.chrMap();
     reg.value = 0;
     scroll.raw = 0;
     vaddr.raw = 0;
