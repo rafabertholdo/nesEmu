@@ -15,7 +15,7 @@ void NMIInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "NMI", NMIInstruction::sharedAction);
 }
 
-uint_least16_t NMIInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {        
+uint_least16_t NMIInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {        
     cpu.tick();
     cpu.tick();
 

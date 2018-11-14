@@ -14,7 +14,7 @@ void TAYInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "TAY", TAYInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t TAYInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
+uint_least16_t TAYInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {    
     cpu.Y = cpu.A;
     cpu.tick();
     return cpu.Y;

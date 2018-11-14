@@ -1,0 +1,3 @@
+/Users/rafaelgb/Developer/nesEmu/build/CMakeFiles/rebuild_cache.dir
+/Users/rafaelgb/Developer/nesEmu/build/CMakeFiles/edit_cache.dir
+/Users/rafaelgb/Developer/nesEmu/build/CMakeFiles/nesEmu.dir

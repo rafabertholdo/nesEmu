@@ -1,0 +1,1024 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		9DBC13A202974D61B5E30C2A /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 3B5C506B657E4EA09B33EEDD /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				A8696EEFE8E3448A88613735 /* CMake Rules */,
+			);
+			dependencies = (
+				0F90C5E10D114F3BB11764F9 /* PBXTargetDependency */,
+				EDE12E0B1AB44C95A25C5337 /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+		DD5DF431DAAA4EBBBCB0DBAF /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2E04C0FF946F4FE7BC60737E /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				14698B80585F4E41A4AB6496 /* CMake Rules */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		016B3086DD6D43D7A9E86C1A /* /Users/rafaelgb/Developer/nesEmu/instructions/BITInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 8DFC15C6007049BDBA3AD562 /* /Users/rafaelgb/Developer/nesEmu/instructions/BITInstruction.cpp */; };
+		01865FF93B4D49558F95220C /* /Users/rafaelgb/Developer/nesEmu/instructions/BVSInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 58FE162A69ED415D8D845468 /* /Users/rafaelgb/Developer/nesEmu/instructions/BVSInstruction.cpp */; };
+		05BC9C599D55441DBF189C1B /* /Users/rafaelgb/Developer/nesEmu/instructions/TYAInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 4C0E176733B4488C823D8113 /* /Users/rafaelgb/Developer/nesEmu/instructions/TYAInstruction.cpp */; };
+		08891C7217114A66B5BF0DFB /* /Users/rafaelgb/Developer/nesEmu/instructions/RLAInstruction.cpp */ = {isa = PBXBuildFile; fileRef = F6DAA3A65494446386241B7E /* /Users/rafaelgb/Developer/nesEmu/instructions/RLAInstruction.cpp */; };
+		139603303F9B4131844E0540 /* /Users/rafaelgb/Developer/nesEmu/instructions/SECInstruction.cpp */ = {isa = PBXBuildFile; fileRef = EC3D55228E6F4E899E791AFD /* /Users/rafaelgb/Developer/nesEmu/instructions/SECInstruction.cpp */; };
+		13B4D7AAFAF641F282650468 /* /Users/rafaelgb/Developer/nesEmu/instructions/SBCInstruction.cpp */ = {isa = PBXBuildFile; fileRef = A84CCCDDC2F84875B4454578 /* /Users/rafaelgb/Developer/nesEmu/instructions/SBCInstruction.cpp */; };
+		1C6ED2C4D9AD43F492102AC1 /* /Users/rafaelgb/Developer/nesEmu/instructions/SEIInstruction.cpp */ = {isa = PBXBuildFile; fileRef = A2101F3A1236419BAFF5FC2A /* /Users/rafaelgb/Developer/nesEmu/instructions/SEIInstruction.cpp */; };
+		1F048D189695426EACFEB3D1 /* /Users/rafaelgb/Developer/nesEmu/Blip_Buffer.cpp */ = {isa = PBXBuildFile; fileRef = 4323B308F6BB412F9A1808CD /* /Users/rafaelgb/Developer/nesEmu/Blip_Buffer.cpp */; };
+		257A8B52725A40D19BAF42B0 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDXInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 688EE9AE20714D758D6AFA54 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDXInstruction.cpp */; };
+		26E0A719C2064A7980CE2711 /* /Users/rafaelgb/Developer/nesEmu/instructions/INXInstruction.cpp */ = {isa = PBXBuildFile; fileRef = C0337BA010EE4303A206EF17 /* /Users/rafaelgb/Developer/nesEmu/instructions/INXInstruction.cpp */; };
+		283EDCF9818F481B849C5864 /* /Users/rafaelgb/Developer/nesEmu/instructions/DEYInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 6E1A1F5FA76A47C9AD761202 /* /Users/rafaelgb/Developer/nesEmu/instructions/DEYInstruction.cpp */; };
+		2B1079CAFCCB45F997ACF9B1 /* /Users/rafaelgb/Developer/nesEmu/instructions/PLPInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 00FCD151E58D4B6D96FE48B9 /* /Users/rafaelgb/Developer/nesEmu/instructions/PLPInstruction.cpp */; };
+		2D5CADF9CEA54F0E9F29755E /* /Users/rafaelgb/Developer/nesEmu/instructions/ASLInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 46530ED958844EF3AF1470AE /* /Users/rafaelgb/Developer/nesEmu/instructions/ASLInstruction.cpp */; };
+		2E92EBE054DA4AF5A64CFF65 /* /Users/rafaelgb/Developer/nesEmu/include/Blip_Buffer.h */ = {isa = PBXBuildFile; fileRef = B55F91C07D59426E99EF98CC /* /Users/rafaelgb/Developer/nesEmu/include/Blip_Buffer.h */; };
+		31BC370B77E5485980B70F25 /* /Users/rafaelgb/Developer/nesEmu/instructions/JSRInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 734C523A84E343A9BB16CC8E /* /Users/rafaelgb/Developer/nesEmu/instructions/JSRInstruction.cpp */; };
+		353E575025DE49DEA63A11CF /* /Users/rafaelgb/Developer/nesEmu/instructions/DCPInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 62CE27C0C43D4E94B8646509 /* /Users/rafaelgb/Developer/nesEmu/instructions/DCPInstruction.cpp */; };
+		39681A0CA895430F996402A2 /* /Users/rafaelgb/Developer/nesEmu/instructions/JMPInstruction.cpp */ = {isa = PBXBuildFile; fileRef = AE154A2D90744DF2A28458E1 /* /Users/rafaelgb/Developer/nesEmu/instructions/JMPInstruction.cpp */; };
+		3AC663AD5D834D2F9D14F13F /* /Users/rafaelgb/Developer/nesEmu/APU.cpp */ = {isa = PBXBuildFile; fileRef = F8AE62ECE77F4DBBA703F4FE /* /Users/rafaelgb/Developer/nesEmu/APU.cpp */; };
+		3D5214DBC0AD40A483E84C5E /* /Users/rafaelgb/Developer/nesEmu/instructions/SEDInstruction.cpp */ = {isa = PBXBuildFile; fileRef = CC7C8A82842B456EB239CA6C /* /Users/rafaelgb/Developer/nesEmu/instructions/SEDInstruction.cpp */; };
+		3D661F8BBC30477390376050 /* /Users/rafaelgb/Developer/nesEmu/APUChannel.cpp */ = {isa = PBXBuildFile; fileRef = 66A784EC353942AAA3CDB433 /* /Users/rafaelgb/Developer/nesEmu/APUChannel.cpp */; };
+		41B0DBCB8046420D8FD6D1F2 /* /Users/rafaelgb/Developer/nesEmu/include/ROM.h */ = {isa = PBXBuildFile; fileRef = 100E4C5E737347549C5D76F1 /* /Users/rafaelgb/Developer/nesEmu/include/ROM.h */; };
+		42FE261996A24961AD75E6D1 /* /Users/rafaelgb/Developer/nesEmu/instructions/RRAInstruction.cpp */ = {isa = PBXBuildFile; fileRef = ACC279F69BE24B5FA20A146A /* /Users/rafaelgb/Developer/nesEmu/instructions/RRAInstruction.cpp */; };
+		45BE5DA5EA544C82B6DF0CD1 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDAInstruction.cpp */ = {isa = PBXBuildFile; fileRef = A3BE0CFF883D4E0EA07BC1D1 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDAInstruction.cpp */; };
+		4F857329ABD544F48A82A9D9 /* /Users/rafaelgb/Developer/nesEmu/instructions/BPLInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 32FB53CE045740EB82E1D7B3 /* /Users/rafaelgb/Developer/nesEmu/instructions/BPLInstruction.cpp */; };
+		4FE690BF7F9740C2AB398A99 /* /Users/rafaelgb/Developer/nesEmu/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 072C1E1B1D7F4CFEA19CE4DC /* /Users/rafaelgb/Developer/nesEmu/CMakeLists.txt */; };
+		57BDA4CF0C494AC8B40F9B3B /* /Users/rafaelgb/Developer/nesEmu/main.cpp */ = {isa = PBXBuildFile; fileRef = 424CDC7A2F8240AD8316C101 /* /Users/rafaelgb/Developer/nesEmu/main.cpp */; };
+		58B461D75346414F888C0301 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDYInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 1ADCAF7D5B4D4D4681917758 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDYInstruction.cpp */; };
+		594F536B0BFD41FCA9CA8839 /* /Users/rafaelgb/Developer/nesEmu/Addressing.cpp */ = {isa = PBXBuildFile; fileRef = D255F9B33458407191AEFCEF /* /Users/rafaelgb/Developer/nesEmu/Addressing.cpp */; };
+		5BD754508CF24C349475BF37 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLIInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 9C1FB77959A54772AF3CF9C5 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLIInstruction.cpp */; };
+		5F46E13AF871400E85BDADC4 /* /Users/rafaelgb/Developer/nesEmu/instructions/ORAInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 16BDE683F64E4F4DB9593577 /* /Users/rafaelgb/Developer/nesEmu/instructions/ORAInstruction.cpp */; };
+		6009EC79BB3D482DBDE776BA /* /Users/rafaelgb/Developer/nesEmu/instructions/PHPInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 9FB8F8CFF50F4A36B25F5556 /* /Users/rafaelgb/Developer/nesEmu/instructions/PHPInstruction.cpp */; };
+		600F566AD5FB4B48B3A6DF12 /* /Users/rafaelgb/Developer/nesEmu/instructions/ADCInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 6DD9CBA987FF435CBB5095F5 /* /Users/rafaelgb/Developer/nesEmu/instructions/ADCInstruction.cpp */; };
+		632F43C8E24240EFA27D6FB4 /* /Users/rafaelgb/Developer/nesEmu/instructions/LSRInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 8F5C5267CC8E4D82A5AA7469 /* /Users/rafaelgb/Developer/nesEmu/instructions/LSRInstruction.cpp */; };
+		637294502B54494385AD330B /* /Users/rafaelgb/Developer/nesEmu/include/Timer.h */ = {isa = PBXBuildFile; fileRef = 12CA4849E586453092757CC8 /* /Users/rafaelgb/Developer/nesEmu/include/Timer.h */; };
+		642A9A6290DE4349B944C926 /* /Users/rafaelgb/Developer/nesEmu/instructions/ROLInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 47F250B3AE85421EA094AE1A /* /Users/rafaelgb/Developer/nesEmu/instructions/ROLInstruction.cpp */; };
+		645783A40E894DF2AB6609E2 /* /Users/rafaelgb/Developer/nesEmu/include/RegBit.h */ = {isa = PBXBuildFile; fileRef = FBC59D8B3F4F4A2690537C53 /* /Users/rafaelgb/Developer/nesEmu/include/RegBit.h */; };
+		689451AB0CA249D3A1C74BF5 /* /Users/rafaelgb/Developer/nesEmu/instructions/STXInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 37542E483AED4B7EACFB7FC8 /* /Users/rafaelgb/Developer/nesEmu/instructions/STXInstruction.cpp */; };
+		68BB57DF05634271BF8FA278 /* /Users/rafaelgb/Developer/nesEmu/instructions/CPYInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 30B1751B178846D0A3B878D5 /* /Users/rafaelgb/Developer/nesEmu/instructions/CPYInstruction.cpp */; };
+		6AB35A2218D946C796070309 /* /Users/rafaelgb/Developer/nesEmu/instructions/BCSInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 1C17BAC2523541EB815F1A76 /* /Users/rafaelgb/Developer/nesEmu/instructions/BCSInstruction.cpp */; };
+		6C3A4C49E5444D6C92A12B82 /* /Users/rafaelgb/Developer/nesEmu/include/Utils.h */ = {isa = PBXBuildFile; fileRef = DD511108636247329D8FF16C /* /Users/rafaelgb/Developer/nesEmu/include/Utils.h */; };
+		6F0C3EF498C24FB79C151046 /* /Users/rafaelgb/Developer/nesEmu/instructions/BEQInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 5057BF8DFC084E8BAF3BBD74 /* /Users/rafaelgb/Developer/nesEmu/instructions/BEQInstruction.cpp */; };
+		7225DDAD282443928C9368A5 /* /Users/rafaelgb/Developer/nesEmu/instructions/SAXInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 3043314EFCFA455DB3C1D8C0 /* /Users/rafaelgb/Developer/nesEmu/instructions/SAXInstruction.cpp */; };
+		77C229B0DDEA47CFB447654A /* /Users/rafaelgb/Developer/nesEmu/instructions/TXAInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 1751C67878324DC4BDABA162 /* /Users/rafaelgb/Developer/nesEmu/instructions/TXAInstruction.cpp */; };
+		78C1B50491A94C9894F57688 /* /Users/rafaelgb/Developer/nesEmu/instructions/SREInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 6B8F2E1F976944B9B79F9BE4 /* /Users/rafaelgb/Developer/nesEmu/instructions/SREInstruction.cpp */; };
+		796EA8F8C68E4B99922F2BCC /* /Users/rafaelgb/Developer/nesEmu/instructions/ANDInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 7389922169A649DE8E90E633 /* /Users/rafaelgb/Developer/nesEmu/instructions/ANDInstruction.cpp */; };
+		7D6D3436BA4A42BCAC650EEF /* /Users/rafaelgb/Developer/nesEmu/ROM.cpp */ = {isa = PBXBuildFile; fileRef = A6CE33AA23E54A4BAF2A6F47 /* /Users/rafaelgb/Developer/nesEmu/ROM.cpp */; };
+		7F1184AC9B6149CE9A37491D /* /Users/rafaelgb/Developer/nesEmu/Utils.cpp */ = {isa = PBXBuildFile; fileRef = 2260BC5F70674D86A580D0C6 /* /Users/rafaelgb/Developer/nesEmu/Utils.cpp */; };
+		819D2C03127D40E59150A11B /* /Users/rafaelgb/Developer/nesEmu/instructions/BCCInstruction.cpp */ = {isa = PBXBuildFile; fileRef = DA2D4D5B6FE74B3EA1B324C3 /* /Users/rafaelgb/Developer/nesEmu/instructions/BCCInstruction.cpp */; };
+		8311144EB7704852B6CC4D00 /* /Users/rafaelgb/Developer/nesEmu/include/CPU.h */ = {isa = PBXBuildFile; fileRef = 1A5BCFFE83394716BB6C0539 /* /Users/rafaelgb/Developer/nesEmu/include/CPU.h */; };
+		84C7CD36842E4A8B8E477329 /* /Users/rafaelgb/Developer/nesEmu/instructions/BNEInstruction.cpp */ = {isa = PBXBuildFile; fileRef = D672FB013FB54039B2EEFFB4 /* /Users/rafaelgb/Developer/nesEmu/instructions/BNEInstruction.cpp */; };
+		89935E07C39D46FF94FF1497 /* /Users/rafaelgb/Developer/nesEmu/instructions/INCInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 6B17D8EDF8E74F38A50BF710 /* /Users/rafaelgb/Developer/nesEmu/instructions/INCInstruction.cpp */; };
+		919E21A4CB3E45B78CA3C14F /* /Users/rafaelgb/Developer/nesEmu/instructions/CMPInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 4BF68AFD94C74721AB54CA65 /* /Users/rafaelgb/Developer/nesEmu/instructions/CMPInstruction.cpp */; };
+		935885B29E0F4D0E875DABD4 /* /Users/rafaelgb/Developer/nesEmu/instructions/SLOInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 09C66DE1D0C94303A600A0D4 /* /Users/rafaelgb/Developer/nesEmu/instructions/SLOInstruction.cpp */; };
+		9CBF74715FB24E4B9A37BFDC /* /Users/rafaelgb/Developer/nesEmu/instructions/PHAInstruction.cpp */ = {isa = PBXBuildFile; fileRef = FB57214739524E41B531D56E /* /Users/rafaelgb/Developer/nesEmu/instructions/PHAInstruction.cpp */; };
+		9EF45E6A632940F884871E5F /* /Users/rafaelgb/Developer/nesEmu/instructions/CPXInstruction.cpp */ = {isa = PBXBuildFile; fileRef = E0FAAE33CE58452C8C6E5417 /* /Users/rafaelgb/Developer/nesEmu/instructions/CPXInstruction.cpp */; };
+		A1C9EBEE164B4B8B833FB743 /* /Users/rafaelgb/Developer/nesEmu/Sync_Audio.cpp */ = {isa = PBXBuildFile; fileRef = 335B24C33D92432A8C4CEE97 /* /Users/rafaelgb/Developer/nesEmu/Sync_Audio.cpp */; };
+		A2BD719C7A2B402EAC20073E /* /Users/rafaelgb/Developer/nesEmu/IO.cpp */ = {isa = PBXBuildFile; fileRef = AE421F1C888D4B2A9A71607B /* /Users/rafaelgb/Developer/nesEmu/IO.cpp */; };
+		A4DC6C6465124E248821D3EA /* /Users/rafaelgb/Developer/nesEmu/include/APU.h */ = {isa = PBXBuildFile; fileRef = FFE08795148D4013B01FBCFF /* /Users/rafaelgb/Developer/nesEmu/include/APU.h */; };
+		A9417FFC60754BEE9CA008D3 /* /Users/rafaelgb/Developer/nesEmu/PPU.cpp */ = {isa = PBXBuildFile; fileRef = A18278559AE949959983AD51 /* /Users/rafaelgb/Developer/nesEmu/PPU.cpp */; };
+		AE71BBBC85FE4C92965851AD /* /Users/rafaelgb/Developer/nesEmu/instructions/NOPInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 1945405D1720440088AD0AF8 /* /Users/rafaelgb/Developer/nesEmu/instructions/NOPInstruction.cpp */; };
+		AE76BD1A12A544988E8B310B /* /Users/rafaelgb/Developer/nesEmu/include/Instruction.h */ = {isa = PBXBuildFile; fileRef = 7BB662C0CD5448E6BD991040 /* /Users/rafaelgb/Developer/nesEmu/include/Instruction.h */; };
+		B236A2AF8F0E4743B2D7DF74 /* /Users/rafaelgb/Developer/nesEmu/instructions/INYInstruction.cpp */ = {isa = PBXBuildFile; fileRef = C567B2D25FBF4F488016E470 /* /Users/rafaelgb/Developer/nesEmu/instructions/INYInstruction.cpp */; };
+		B48776E778F64FBE8F86073E /* /Users/rafaelgb/Developer/nesEmu/instructions/TXSInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 2100122BEDFE409BA1552C0A /* /Users/rafaelgb/Developer/nesEmu/instructions/TXSInstruction.cpp */; };
+		B4A3EFB6B71149129146FD3C /* /Users/rafaelgb/Developer/nesEmu/instructions/DECInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 8A38620121234962AA1215C9 /* /Users/rafaelgb/Developer/nesEmu/instructions/DECInstruction.cpp */; };
+		B4DA8DEEFC534903A3EAF441 /* /Users/rafaelgb/Developer/nesEmu/instructions/STAInstruction.cpp */ = {isa = PBXBuildFile; fileRef = F1ED3F651147444FBA20AA11 /* /Users/rafaelgb/Developer/nesEmu/instructions/STAInstruction.cpp */; };
+		B6A12027B56246E7BE60E7C7 /* /Users/rafaelgb/Developer/nesEmu/instructions/STYInstruction.cpp */ = {isa = PBXBuildFile; fileRef = C21FDE8F1D644B85AA3DE12B /* /Users/rafaelgb/Developer/nesEmu/instructions/STYInstruction.cpp */; };
+		BAB74C69F1A54F31952E9B68 /* /Users/rafaelgb/Developer/nesEmu/instructions/TAXInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 283A15CA4B0540109685DAA9 /* /Users/rafaelgb/Developer/nesEmu/instructions/TAXInstruction.cpp */; };
+		BB4CBF02EF4642D499A4A8EC /* /Users/rafaelgb/Developer/nesEmu/instructions/CLCInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 704BEFEB7F334E44BC7D6EE9 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLCInstruction.cpp */; };
+		BFF8E2255018474FB7C01EBE /* /Users/rafaelgb/Developer/nesEmu/instructions/TSXInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 79E4CAE46176415C806B3447 /* /Users/rafaelgb/Developer/nesEmu/instructions/TSXInstruction.cpp */; };
+		C067E3631C284B8A9030EFF5 /* /Users/rafaelgb/Developer/nesEmu/instructions/PLAInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 0791582CE16A48F882CF57C8 /* /Users/rafaelgb/Developer/nesEmu/instructions/PLAInstruction.cpp */; };
+		C362C9F61A3542CEB862E9E6 /* /Users/rafaelgb/Developer/nesEmu/include/Sync_Audio.h */ = {isa = PBXBuildFile; fileRef = 4DC20808D9954A5F819E9865 /* /Users/rafaelgb/Developer/nesEmu/include/Sync_Audio.h */; };
+		C692997F8DDE4BCBA44BF123 /* /Users/rafaelgb/Developer/nesEmu/instructions/BMIInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 2A4C6DF04BC74ED5B88DA827 /* /Users/rafaelgb/Developer/nesEmu/instructions/BMIInstruction.cpp */; };
+		CCFD54B38E2B4A64BF61C079 /* /Users/rafaelgb/Developer/nesEmu/instructions/TAYInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 970063741614494495DA112B /* /Users/rafaelgb/Developer/nesEmu/instructions/TAYInstruction.cpp */; };
+		D9C66EE3E1A54F4FA29E5900 /* /Users/rafaelgb/Developer/nesEmu/instructions/Instruction.cpp */ = {isa = PBXBuildFile; fileRef = B0A4DD9E26304F1CA1393401 /* /Users/rafaelgb/Developer/nesEmu/instructions/Instruction.cpp */; };
+		DBB18982C81A420AAE9B8841 /* /Users/rafaelgb/Developer/nesEmu/instructions/EORInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 5DE72A989C784766B752DD7F /* /Users/rafaelgb/Developer/nesEmu/instructions/EORInstruction.cpp */; };
+		DCAB1AE49BE741C28858DDA0 /* /Users/rafaelgb/Developer/nesEmu/instructions/NMIInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 4942DFC8915949A6B207F4CC /* /Users/rafaelgb/Developer/nesEmu/instructions/NMIInstruction.cpp */; };
+		DDC8F593329E464690C047AE /* /Users/rafaelgb/Developer/nesEmu/instructions/RORInstruction.cpp */ = {isa = PBXBuildFile; fileRef = A9B87684F71A40A09CF52A1C /* /Users/rafaelgb/Developer/nesEmu/instructions/RORInstruction.cpp */; };
+		E63A2411C9D64E3B8BF64F81 /* /Users/rafaelgb/Developer/nesEmu/instructions/ISBInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 102C8F1DC41E4CE79444E060 /* /Users/rafaelgb/Developer/nesEmu/instructions/ISBInstruction.cpp */; };
+		E67AC81560464BC08D502132 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLVInstruction.cpp */ = {isa = PBXBuildFile; fileRef = A965B321309E4CC189126244 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLVInstruction.cpp */; };
+		E8A4BC3E85AE4C118593E72A /* /Users/rafaelgb/Developer/nesEmu/CPU.cpp */ = {isa = PBXBuildFile; fileRef = FD372D62FA7345AA844F34FC /* /Users/rafaelgb/Developer/nesEmu/CPU.cpp */; };
+		E8CD64961EDD4130B67456E5 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLDInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 54988E8BF1D14C1DA3844581 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLDInstruction.cpp */; };
+		EB0512B0530D43E9B86FCC2B /* /Users/rafaelgb/Developer/nesEmu/include/APUChannel.h */ = {isa = PBXBuildFile; fileRef = E62FA675E847437B908ACBC6 /* /Users/rafaelgb/Developer/nesEmu/include/APUChannel.h */; };
+		EB3FC231D6F64A429AD333B0 /* /Users/rafaelgb/Developer/nesEmu/instructions/RTSInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 95CEC7238E7445799B9195D8 /* /Users/rafaelgb/Developer/nesEmu/instructions/RTSInstruction.cpp */; };
+		EEBCA0B1483348BEA2DDA4EA /* /Users/rafaelgb/Developer/nesEmu/instructions/RTIInstruction.cpp */ = {isa = PBXBuildFile; fileRef = BF46DBD380524A04B16BDD46 /* /Users/rafaelgb/Developer/nesEmu/instructions/RTIInstruction.cpp */; };
+		EF8B45ABD46947719C3325D4 /* /Users/rafaelgb/Developer/nesEmu/instructions/LAXInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 6733CFEEA2A04C58B4891DD3 /* /Users/rafaelgb/Developer/nesEmu/instructions/LAXInstruction.cpp */; };
+		F03CD781BED64FD3A617CA99 /* /Users/rafaelgb/Developer/nesEmu/instructions/BRKInstruction.cpp */ = {isa = PBXBuildFile; fileRef = B3C31291DAF846158F642AF9 /* /Users/rafaelgb/Developer/nesEmu/instructions/BRKInstruction.cpp */; };
+		F1A06CB1BC764471AADADA8C /* /Users/rafaelgb/Developer/nesEmu/include/PPU.h */ = {isa = PBXBuildFile; fileRef = 0BD7E5054E8A452FB9B3DA02 /* /Users/rafaelgb/Developer/nesEmu/include/PPU.h */; };
+		F3CD849F6A134A728252A96B /* /Users/rafaelgb/Developer/nesEmu/instructions/DEXInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 7C2385A47A9F450DB13E0A40 /* /Users/rafaelgb/Developer/nesEmu/instructions/DEXInstruction.cpp */; };
+		FA929DC4369945BBB321652C /* /Users/rafaelgb/Developer/nesEmu/include/IO.h */ = {isa = PBXBuildFile; fileRef = 1BED3071379C4346A2846428 /* /Users/rafaelgb/Developer/nesEmu/include/IO.h */; };
+		FD0749921F24412C8F587EC1 /* /Users/rafaelgb/Developer/nesEmu/instructions/BVCInstruction.cpp */ = {isa = PBXBuildFile; fileRef = FD2402D7FD9243A79A588C57 /* /Users/rafaelgb/Developer/nesEmu/instructions/BVCInstruction.cpp */; };
+		FD4C69F276A34BE3AD1C4022 /* /Users/rafaelgb/Developer/nesEmu/instructions/RSTInstruction.cpp */ = {isa = PBXBuildFile; fileRef = 4A4A7068D6EB48D8BB760334 /* /Users/rafaelgb/Developer/nesEmu/instructions/RSTInstruction.cpp */; };
+		FE447CCDBD6F45EFB6E6B386 /* /Users/rafaelgb/Developer/nesEmu/include/Addressing.h */ = {isa = PBXBuildFile; fileRef = 520167BBF02446789FDA9CCF /* /Users/rafaelgb/Developer/nesEmu/include/Addressing.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		2C95DA57DD3641FBB6FB92C9 /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+		348CCD83C5B04A0292A2FAE8 /* MinSizeRel */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = MinSizeRel;
+		};
+		6A9FD0BF867541EF8B498432 /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		F492DA4D4FEF47BA9C271A2D /* RelWithDebInfo */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = RelWithDebInfo;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		389C4FD1861C4DF383A460F7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D15E85ACA8EF4F7FA461F0F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD5DF431DAAA4EBBBCB0DBAF;
+			remoteInfo = ZERO_CHECK;
+		};
+		9A3D0958220248748C874CC3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D15E85ACA8EF4F7FA461F0F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD5DF431DAAA4EBBBCB0DBAF;
+			remoteInfo = ZERO_CHECK;
+		};
+		A28803E1C0454219947E7111 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D15E85ACA8EF4F7FA461F0F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F305DE0E303C4D078422B0CB;
+			remoteInfo = nesEmu;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		00FCD151E58D4B6D96FE48B9 /* /Users/rafaelgb/Developer/nesEmu/instructions/PLPInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = PLPInstruction.cpp; path = instructions/PLPInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		072C1E1B1D7F4CFEA19CE4DC /* /Users/rafaelgb/Developer/nesEmu/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		0791582CE16A48F882CF57C8 /* /Users/rafaelgb/Developer/nesEmu/instructions/PLAInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = PLAInstruction.cpp; path = instructions/PLAInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		09C66DE1D0C94303A600A0D4 /* /Users/rafaelgb/Developer/nesEmu/instructions/SLOInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SLOInstruction.cpp; path = instructions/SLOInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		0BD7E5054E8A452FB9B3DA02 /* /Users/rafaelgb/Developer/nesEmu/include/PPU.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = PPU.h; path = include/PPU.h; sourceTree = SOURCE_ROOT; };
+		100E4C5E737347549C5D76F1 /* /Users/rafaelgb/Developer/nesEmu/include/ROM.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ROM.h; path = include/ROM.h; sourceTree = SOURCE_ROOT; };
+		102C8F1DC41E4CE79444E060 /* /Users/rafaelgb/Developer/nesEmu/instructions/ISBInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ISBInstruction.cpp; path = instructions/ISBInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		12CA4849E586453092757CC8 /* /Users/rafaelgb/Developer/nesEmu/include/Timer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Timer.h; path = include/Timer.h; sourceTree = SOURCE_ROOT; };
+		16BDE683F64E4F4DB9593577 /* /Users/rafaelgb/Developer/nesEmu/instructions/ORAInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ORAInstruction.cpp; path = instructions/ORAInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		1751C67878324DC4BDABA162 /* /Users/rafaelgb/Developer/nesEmu/instructions/TXAInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = TXAInstruction.cpp; path = instructions/TXAInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		1945405D1720440088AD0AF8 /* /Users/rafaelgb/Developer/nesEmu/instructions/NOPInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = NOPInstruction.cpp; path = instructions/NOPInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		1A5BCFFE83394716BB6C0539 /* /Users/rafaelgb/Developer/nesEmu/include/CPU.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = CPU.h; path = include/CPU.h; sourceTree = SOURCE_ROOT; };
+		1ADCAF7D5B4D4D4681917758 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDYInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = LDYInstruction.cpp; path = instructions/LDYInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		1BED3071379C4346A2846428 /* /Users/rafaelgb/Developer/nesEmu/include/IO.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = IO.h; path = include/IO.h; sourceTree = SOURCE_ROOT; };
+		1C17BAC2523541EB815F1A76 /* /Users/rafaelgb/Developer/nesEmu/instructions/BCSInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = BCSInstruction.cpp; path = instructions/BCSInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		2100122BEDFE409BA1552C0A /* /Users/rafaelgb/Developer/nesEmu/instructions/TXSInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = TXSInstruction.cpp; path = instructions/TXSInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		2260BC5F70674D86A580D0C6 /* /Users/rafaelgb/Developer/nesEmu/Utils.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Utils.cpp; path = Utils.cpp; sourceTree = SOURCE_ROOT; };
+		283A15CA4B0540109685DAA9 /* /Users/rafaelgb/Developer/nesEmu/instructions/TAXInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = TAXInstruction.cpp; path = instructions/TAXInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		2A4C6DF04BC74ED5B88DA827 /* /Users/rafaelgb/Developer/nesEmu/instructions/BMIInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = BMIInstruction.cpp; path = instructions/BMIInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		3043314EFCFA455DB3C1D8C0 /* /Users/rafaelgb/Developer/nesEmu/instructions/SAXInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SAXInstruction.cpp; path = instructions/SAXInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		30B1751B178846D0A3B878D5 /* /Users/rafaelgb/Developer/nesEmu/instructions/CPYInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CPYInstruction.cpp; path = instructions/CPYInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		32FB53CE045740EB82E1D7B3 /* /Users/rafaelgb/Developer/nesEmu/instructions/BPLInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = BPLInstruction.cpp; path = instructions/BPLInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		335B24C33D92432A8C4CEE97 /* /Users/rafaelgb/Developer/nesEmu/Sync_Audio.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Sync_Audio.cpp; path = Sync_Audio.cpp; sourceTree = SOURCE_ROOT; };
+		37542E483AED4B7EACFB7FC8 /* /Users/rafaelgb/Developer/nesEmu/instructions/STXInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = STXInstruction.cpp; path = instructions/STXInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		424CDC7A2F8240AD8316C101 /* /Users/rafaelgb/Developer/nesEmu/main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		4323B308F6BB412F9A1808CD /* /Users/rafaelgb/Developer/nesEmu/Blip_Buffer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Blip_Buffer.cpp; path = Blip_Buffer.cpp; sourceTree = SOURCE_ROOT; };
+		46530ED958844EF3AF1470AE /* /Users/rafaelgb/Developer/nesEmu/instructions/ASLInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ASLInstruction.cpp; path = instructions/ASLInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		47F250B3AE85421EA094AE1A /* /Users/rafaelgb/Developer/nesEmu/instructions/ROLInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ROLInstruction.cpp; path = instructions/ROLInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		4942DFC8915949A6B207F4CC /* /Users/rafaelgb/Developer/nesEmu/instructions/NMIInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = NMIInstruction.cpp; path = instructions/NMIInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		4A4A7068D6EB48D8BB760334 /* /Users/rafaelgb/Developer/nesEmu/instructions/RSTInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = RSTInstruction.cpp; path = instructions/RSTInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		4BF68AFD94C74721AB54CA65 /* /Users/rafaelgb/Developer/nesEmu/instructions/CMPInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CMPInstruction.cpp; path = instructions/CMPInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		4C0E176733B4488C823D8113 /* /Users/rafaelgb/Developer/nesEmu/instructions/TYAInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = TYAInstruction.cpp; path = instructions/TYAInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		4DC20808D9954A5F819E9865 /* /Users/rafaelgb/Developer/nesEmu/include/Sync_Audio.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Sync_Audio.h; path = include/Sync_Audio.h; sourceTree = SOURCE_ROOT; };
+		5057BF8DFC084E8BAF3BBD74 /* /Users/rafaelgb/Developer/nesEmu/instructions/BEQInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = BEQInstruction.cpp; path = instructions/BEQInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		520167BBF02446789FDA9CCF /* /Users/rafaelgb/Developer/nesEmu/include/Addressing.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Addressing.h; path = include/Addressing.h; sourceTree = SOURCE_ROOT; };
+		54988E8BF1D14C1DA3844581 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLDInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CLDInstruction.cpp; path = instructions/CLDInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		58FE162A69ED415D8D845468 /* /Users/rafaelgb/Developer/nesEmu/instructions/BVSInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = BVSInstruction.cpp; path = instructions/BVSInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		5DE72A989C784766B752DD7F /* /Users/rafaelgb/Developer/nesEmu/instructions/EORInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = EORInstruction.cpp; path = instructions/EORInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		62CE27C0C43D4E94B8646509 /* /Users/rafaelgb/Developer/nesEmu/instructions/DCPInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = DCPInstruction.cpp; path = instructions/DCPInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		66A784EC353942AAA3CDB433 /* /Users/rafaelgb/Developer/nesEmu/APUChannel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = APUChannel.cpp; path = APUChannel.cpp; sourceTree = SOURCE_ROOT; };
+		6733CFEEA2A04C58B4891DD3 /* /Users/rafaelgb/Developer/nesEmu/instructions/LAXInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = LAXInstruction.cpp; path = instructions/LAXInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		688EE9AE20714D758D6AFA54 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDXInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = LDXInstruction.cpp; path = instructions/LDXInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		6B17D8EDF8E74F38A50BF710 /* /Users/rafaelgb/Developer/nesEmu/instructions/INCInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = INCInstruction.cpp; path = instructions/INCInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		6B8F2E1F976944B9B79F9BE4 /* /Users/rafaelgb/Developer/nesEmu/instructions/SREInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SREInstruction.cpp; path = instructions/SREInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		6DD9CBA987FF435CBB5095F5 /* /Users/rafaelgb/Developer/nesEmu/instructions/ADCInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ADCInstruction.cpp; path = instructions/ADCInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		6E1A1F5FA76A47C9AD761202 /* /Users/rafaelgb/Developer/nesEmu/instructions/DEYInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = DEYInstruction.cpp; path = instructions/DEYInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		704BEFEB7F334E44BC7D6EE9 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLCInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CLCInstruction.cpp; path = instructions/CLCInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		734C523A84E343A9BB16CC8E /* /Users/rafaelgb/Developer/nesEmu/instructions/JSRInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = JSRInstruction.cpp; path = instructions/JSRInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		7389922169A649DE8E90E633 /* /Users/rafaelgb/Developer/nesEmu/instructions/ANDInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ANDInstruction.cpp; path = instructions/ANDInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		79E4CAE46176415C806B3447 /* /Users/rafaelgb/Developer/nesEmu/instructions/TSXInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = TSXInstruction.cpp; path = instructions/TSXInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		7BB662C0CD5448E6BD991040 /* /Users/rafaelgb/Developer/nesEmu/include/Instruction.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Instruction.h; path = include/Instruction.h; sourceTree = SOURCE_ROOT; };
+		7C2385A47A9F450DB13E0A40 /* /Users/rafaelgb/Developer/nesEmu/instructions/DEXInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = DEXInstruction.cpp; path = instructions/DEXInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		849674E6E09E435BA35557DB /* /Users/rafaelgb/Developer/nesEmu/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		8A38620121234962AA1215C9 /* /Users/rafaelgb/Developer/nesEmu/instructions/DECInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = DECInstruction.cpp; path = instructions/DECInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		8DFC15C6007049BDBA3AD562 /* /Users/rafaelgb/Developer/nesEmu/instructions/BITInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = BITInstruction.cpp; path = instructions/BITInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		8F5C5267CC8E4D82A5AA7469 /* /Users/rafaelgb/Developer/nesEmu/instructions/LSRInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = LSRInstruction.cpp; path = instructions/LSRInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		95CEC7238E7445799B9195D8 /* /Users/rafaelgb/Developer/nesEmu/instructions/RTSInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = RTSInstruction.cpp; path = instructions/RTSInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		970063741614494495DA112B /* /Users/rafaelgb/Developer/nesEmu/instructions/TAYInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = TAYInstruction.cpp; path = instructions/TAYInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		9C1FB77959A54772AF3CF9C5 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLIInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CLIInstruction.cpp; path = instructions/CLIInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		9FB8F8CFF50F4A36B25F5556 /* /Users/rafaelgb/Developer/nesEmu/instructions/PHPInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = PHPInstruction.cpp; path = instructions/PHPInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		A18278559AE949959983AD51 /* /Users/rafaelgb/Developer/nesEmu/PPU.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = PPU.cpp; path = PPU.cpp; sourceTree = SOURCE_ROOT; };
+		A2101F3A1236419BAFF5FC2A /* /Users/rafaelgb/Developer/nesEmu/instructions/SEIInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SEIInstruction.cpp; path = instructions/SEIInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		A3BE0CFF883D4E0EA07BC1D1 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDAInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = LDAInstruction.cpp; path = instructions/LDAInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		A6CE33AA23E54A4BAF2A6F47 /* /Users/rafaelgb/Developer/nesEmu/ROM.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ROM.cpp; path = ROM.cpp; sourceTree = SOURCE_ROOT; };
+		A84CCCDDC2F84875B4454578 /* /Users/rafaelgb/Developer/nesEmu/instructions/SBCInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SBCInstruction.cpp; path = instructions/SBCInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		A965B321309E4CC189126244 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLVInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CLVInstruction.cpp; path = instructions/CLVInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		A9B87684F71A40A09CF52A1C /* /Users/rafaelgb/Developer/nesEmu/instructions/RORInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = RORInstruction.cpp; path = instructions/RORInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		ACC279F69BE24B5FA20A146A /* /Users/rafaelgb/Developer/nesEmu/instructions/RRAInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = RRAInstruction.cpp; path = instructions/RRAInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		AE154A2D90744DF2A28458E1 /* /Users/rafaelgb/Developer/nesEmu/instructions/JMPInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = JMPInstruction.cpp; path = instructions/JMPInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		AE421F1C888D4B2A9A71607B /* /Users/rafaelgb/Developer/nesEmu/IO.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = IO.cpp; path = IO.cpp; sourceTree = SOURCE_ROOT; };
+		B0A4DD9E26304F1CA1393401 /* /Users/rafaelgb/Developer/nesEmu/instructions/Instruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Instruction.cpp; path = instructions/Instruction.cpp; sourceTree = SOURCE_ROOT; };
+		B2E1EDEF289A495F9F903F67 /* /Users/rafaelgb/Developer/nesEmu/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		B3C31291DAF846158F642AF9 /* /Users/rafaelgb/Developer/nesEmu/instructions/BRKInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = BRKInstruction.cpp; path = instructions/BRKInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		B55F91C07D59426E99EF98CC /* /Users/rafaelgb/Developer/nesEmu/include/Blip_Buffer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Blip_Buffer.h; path = include/Blip_Buffer.h; sourceTree = SOURCE_ROOT; };
+		BF46DBD380524A04B16BDD46 /* /Users/rafaelgb/Developer/nesEmu/instructions/RTIInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = RTIInstruction.cpp; path = instructions/RTIInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		C0337BA010EE4303A206EF17 /* /Users/rafaelgb/Developer/nesEmu/instructions/INXInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = INXInstruction.cpp; path = instructions/INXInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		C21FDE8F1D644B85AA3DE12B /* /Users/rafaelgb/Developer/nesEmu/instructions/STYInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = STYInstruction.cpp; path = instructions/STYInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		C567B2D25FBF4F488016E470 /* /Users/rafaelgb/Developer/nesEmu/instructions/INYInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = INYInstruction.cpp; path = instructions/INYInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		C795280A59B346F0B4C8892B /* nesEmu */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = nesEmu; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC7C8A82842B456EB239CA6C /* /Users/rafaelgb/Developer/nesEmu/instructions/SEDInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SEDInstruction.cpp; path = instructions/SEDInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		D255F9B33458407191AEFCEF /* /Users/rafaelgb/Developer/nesEmu/Addressing.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Addressing.cpp; path = Addressing.cpp; sourceTree = SOURCE_ROOT; };
+		D672FB013FB54039B2EEFFB4 /* /Users/rafaelgb/Developer/nesEmu/instructions/BNEInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = BNEInstruction.cpp; path = instructions/BNEInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		DA2D4D5B6FE74B3EA1B324C3 /* /Users/rafaelgb/Developer/nesEmu/instructions/BCCInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = BCCInstruction.cpp; path = instructions/BCCInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		DD511108636247329D8FF16C /* /Users/rafaelgb/Developer/nesEmu/include/Utils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Utils.h; path = include/Utils.h; sourceTree = SOURCE_ROOT; };
+		E0FAAE33CE58452C8C6E5417 /* /Users/rafaelgb/Developer/nesEmu/instructions/CPXInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CPXInstruction.cpp; path = instructions/CPXInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		E62FA675E847437B908ACBC6 /* /Users/rafaelgb/Developer/nesEmu/include/APUChannel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = APUChannel.h; path = include/APUChannel.h; sourceTree = SOURCE_ROOT; };
+		EC3D55228E6F4E899E791AFD /* /Users/rafaelgb/Developer/nesEmu/instructions/SECInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SECInstruction.cpp; path = instructions/SECInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		F1ED3F651147444FBA20AA11 /* /Users/rafaelgb/Developer/nesEmu/instructions/STAInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = STAInstruction.cpp; path = instructions/STAInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		F6DAA3A65494446386241B7E /* /Users/rafaelgb/Developer/nesEmu/instructions/RLAInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = RLAInstruction.cpp; path = instructions/RLAInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		F8AE62ECE77F4DBBA703F4FE /* /Users/rafaelgb/Developer/nesEmu/APU.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = APU.cpp; path = APU.cpp; sourceTree = SOURCE_ROOT; };
+		FB57214739524E41B531D56E /* /Users/rafaelgb/Developer/nesEmu/instructions/PHAInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = PHAInstruction.cpp; path = instructions/PHAInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		FBC59D8B3F4F4A2690537C53 /* /Users/rafaelgb/Developer/nesEmu/include/RegBit.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = RegBit.h; path = include/RegBit.h; sourceTree = SOURCE_ROOT; };
+		FD2402D7FD9243A79A588C57 /* /Users/rafaelgb/Developer/nesEmu/instructions/BVCInstruction.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = BVCInstruction.cpp; path = instructions/BVCInstruction.cpp; sourceTree = SOURCE_ROOT; };
+		FD372D62FA7345AA844F34FC /* /Users/rafaelgb/Developer/nesEmu/CPU.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CPU.cpp; path = CPU.cpp; sourceTree = SOURCE_ROOT; };
+		FFE08795148D4013B01FBCFF /* /Users/rafaelgb/Developer/nesEmu/include/APU.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = APU.h; path = include/APU.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0C53EAE45FCA477FB90835D6 = {
+			isa = PBXGroup;
+			children = (
+				CB86465465C8482985272801 /* nesEmu */,
+				C366E7DA61514C1D9C100311 /* ALL_BUILD */,
+				319179F64794434896BD5BAF /* ZERO_CHECK */,
+				22A3D753833345098CFC8003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		22A3D753833345098CFC8003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C795280A59B346F0B4C8892B /* nesEmu */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		319179F64794434896BD5BAF /* ZERO_CHECK */ = {
+			isa = PBXGroup;
+			children = (
+				AE04004FE372425FA5BD171B /* CMake Rules */,
+				B2E1EDEF289A495F9F903F67 /* /Users/rafaelgb/Developer/nesEmu/CMakeLists.txt */,
+			);
+			name = ZERO_CHECK;
+			sourceTree = "<group>";
+		};
+		7530F6639F164AAB9EA5CB48 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		AE04004FE372425FA5BD171B /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		C366E7DA61514C1D9C100311 /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				7530F6639F164AAB9EA5CB48 /* CMake Rules */,
+				849674E6E09E435BA35557DB /* /Users/rafaelgb/Developer/nesEmu/CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		C4D0434034914441A0DF5ACC /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				F8AE62ECE77F4DBBA703F4FE /* /Users/rafaelgb/Developer/nesEmu/APU.cpp */,
+				66A784EC353942AAA3CDB433 /* /Users/rafaelgb/Developer/nesEmu/APUChannel.cpp */,
+				D255F9B33458407191AEFCEF /* /Users/rafaelgb/Developer/nesEmu/Addressing.cpp */,
+				4323B308F6BB412F9A1808CD /* /Users/rafaelgb/Developer/nesEmu/Blip_Buffer.cpp */,
+				FD372D62FA7345AA844F34FC /* /Users/rafaelgb/Developer/nesEmu/CPU.cpp */,
+				AE421F1C888D4B2A9A71607B /* /Users/rafaelgb/Developer/nesEmu/IO.cpp */,
+				A18278559AE949959983AD51 /* /Users/rafaelgb/Developer/nesEmu/PPU.cpp */,
+				A6CE33AA23E54A4BAF2A6F47 /* /Users/rafaelgb/Developer/nesEmu/ROM.cpp */,
+				335B24C33D92432A8C4CEE97 /* /Users/rafaelgb/Developer/nesEmu/Sync_Audio.cpp */,
+				2260BC5F70674D86A580D0C6 /* /Users/rafaelgb/Developer/nesEmu/Utils.cpp */,
+				6DD9CBA987FF435CBB5095F5 /* /Users/rafaelgb/Developer/nesEmu/instructions/ADCInstruction.cpp */,
+				7389922169A649DE8E90E633 /* /Users/rafaelgb/Developer/nesEmu/instructions/ANDInstruction.cpp */,
+				46530ED958844EF3AF1470AE /* /Users/rafaelgb/Developer/nesEmu/instructions/ASLInstruction.cpp */,
+				DA2D4D5B6FE74B3EA1B324C3 /* /Users/rafaelgb/Developer/nesEmu/instructions/BCCInstruction.cpp */,
+				1C17BAC2523541EB815F1A76 /* /Users/rafaelgb/Developer/nesEmu/instructions/BCSInstruction.cpp */,
+				5057BF8DFC084E8BAF3BBD74 /* /Users/rafaelgb/Developer/nesEmu/instructions/BEQInstruction.cpp */,
+				8DFC15C6007049BDBA3AD562 /* /Users/rafaelgb/Developer/nesEmu/instructions/BITInstruction.cpp */,
+				2A4C6DF04BC74ED5B88DA827 /* /Users/rafaelgb/Developer/nesEmu/instructions/BMIInstruction.cpp */,
+				D672FB013FB54039B2EEFFB4 /* /Users/rafaelgb/Developer/nesEmu/instructions/BNEInstruction.cpp */,
+				32FB53CE045740EB82E1D7B3 /* /Users/rafaelgb/Developer/nesEmu/instructions/BPLInstruction.cpp */,
+				B3C31291DAF846158F642AF9 /* /Users/rafaelgb/Developer/nesEmu/instructions/BRKInstruction.cpp */,
+				FD2402D7FD9243A79A588C57 /* /Users/rafaelgb/Developer/nesEmu/instructions/BVCInstruction.cpp */,
+				58FE162A69ED415D8D845468 /* /Users/rafaelgb/Developer/nesEmu/instructions/BVSInstruction.cpp */,
+				704BEFEB7F334E44BC7D6EE9 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLCInstruction.cpp */,
+				54988E8BF1D14C1DA3844581 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLDInstruction.cpp */,
+				9C1FB77959A54772AF3CF9C5 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLIInstruction.cpp */,
+				A965B321309E4CC189126244 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLVInstruction.cpp */,
+				4BF68AFD94C74721AB54CA65 /* /Users/rafaelgb/Developer/nesEmu/instructions/CMPInstruction.cpp */,
+				E0FAAE33CE58452C8C6E5417 /* /Users/rafaelgb/Developer/nesEmu/instructions/CPXInstruction.cpp */,
+				30B1751B178846D0A3B878D5 /* /Users/rafaelgb/Developer/nesEmu/instructions/CPYInstruction.cpp */,
+				62CE27C0C43D4E94B8646509 /* /Users/rafaelgb/Developer/nesEmu/instructions/DCPInstruction.cpp */,
+				8A38620121234962AA1215C9 /* /Users/rafaelgb/Developer/nesEmu/instructions/DECInstruction.cpp */,
+				7C2385A47A9F450DB13E0A40 /* /Users/rafaelgb/Developer/nesEmu/instructions/DEXInstruction.cpp */,
+				6E1A1F5FA76A47C9AD761202 /* /Users/rafaelgb/Developer/nesEmu/instructions/DEYInstruction.cpp */,
+				5DE72A989C784766B752DD7F /* /Users/rafaelgb/Developer/nesEmu/instructions/EORInstruction.cpp */,
+				6B17D8EDF8E74F38A50BF710 /* /Users/rafaelgb/Developer/nesEmu/instructions/INCInstruction.cpp */,
+				C0337BA010EE4303A206EF17 /* /Users/rafaelgb/Developer/nesEmu/instructions/INXInstruction.cpp */,
+				C567B2D25FBF4F488016E470 /* /Users/rafaelgb/Developer/nesEmu/instructions/INYInstruction.cpp */,
+				102C8F1DC41E4CE79444E060 /* /Users/rafaelgb/Developer/nesEmu/instructions/ISBInstruction.cpp */,
+				B0A4DD9E26304F1CA1393401 /* /Users/rafaelgb/Developer/nesEmu/instructions/Instruction.cpp */,
+				AE154A2D90744DF2A28458E1 /* /Users/rafaelgb/Developer/nesEmu/instructions/JMPInstruction.cpp */,
+				734C523A84E343A9BB16CC8E /* /Users/rafaelgb/Developer/nesEmu/instructions/JSRInstruction.cpp */,
+				6733CFEEA2A04C58B4891DD3 /* /Users/rafaelgb/Developer/nesEmu/instructions/LAXInstruction.cpp */,
+				A3BE0CFF883D4E0EA07BC1D1 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDAInstruction.cpp */,
+				688EE9AE20714D758D6AFA54 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDXInstruction.cpp */,
+				1ADCAF7D5B4D4D4681917758 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDYInstruction.cpp */,
+				8F5C5267CC8E4D82A5AA7469 /* /Users/rafaelgb/Developer/nesEmu/instructions/LSRInstruction.cpp */,
+				4942DFC8915949A6B207F4CC /* /Users/rafaelgb/Developer/nesEmu/instructions/NMIInstruction.cpp */,
+				1945405D1720440088AD0AF8 /* /Users/rafaelgb/Developer/nesEmu/instructions/NOPInstruction.cpp */,
+				16BDE683F64E4F4DB9593577 /* /Users/rafaelgb/Developer/nesEmu/instructions/ORAInstruction.cpp */,
+				FB57214739524E41B531D56E /* /Users/rafaelgb/Developer/nesEmu/instructions/PHAInstruction.cpp */,
+				9FB8F8CFF50F4A36B25F5556 /* /Users/rafaelgb/Developer/nesEmu/instructions/PHPInstruction.cpp */,
+				0791582CE16A48F882CF57C8 /* /Users/rafaelgb/Developer/nesEmu/instructions/PLAInstruction.cpp */,
+				00FCD151E58D4B6D96FE48B9 /* /Users/rafaelgb/Developer/nesEmu/instructions/PLPInstruction.cpp */,
+				F6DAA3A65494446386241B7E /* /Users/rafaelgb/Developer/nesEmu/instructions/RLAInstruction.cpp */,
+				47F250B3AE85421EA094AE1A /* /Users/rafaelgb/Developer/nesEmu/instructions/ROLInstruction.cpp */,
+				A9B87684F71A40A09CF52A1C /* /Users/rafaelgb/Developer/nesEmu/instructions/RORInstruction.cpp */,
+				ACC279F69BE24B5FA20A146A /* /Users/rafaelgb/Developer/nesEmu/instructions/RRAInstruction.cpp */,
+				4A4A7068D6EB48D8BB760334 /* /Users/rafaelgb/Developer/nesEmu/instructions/RSTInstruction.cpp */,
+				BF46DBD380524A04B16BDD46 /* /Users/rafaelgb/Developer/nesEmu/instructions/RTIInstruction.cpp */,
+				95CEC7238E7445799B9195D8 /* /Users/rafaelgb/Developer/nesEmu/instructions/RTSInstruction.cpp */,
+				3043314EFCFA455DB3C1D8C0 /* /Users/rafaelgb/Developer/nesEmu/instructions/SAXInstruction.cpp */,
+				A84CCCDDC2F84875B4454578 /* /Users/rafaelgb/Developer/nesEmu/instructions/SBCInstruction.cpp */,
+				EC3D55228E6F4E899E791AFD /* /Users/rafaelgb/Developer/nesEmu/instructions/SECInstruction.cpp */,
+				CC7C8A82842B456EB239CA6C /* /Users/rafaelgb/Developer/nesEmu/instructions/SEDInstruction.cpp */,
+				A2101F3A1236419BAFF5FC2A /* /Users/rafaelgb/Developer/nesEmu/instructions/SEIInstruction.cpp */,
+				09C66DE1D0C94303A600A0D4 /* /Users/rafaelgb/Developer/nesEmu/instructions/SLOInstruction.cpp */,
+				6B8F2E1F976944B9B79F9BE4 /* /Users/rafaelgb/Developer/nesEmu/instructions/SREInstruction.cpp */,
+				F1ED3F651147444FBA20AA11 /* /Users/rafaelgb/Developer/nesEmu/instructions/STAInstruction.cpp */,
+				37542E483AED4B7EACFB7FC8 /* /Users/rafaelgb/Developer/nesEmu/instructions/STXInstruction.cpp */,
+				C21FDE8F1D644B85AA3DE12B /* /Users/rafaelgb/Developer/nesEmu/instructions/STYInstruction.cpp */,
+				283A15CA4B0540109685DAA9 /* /Users/rafaelgb/Developer/nesEmu/instructions/TAXInstruction.cpp */,
+				970063741614494495DA112B /* /Users/rafaelgb/Developer/nesEmu/instructions/TAYInstruction.cpp */,
+				79E4CAE46176415C806B3447 /* /Users/rafaelgb/Developer/nesEmu/instructions/TSXInstruction.cpp */,
+				1751C67878324DC4BDABA162 /* /Users/rafaelgb/Developer/nesEmu/instructions/TXAInstruction.cpp */,
+				2100122BEDFE409BA1552C0A /* /Users/rafaelgb/Developer/nesEmu/instructions/TXSInstruction.cpp */,
+				4C0E176733B4488C823D8113 /* /Users/rafaelgb/Developer/nesEmu/instructions/TYAInstruction.cpp */,
+				424CDC7A2F8240AD8316C101 /* /Users/rafaelgb/Developer/nesEmu/main.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		CB86465465C8482985272801 /* nesEmu */ = {
+			isa = PBXGroup;
+			children = (
+				C4D0434034914441A0DF5ACC /* Source Files */,
+				E1D8A11A1E2444739CA95D49 /* Header Files */,
+				072C1E1B1D7F4CFEA19CE4DC /* /Users/rafaelgb/Developer/nesEmu/CMakeLists.txt */,
+			);
+			name = nesEmu;
+			sourceTree = "<group>";
+		};
+		E1D8A11A1E2444739CA95D49 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				FFE08795148D4013B01FBCFF /* /Users/rafaelgb/Developer/nesEmu/include/APU.h */,
+				E62FA675E847437B908ACBC6 /* /Users/rafaelgb/Developer/nesEmu/include/APUChannel.h */,
+				520167BBF02446789FDA9CCF /* /Users/rafaelgb/Developer/nesEmu/include/Addressing.h */,
+				B55F91C07D59426E99EF98CC /* /Users/rafaelgb/Developer/nesEmu/include/Blip_Buffer.h */,
+				1A5BCFFE83394716BB6C0539 /* /Users/rafaelgb/Developer/nesEmu/include/CPU.h */,
+				1BED3071379C4346A2846428 /* /Users/rafaelgb/Developer/nesEmu/include/IO.h */,
+				7BB662C0CD5448E6BD991040 /* /Users/rafaelgb/Developer/nesEmu/include/Instruction.h */,
+				0BD7E5054E8A452FB9B3DA02 /* /Users/rafaelgb/Developer/nesEmu/include/PPU.h */,
+				100E4C5E737347549C5D76F1 /* /Users/rafaelgb/Developer/nesEmu/include/ROM.h */,
+				FBC59D8B3F4F4A2690537C53 /* /Users/rafaelgb/Developer/nesEmu/include/RegBit.h */,
+				4DC20808D9954A5F819E9865 /* /Users/rafaelgb/Developer/nesEmu/include/Sync_Audio.h */,
+				12CA4849E586453092757CC8 /* /Users/rafaelgb/Developer/nesEmu/include/Timer.h */,
+				DD511108636247329D8FF16C /* /Users/rafaelgb/Developer/nesEmu/include/Utils.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F305DE0E303C4D078422B0CB /* nesEmu */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 239B09DD40B74141875D0D5D /* Build configuration list for PBXNativeTarget "nesEmu" */;
+			buildPhases = (
+				E6980B04100045CCA35190D3 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				35CAB72686D64CC7BBB40F0F /* PBXTargetDependency */,
+			);
+			name = nesEmu;
+			productName = nesEmu;
+			productReference = C795280A59B346F0B4C8892B /* nesEmu */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D15E85ACA8EF4F7FA461F0F2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0830;
+			};
+			buildConfigurationList = 7DDB5871571F45B6848CB3E7 /* Build configuration list for PBXProject "nesEmu" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				6A9FD0BF867541EF8B498432 /* Debug */,
+				2C95DA57DD3641FBB6FB92C9 /* Release */,
+				348CCD83C5B04A0292A2FAE8 /* MinSizeRel */,
+				F492DA4D4FEF47BA9C271A2D /* RelWithDebInfo */,
+			);
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 0;
+			mainGroup = 0C53EAE45FCA477FB90835D6;
+			projectDirPath = ../;
+			projectRoot = "";
+			targets = (
+				9DBC13A202974D61B5E30C2A /* ALL_BUILD */,
+				DD5DF431DAAA4EBBBCB0DBAF /* ZERO_CHECK */,
+				F305DE0E303C4D078422B0CB /* nesEmu */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0AD2FF7C70AD436F8A58FC95 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		14698B80585F4E41A4AB6496 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/rafaelgb/Developer/nesEmu/build -f /Users/rafaelgb/Developer/nesEmu/build/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		A8696EEFE8E3448A88613735 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/rafaelgb/Developer/nesEmu/build -f /Users/rafaelgb/Developer/nesEmu/build/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		D7B4C276D77440B691AAAE69 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E6980B04100045CCA35190D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3AC663AD5D834D2F9D14F13F /* /Users/rafaelgb/Developer/nesEmu/APU.cpp */,
+				3D661F8BBC30477390376050 /* /Users/rafaelgb/Developer/nesEmu/APUChannel.cpp */,
+				594F536B0BFD41FCA9CA8839 /* /Users/rafaelgb/Developer/nesEmu/Addressing.cpp */,
+				1F048D189695426EACFEB3D1 /* /Users/rafaelgb/Developer/nesEmu/Blip_Buffer.cpp */,
+				E8A4BC3E85AE4C118593E72A /* /Users/rafaelgb/Developer/nesEmu/CPU.cpp */,
+				A2BD719C7A2B402EAC20073E /* /Users/rafaelgb/Developer/nesEmu/IO.cpp */,
+				A9417FFC60754BEE9CA008D3 /* /Users/rafaelgb/Developer/nesEmu/PPU.cpp */,
+				7D6D3436BA4A42BCAC650EEF /* /Users/rafaelgb/Developer/nesEmu/ROM.cpp */,
+				A1C9EBEE164B4B8B833FB743 /* /Users/rafaelgb/Developer/nesEmu/Sync_Audio.cpp */,
+				7F1184AC9B6149CE9A37491D /* /Users/rafaelgb/Developer/nesEmu/Utils.cpp */,
+				600F566AD5FB4B48B3A6DF12 /* /Users/rafaelgb/Developer/nesEmu/instructions/ADCInstruction.cpp */,
+				796EA8F8C68E4B99922F2BCC /* /Users/rafaelgb/Developer/nesEmu/instructions/ANDInstruction.cpp */,
+				2D5CADF9CEA54F0E9F29755E /* /Users/rafaelgb/Developer/nesEmu/instructions/ASLInstruction.cpp */,
+				819D2C03127D40E59150A11B /* /Users/rafaelgb/Developer/nesEmu/instructions/BCCInstruction.cpp */,
+				6AB35A2218D946C796070309 /* /Users/rafaelgb/Developer/nesEmu/instructions/BCSInstruction.cpp */,
+				6F0C3EF498C24FB79C151046 /* /Users/rafaelgb/Developer/nesEmu/instructions/BEQInstruction.cpp */,
+				016B3086DD6D43D7A9E86C1A /* /Users/rafaelgb/Developer/nesEmu/instructions/BITInstruction.cpp */,
+				C692997F8DDE4BCBA44BF123 /* /Users/rafaelgb/Developer/nesEmu/instructions/BMIInstruction.cpp */,
+				84C7CD36842E4A8B8E477329 /* /Users/rafaelgb/Developer/nesEmu/instructions/BNEInstruction.cpp */,
+				4F857329ABD544F48A82A9D9 /* /Users/rafaelgb/Developer/nesEmu/instructions/BPLInstruction.cpp */,
+				F03CD781BED64FD3A617CA99 /* /Users/rafaelgb/Developer/nesEmu/instructions/BRKInstruction.cpp */,
+				FD0749921F24412C8F587EC1 /* /Users/rafaelgb/Developer/nesEmu/instructions/BVCInstruction.cpp */,
+				01865FF93B4D49558F95220C /* /Users/rafaelgb/Developer/nesEmu/instructions/BVSInstruction.cpp */,
+				BB4CBF02EF4642D499A4A8EC /* /Users/rafaelgb/Developer/nesEmu/instructions/CLCInstruction.cpp */,
+				E8CD64961EDD4130B67456E5 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLDInstruction.cpp */,
+				5BD754508CF24C349475BF37 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLIInstruction.cpp */,
+				E67AC81560464BC08D502132 /* /Users/rafaelgb/Developer/nesEmu/instructions/CLVInstruction.cpp */,
+				919E21A4CB3E45B78CA3C14F /* /Users/rafaelgb/Developer/nesEmu/instructions/CMPInstruction.cpp */,
+				9EF45E6A632940F884871E5F /* /Users/rafaelgb/Developer/nesEmu/instructions/CPXInstruction.cpp */,
+				68BB57DF05634271BF8FA278 /* /Users/rafaelgb/Developer/nesEmu/instructions/CPYInstruction.cpp */,
+				353E575025DE49DEA63A11CF /* /Users/rafaelgb/Developer/nesEmu/instructions/DCPInstruction.cpp */,
+				B4A3EFB6B71149129146FD3C /* /Users/rafaelgb/Developer/nesEmu/instructions/DECInstruction.cpp */,
+				F3CD849F6A134A728252A96B /* /Users/rafaelgb/Developer/nesEmu/instructions/DEXInstruction.cpp */,
+				283EDCF9818F481B849C5864 /* /Users/rafaelgb/Developer/nesEmu/instructions/DEYInstruction.cpp */,
+				DBB18982C81A420AAE9B8841 /* /Users/rafaelgb/Developer/nesEmu/instructions/EORInstruction.cpp */,
+				89935E07C39D46FF94FF1497 /* /Users/rafaelgb/Developer/nesEmu/instructions/INCInstruction.cpp */,
+				26E0A719C2064A7980CE2711 /* /Users/rafaelgb/Developer/nesEmu/instructions/INXInstruction.cpp */,
+				B236A2AF8F0E4743B2D7DF74 /* /Users/rafaelgb/Developer/nesEmu/instructions/INYInstruction.cpp */,
+				E63A2411C9D64E3B8BF64F81 /* /Users/rafaelgb/Developer/nesEmu/instructions/ISBInstruction.cpp */,
+				D9C66EE3E1A54F4FA29E5900 /* /Users/rafaelgb/Developer/nesEmu/instructions/Instruction.cpp */,
+				39681A0CA895430F996402A2 /* /Users/rafaelgb/Developer/nesEmu/instructions/JMPInstruction.cpp */,
+				31BC370B77E5485980B70F25 /* /Users/rafaelgb/Developer/nesEmu/instructions/JSRInstruction.cpp */,
+				EF8B45ABD46947719C3325D4 /* /Users/rafaelgb/Developer/nesEmu/instructions/LAXInstruction.cpp */,
+				45BE5DA5EA544C82B6DF0CD1 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDAInstruction.cpp */,
+				257A8B52725A40D19BAF42B0 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDXInstruction.cpp */,
+				58B461D75346414F888C0301 /* /Users/rafaelgb/Developer/nesEmu/instructions/LDYInstruction.cpp */,
+				632F43C8E24240EFA27D6FB4 /* /Users/rafaelgb/Developer/nesEmu/instructions/LSRInstruction.cpp */,
+				DCAB1AE49BE741C28858DDA0 /* /Users/rafaelgb/Developer/nesEmu/instructions/NMIInstruction.cpp */,
+				AE71BBBC85FE4C92965851AD /* /Users/rafaelgb/Developer/nesEmu/instructions/NOPInstruction.cpp */,
+				5F46E13AF871400E85BDADC4 /* /Users/rafaelgb/Developer/nesEmu/instructions/ORAInstruction.cpp */,
+				9CBF74715FB24E4B9A37BFDC /* /Users/rafaelgb/Developer/nesEmu/instructions/PHAInstruction.cpp */,
+				6009EC79BB3D482DBDE776BA /* /Users/rafaelgb/Developer/nesEmu/instructions/PHPInstruction.cpp */,
+				C067E3631C284B8A9030EFF5 /* /Users/rafaelgb/Developer/nesEmu/instructions/PLAInstruction.cpp */,
+				2B1079CAFCCB45F997ACF9B1 /* /Users/rafaelgb/Developer/nesEmu/instructions/PLPInstruction.cpp */,
+				08891C7217114A66B5BF0DFB /* /Users/rafaelgb/Developer/nesEmu/instructions/RLAInstruction.cpp */,
+				642A9A6290DE4349B944C926 /* /Users/rafaelgb/Developer/nesEmu/instructions/ROLInstruction.cpp */,
+				DDC8F593329E464690C047AE /* /Users/rafaelgb/Developer/nesEmu/instructions/RORInstruction.cpp */,
+				42FE261996A24961AD75E6D1 /* /Users/rafaelgb/Developer/nesEmu/instructions/RRAInstruction.cpp */,
+				FD4C69F276A34BE3AD1C4022 /* /Users/rafaelgb/Developer/nesEmu/instructions/RSTInstruction.cpp */,
+				EEBCA0B1483348BEA2DDA4EA /* /Users/rafaelgb/Developer/nesEmu/instructions/RTIInstruction.cpp */,
+				EB3FC231D6F64A429AD333B0 /* /Users/rafaelgb/Developer/nesEmu/instructions/RTSInstruction.cpp */,
+				7225DDAD282443928C9368A5 /* /Users/rafaelgb/Developer/nesEmu/instructions/SAXInstruction.cpp */,
+				13B4D7AAFAF641F282650468 /* /Users/rafaelgb/Developer/nesEmu/instructions/SBCInstruction.cpp */,
+				139603303F9B4131844E0540 /* /Users/rafaelgb/Developer/nesEmu/instructions/SECInstruction.cpp */,
+				3D5214DBC0AD40A483E84C5E /* /Users/rafaelgb/Developer/nesEmu/instructions/SEDInstruction.cpp */,
+				1C6ED2C4D9AD43F492102AC1 /* /Users/rafaelgb/Developer/nesEmu/instructions/SEIInstruction.cpp */,
+				935885B29E0F4D0E875DABD4 /* /Users/rafaelgb/Developer/nesEmu/instructions/SLOInstruction.cpp */,
+				78C1B50491A94C9894F57688 /* /Users/rafaelgb/Developer/nesEmu/instructions/SREInstruction.cpp */,
+				B4DA8DEEFC534903A3EAF441 /* /Users/rafaelgb/Developer/nesEmu/instructions/STAInstruction.cpp */,
+				689451AB0CA249D3A1C74BF5 /* /Users/rafaelgb/Developer/nesEmu/instructions/STXInstruction.cpp */,
+				B6A12027B56246E7BE60E7C7 /* /Users/rafaelgb/Developer/nesEmu/instructions/STYInstruction.cpp */,
+				BAB74C69F1A54F31952E9B68 /* /Users/rafaelgb/Developer/nesEmu/instructions/TAXInstruction.cpp */,
+				CCFD54B38E2B4A64BF61C079 /* /Users/rafaelgb/Developer/nesEmu/instructions/TAYInstruction.cpp */,
+				BFF8E2255018474FB7C01EBE /* /Users/rafaelgb/Developer/nesEmu/instructions/TSXInstruction.cpp */,
+				77C229B0DDEA47CFB447654A /* /Users/rafaelgb/Developer/nesEmu/instructions/TXAInstruction.cpp */,
+				B48776E778F64FBE8F86073E /* /Users/rafaelgb/Developer/nesEmu/instructions/TXSInstruction.cpp */,
+				05BC9C599D55441DBF189C1B /* /Users/rafaelgb/Developer/nesEmu/instructions/TYAInstruction.cpp */,
+				57BDA4CF0C494AC8B40F9B3B /* /Users/rafaelgb/Developer/nesEmu/main.cpp */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0F90C5E10D114F3BB11764F9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F305DE0E303C4D078422B0CB /* nesEmu */;
+			targetProxy = A28803E1C0454219947E7111 /* PBXContainerItemProxy */;
+		};
+		35CAB72686D64CC7BBB40F0F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD5DF431DAAA4EBBBCB0DBAF /* ZERO_CHECK */;
+			targetProxy = 9A3D0958220248748C874CC3 /* PBXContainerItemProxy */;
+		};
+		EDE12E0B1AB44C95A25C5337 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD5DF431DAAA4EBBBCB0DBAF /* ZERO_CHECK */;
+			targetProxy = 389C4FD1861C4DF383A460F7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		00DAE950DF864CC09FF1F26D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk;
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build/build;
+			};
+			name = Release;
+		};
+		0F1EB8FC19FA4D75B26C85A2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		21EEA98210434CD589FD435B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		235ADC9055FD43C5A10C6FBE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		390CD4D3285F467196CC4300 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		56D146CA58694D64A34B25A7 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		6D9B7BBF4F1740FDA7303251 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (/Library/Frameworks);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=gnu++14'  ";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -framework SDL2 -framework Cocoa";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = nesEmu;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		710662C33A764953AEB74D70 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		741FA183B2EB4D129057ADAE /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk;
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build/build;
+			};
+			name = MinSizeRel;
+		};
+		A5274215461444329DB293B2 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk;
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build/build;
+			};
+			name = RelWithDebInfo;
+		};
+		CCFB8436CCE84C429BB441A5 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (/Library/Frameworks);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=gnu++14'  ";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -framework SDL2 -framework Cocoa";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = nesEmu;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		D19AE49DF5104224B143FF93 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		E672B3EC0B694DAB8410DEE8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		EB2775A896D54C879B516046 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (/Library/Frameworks);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CPLUSPLUSFLAGS = "       -DNDEBUG '-std=gnu++14'  ";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -framework SDL2 -framework Cocoa";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = nesEmu;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		F09208532BF647DF8F64C8E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (/Library/Frameworks);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Library/Frameworks/SDL2.framework/Headers,/Users/rafaelgb/Developer/nesEmu/include);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CPLUSPLUSFLAGS = "   '-std=gnu++14'  ";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -framework SDL2 -framework Cocoa";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = nesEmu;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		FFD1038301964CAFA06719D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk;
+				SYMROOT = /Users/rafaelgb/Developer/nesEmu/build/build;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		239B09DD40B74141875D0D5D /* Build configuration list for PBXNativeTarget "nesEmu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F09208532BF647DF8F64C8E9 /* Debug */,
+				6D9B7BBF4F1740FDA7303251 /* Release */,
+				CCFB8436CCE84C429BB441A5 /* MinSizeRel */,
+				EB2775A896D54C879B516046 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2E04C0FF946F4FE7BC60737E /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0F1EB8FC19FA4D75B26C85A2 /* Debug */,
+				235ADC9055FD43C5A10C6FBE /* Release */,
+				D19AE49DF5104224B143FF93 /* MinSizeRel */,
+				390CD4D3285F467196CC4300 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3B5C506B657E4EA09B33EEDD /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21EEA98210434CD589FD435B /* Debug */,
+				E672B3EC0B694DAB8410DEE8 /* Release */,
+				710662C33A764953AEB74D70 /* MinSizeRel */,
+				56D146CA58694D64A34B25A7 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7DDB5871571F45B6848CB3E7 /* Build configuration list for PBXProject "nesEmu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFD1038301964CAFA06719D0 /* Debug */,
+				00DAE950DF864CC09FF1F26D /* Release */,
+				741FA183B2EB4D129057ADAE /* MinSizeRel */,
+				A5274215461444329DB293B2 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D15E85ACA8EF4F7FA461F0F2 /* Project object */;
+}

@@ -118,7 +118,7 @@ inline Sync_Audio::sample_t* Sync_Audio::buf( int index )
 }
 
 void Sync_Audio::write( const sample_t* in, int remain )
-{
+{	
 	while ( remain )
 	{
 		int count = buf_size - write_pos;
@@ -128,7 +128,7 @@ void Sync_Audio::write( const sample_t* in, int remain )
 		sample_t* out = buf( write_buf ) + write_pos;
 		if ( gain != (1L << gain_bits) )
 		{
-			register long gain = this->gain;
+			long gain = this->gain;
 			for ( int n = count; n--; )
 				*out++ = (*in++ * gain) >> gain_bits;
 		}

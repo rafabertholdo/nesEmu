@@ -13,7 +13,7 @@ void SAXInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{zeroPage, zeroPageY, absolute, indirectX};
     vector<uint_least8_t> opcodeList{             0x87,      0x97,     0x8F,      0x83};
 
-    for(int i=0; i < opcodeList.size(); i++) {        
+    for(unsigned long i=0; i < opcodeList.size(); i++) {        
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "SAX", SAXInstruction::sharedAction);
     }    
 }

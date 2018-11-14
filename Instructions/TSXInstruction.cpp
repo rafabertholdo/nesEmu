@@ -14,7 +14,7 @@ void TSXInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "TSX", TSXInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t TSXInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
+uint_least16_t TSXInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {    
     cpu.X = cpu.SP;
     cpu.tick();
     return cpu.X;

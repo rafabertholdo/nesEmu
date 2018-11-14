@@ -15,7 +15,7 @@ void INYInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = INYInstruction(implict, opcode, "INY", INYInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t INYInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
+uint_least16_t INYInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {    
     cpu.Y++;
     cpu.tick();
     return cpu.Y;

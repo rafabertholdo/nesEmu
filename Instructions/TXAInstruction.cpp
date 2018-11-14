@@ -14,7 +14,7 @@ void TXAInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "TXA", TXAInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t TXAInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
+uint_least16_t TXAInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {    
     cpu.A = cpu.X;
     cpu.tick();
     return cpu.A;

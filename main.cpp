@@ -8,21 +8,18 @@
 
 using namespace std;
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-
 int main(int argc, char *argv[]) {
 
   if ( argc != 2 ) {
     cout << "usage: " << argv[0] << " <filename>\n";
   } else {
-    ROM& rom = ROM::loadROM(argv[1]);
+    ROM::loadROM(argv[1]);
     IO& io = IO::instance();
     CPU& cpu = CPU::instance();
 
     // Framerate control:
     u32 frameStart, frameTime;
-    const float FPS   = 60;
+    const float FPS   = 60.098814;
     const float DELAY = 1000.0f / FPS;
     SDL_Event event;
     if (SDL_NumJoysticks() > 0) {

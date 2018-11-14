@@ -14,7 +14,7 @@ void PLPInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "PLP", PLPInstruction::sharedAction);
 }
 
-uint_least16_t PLPInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
+uint_least16_t PLPInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {
     cpu.tick();
     cpu.tick();
     uint_least8_t flagsToPop = cpu.pop();

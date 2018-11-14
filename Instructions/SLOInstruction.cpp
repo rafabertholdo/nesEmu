@@ -16,7 +16,7 @@ void SLOInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{zeroPage, zeroPageX, absolute, absoluteX, absoluteY, indirectX, indirectY};
     vector<uint_least8_t> opcodeList{             0x07,      0x17,     0x0F,      0x1F,      0x1B,      0x03,      0x13};
 
-    for(int i=0; i < opcodeList.size(); i++) {
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "SLO", SLOInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
     }    
 }

@@ -218,13 +218,13 @@ void APU::tick() { // Invoked at CPU's rate.
 
         ++m_currentSample;
     }
-
+    
     if (m_currentSample == m_cyclesPerFrame) {
         m_blipBuffer.end_frame(m_cyclesPerFrame);
-        long count = m_blipBuffer.read_samples(m_samples, m_BufferSize);
+        long count = m_blipBuffer.read_samples(m_samples, m_BufferSize);        
         m_audio.write(m_samples, count);
         m_currentSample = 0;
-    }
+    }    
 }
 
 int APU::channelTick(unsigned channelNumber) {

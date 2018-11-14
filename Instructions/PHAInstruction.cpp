@@ -14,7 +14,7 @@ void PHAInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "PHA", PHAInstruction::sharedAction);
 }
 
-uint_least16_t PHAInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
+uint_least16_t PHAInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {
     cpu.tick();
     cpu.push(cpu.A);
     return cpu.A;

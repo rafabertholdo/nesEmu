@@ -15,7 +15,7 @@ void INXInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "INX", INXInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t INXInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
+uint_least16_t INXInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {    
     cpu.X++;
     cpu.tick();
     return cpu.X;

@@ -14,7 +14,7 @@ void PLAInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "PLA", PLAInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t PLAInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
+uint_least16_t PLAInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {
     cpu.tick();
     cpu.tick();
     return cpu.A = cpu.pop();

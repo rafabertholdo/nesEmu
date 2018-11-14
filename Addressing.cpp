@@ -25,11 +25,11 @@ ImplictAddressing::ImplictAddressing() {
 
 u8 ImplictAddressing::length = 1;
 
-uint_least16_t ImplictAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
+uint_least16_t ImplictAddressing::getAddress(CPU &, const uint_least16_t &) {
     return 0;
 }
 
-uint_least16_t ImplictAddressing::printAddress(const uint_least16_t &address) {
+uint_least16_t ImplictAddressing::printAddress(const uint_least16_t &) {
     return printSpaces(28);
 }
 
@@ -40,11 +40,11 @@ AccumulatorAddressing::AccumulatorAddressing() {
 
 u8 AccumulatorAddressing::length = 1;
 
-uint_least16_t AccumulatorAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
+uint_least16_t AccumulatorAddressing::getAddress(CPU &cpu, const uint_least16_t &) {
     return cpu.A;
 };
 
-uint_least16_t AccumulatorAddressing::printAddress(const uint_least16_t &address){
+uint_least16_t AccumulatorAddressing::printAddress(const uint_least16_t &){
     cout << "A";
 	return printSpaces(27);
 }
@@ -56,7 +56,7 @@ ImmediateAddressing::ImmediateAddressing() {
 
 u8 ImmediateAddressing::length = 2;
 
-uint_least16_t ImmediateAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
+uint_least16_t ImmediateAddressing::getAddress(CPU &, const uint_least16_t &instructionData) {
     return instructionData;
 };
 
@@ -73,7 +73,7 @@ ZeroPageAddressing::ZeroPageAddressing() {
 
 u8 ZeroPageAddressing::length = 2;
 
-uint_least16_t ZeroPageAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
+uint_least16_t ZeroPageAddressing::getAddress(CPU &, const uint_least16_t &instructionData) {
     return instructionData;
 };
 
@@ -128,7 +128,7 @@ AbsoluteAddressing::AbsoluteAddressing() {
 
 u8 AbsoluteAddressing::length = 3;
 
-uint_least16_t AbsoluteAddressing::getAddress(CPU &cpu, const uint_least16_t &instructionData) {
+uint_least16_t AbsoluteAddressing::getAddress(CPU &, const uint_least16_t &instructionData) {
     return instructionData;
 };
 

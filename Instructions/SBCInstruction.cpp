@@ -14,7 +14,7 @@ void SBCInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{immediate, immediate, zeroPage, zeroPageX, absolute, absoluteX, absoluteY, indirectX, indirectY};
     vector<uint_least8_t> opcodeList{              0xE9,      0xEB,     0xE5,      0xF5,     0xED,      0xFD,      0xF9,      0xE1,      0xF1};
 
-    for(int i=0; i < opcodeList.size(); i++) {
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "SBC", SBCInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero, true);        
     }    
 }

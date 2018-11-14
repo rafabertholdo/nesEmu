@@ -13,7 +13,7 @@ void LDYInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{immediate, zeroPage, zeroPageX, absolute, absoluteX};
     vector<uint_least8_t> opcodeList{              0xA0,     0xA4,      0xB4,     0xAC,      0xBC};
 
-    for(int i=0; i < opcodeList.size(); i++) {        
+    for(unsigned long i=0; i < opcodeList.size(); i++) {        
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "LDY", LDYInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero, true);        ;        
     }    
 }

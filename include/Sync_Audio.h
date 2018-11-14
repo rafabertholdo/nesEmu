@@ -4,7 +4,15 @@
 #ifndef SYNC_AUDIO_H
 #define SYNC_AUDIO_H
 
-#include "SDL.h"
+#include <SDL.h>
+
+struct sdl_audio_ring_buffer
+{
+    int Size;
+    int WriteCursor;
+    int PlayCursor;
+    void *Data;
+};
 
 // Simple SDL sound wrapper that has a synchronous interface
 class Sync_Audio {
@@ -31,14 +39,13 @@ public:
 	~Sync_Audio();
 	
 private:
-	enum { buf_size = 1024 };
+	enum { buf_size = 1600 };
 	sample_t* volatile bufs;
 	SDL_sem* volatile free_sem;
 	int volatile buf_count;
 	int volatile read_buf;
 	int write_buf;
 	int write_pos;
-	int latency;
 	long gain;
 	int sound_open;
 	

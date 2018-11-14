@@ -15,7 +15,7 @@ void DEXInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "DEX", DEXInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t DEXInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
+uint_least16_t DEXInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {    
     cpu.X--;
     cpu.tick();
     return cpu.X;

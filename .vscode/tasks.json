@@ -17,8 +17,12 @@
             "args": ["-G 'Visual Studio 15 2017 Win64' -DCMAKE_BUILD_TYPE=Debug .."]
         },
         {
-            "taskName": "cmake",
+            "taskName": "cmake Debug",
             "args": ["cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug .."]
+        },
+        {
+            "taskName": "cmake Release",
+            "args": ["cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release .."]
         },
         {
             "taskName": "cmake xcode",

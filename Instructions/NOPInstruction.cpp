@@ -54,7 +54,7 @@ void NOPInstruction::createInstructions(InstructionArray &instructions) {
         lengthList.push_back(3);
     }      
 
-    for(int i=0; i < opcodeList.size(); i++) {
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "NOP", NOPInstruction::sharedAction, AffectFlags::None, true);        
     }    
 }

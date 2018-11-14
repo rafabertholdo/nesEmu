@@ -16,7 +16,7 @@ void RLAInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{zeroPage, zeroPageX, absolute, absoluteX, absoluteY, indirectX, indirectY};
     vector<uint_least8_t> opcodeList{             0x27,      0x37,     0x2F,      0x3F,      0x3B,      0x23,      0x33};
 
-    for(int i=0; i < opcodeList.size(); i++) {        
+    for(unsigned long i=0; i < opcodeList.size(); i++) {        
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "RLA", RLAInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);        
     }    
 }

@@ -13,7 +13,7 @@ namespace
 void BITInstruction::createInstructions(InstructionArray &instructions) {    
     vector<AddressingMode> addressingModeList{zeroPage, absolute};
     vector<uint_least8_t> opcodeList{             0x24,     0x2C};
-    for(int i=0; i < opcodeList.size(); i++) {        
+    for(unsigned long i=0; i < opcodeList.size(); i++) {        
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "BIT", BITInstruction::sharedAction, AffectFlags::None, true);
     }    
 }

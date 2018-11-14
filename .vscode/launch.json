@@ -5,6 +5,7 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
+            "preLaunchTask": "make",
             "program": "${workspaceRoot}/build/nesEmu",
             "args": ["build/MarioUsa.nes"],
             "stopAtEntry": false,

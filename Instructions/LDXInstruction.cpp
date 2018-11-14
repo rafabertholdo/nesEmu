@@ -13,7 +13,7 @@ void LDXInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{immediate, zeroPage, zeroPageY, absolute, absoluteY};
     vector<uint_least8_t> opcodeList{              0xA2,     0xA6,      0xB6,     0xAE,      0xBE};
 
-    for(int i=0; i < opcodeList.size(); i++) {        
+    for(unsigned long i=0; i < opcodeList.size(); i++) {        
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "LDX", LDXInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero, true);        
     }    
 }

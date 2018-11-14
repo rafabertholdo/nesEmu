@@ -15,7 +15,7 @@ void DCPInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{zeroPage, zeroPageX, absolute, absoluteX, absoluteY, indirectX, indirectY};
     vector<uint_least8_t> opcodeList{             0xC7,      0xD7,     0xCF,      0xDF,      0xDB,      0xC3,      0xD3};
 
-    for(int i=0; i < opcodeList.size(); i++) {        
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "DCP", DCPInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
     }    
 }

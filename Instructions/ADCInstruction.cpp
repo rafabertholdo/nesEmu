@@ -14,7 +14,7 @@ void ADCInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{immediate, zeroPage, zeroPageX, absolute, absoluteX, absoluteY, indirectX, indirectY};
     vector<uint_least8_t> opcodeList{              0x69,     0x65,      0x75,     0x6D,      0x7D,      0x79,      0x61,      0x71};
 
-    for(int i=0; i < opcodeList.size(); i++) {
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "ADC", ADCInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero, true);        
     }    
 }

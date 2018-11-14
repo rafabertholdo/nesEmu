@@ -37,9 +37,9 @@ class CPU {
     u8 memAccess(const u16 &address, const u8 &value, const bool &write);
     void identify(const std::vector<u8> &instructionData, const Instruction &instruction);
     void dmaOam(const u8 &value);
-    u8 prgAccess(const u16 &address, const u8 &value, const bool &write);
+    u8 prgAccess(const u16 &address);
     int elapsed();
-    void test(const std::string &line, const std::vector<u8> &instructionData, const std::string &menmonic);
+    void test(const std::string &line, const std::string &menmonic);
     void dumpRegs();
     //std::ostream& operator <<(std::ostream& stream, const CPU& cpu);
 public:

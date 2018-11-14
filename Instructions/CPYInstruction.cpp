@@ -15,7 +15,7 @@ void CPYInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{immediate, zeroPage, absolute};
     vector<uint_least8_t> opcodeList{              0xC0,     0xC4,     0xCC};
 
-    for(int i=0; i < opcodeList.size(); i++) {
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "CPY", CPYInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero, true);        
     }    
 }

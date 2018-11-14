@@ -15,7 +15,7 @@ void RSTInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "RST", RSTInstruction::sharedAction);
 }
 
-uint_least16_t RSTInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {        
+uint_least16_t RSTInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {        
     cpu.tick();
     cpu.tick();
     return cpu.PC = cpu.getResetVectorValue();    

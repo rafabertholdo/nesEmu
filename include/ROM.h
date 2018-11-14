@@ -12,13 +12,18 @@ static const u8 HEADER_SIZE = 16;
 static const unsigned CHR_GRANULARITY = 0x0400, CHR_PAGES = 0x2000  / CHR_GRANULARITY; //8 pages
 static const unsigned PRG_GRANULARITY = 0x2000, PRG_PAGES = 0x10000 / PRG_GRANULARITY; //8 pages
 static const unsigned PRG_START = 0x8000;
+static const int kPrgBlockSizeInKb = 0x4000; //16kb
+static const int kChrBlockSizeInKb = 0x2000; //8kb
+
+static const int kMaxPrgSize = kPrgBlockSizeInKb * 9;
+static const int kMaxChrSize = kChrBlockSizeInKb * 9;
 
 class ROM {        
     static ROM& theInstance;
 
     std::vector<u8> data;
-    std::vector<u8> m_prg;    
-    std::vector<u8> m_chr;    
+    static std::array<u8, kMaxPrgSize> m_prg;
+    static std::array<u8, kMaxChrSize> m_chr;
     
     u16 prgROMSize;
     u16 prgRAMSize;
@@ -27,8 +32,8 @@ class ROM {
     u8 ctrlbyte;
     u8 mappernum;     
 
-    std::array<u32, PRG_PAGES> m_prgMap = {0};
-    std::array<u32, CHR_PAGES> m_chrMap = {0};
+    static std::array<u32, PRG_PAGES> m_prgMap;
+    static std::array<u32, CHR_PAGES> m_chrMap;
 
     void loadProgramData();
     bool readFile(const char* filename);
@@ -49,11 +54,11 @@ public:
     void mapPrg(int pageKBs, int slot, int bank);    
     void mapChr(int pageKBs, int slot, int bank);       
     
-    std::vector<u8>& chr();
-    const std::array<u32, CHR_PAGES>& chrMap() const;
+    static std::array<u8, kMaxChrSize>& chr();
+    static const std::array<u32, CHR_PAGES>& chrMap();
 
-    std::vector<u8>& prg();
-    const std::array<u32, PRG_PAGES>& prgMap() const;
+    static std::array<u8, kMaxPrgSize>& prg();
+    static const std::array<u32, PRG_PAGES>& prgMap();
 };
 
 #endif

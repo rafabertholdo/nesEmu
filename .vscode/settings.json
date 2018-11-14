@@ -46,6 +46,8 @@
         "chrono": "cpp",
         "array": "cpp",
         "future": "cpp",
-        "streambuf": "cpp"
+        "streambuf": "cpp",
+        "__nullptr": "cpp",
+        "string_view": "cpp"
     }
 }

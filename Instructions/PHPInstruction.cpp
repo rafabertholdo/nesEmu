@@ -14,7 +14,7 @@ void PHPInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "PHP", PHPInstruction::sharedAction);
 }
 
-uint_least16_t PHPInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {
+uint_least16_t PHPInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {
     cpu.tick();
     uint_least8_t flagsToPush = cpu.Flags.raw;
     flagsToPush |= 0b110000; //bit 4 and 5 is always set on push

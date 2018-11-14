@@ -14,7 +14,7 @@ void TAXInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "TAX", TAXInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t TAXInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
+uint_least16_t TAXInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {    
     cpu.X = cpu.A;
     cpu.tick();
     return cpu.X;

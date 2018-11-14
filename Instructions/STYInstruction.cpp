@@ -14,7 +14,7 @@ void STYInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{zeroPage, zeroPageX, absolute};
     vector<uint_least8_t> opcodeList{             0x84,      0x94,     0x8C};
 
-    for(int i=0; i < opcodeList.size(); i++) {        
+    for(unsigned long i=0; i < opcodeList.size(); i++) {        
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "STY", STYInstruction::sharedAction);        
     }    
 }

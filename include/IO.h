@@ -28,7 +28,6 @@ class IO {
     
     //The surface contained by the window
     SDL_Surface* screenSurface;
-    SDL_Renderer* renderer;
     bool CheckBit(const u8 &var, const u8 &pos);
     Timer timer;
     int frameCount = 0;

@@ -15,7 +15,7 @@ void CPXInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{immediate, zeroPage, absolute};
     vector<uint_least8_t> opcodeList{              0xE0,     0xE4,     0xEC};
 
-    for(int i=0; i < opcodeList.size(); i++) {        
+    for(unsigned long i=0; i < opcodeList.size(); i++) {        
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "CPX", CPXInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero, true);        
     }    
 }

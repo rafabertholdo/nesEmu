@@ -15,7 +15,7 @@ void ASLInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{accumulator, zeroPage, zeroPageX, absolute, absoluteX};
     vector<uint_least8_t> opcodeList{                0x0A,     0x06,      0x16,     0x0E,      0x1E};
 
-    for(int i=0; i < opcodeList.size(); i++) {
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         actionFunctionPointer_t actionFP = addressingModeList[i] == accumulator ? actionFP = ASLInstruction::sharedActionA : ASLInstruction::sharedAction;        
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "ASL", actionFP, AffectFlags::Negative | AffectFlags::Zero);        
     }    

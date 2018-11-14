@@ -14,7 +14,7 @@ void LSRInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{accumulator, zeroPage, zeroPageX, absolute, absoluteX};
     vector<uint_least8_t> opcodeList{                0x4A,     0x46,      0x56,     0x4E,      0x5E};
 
-    for(int i=0; i < opcodeList.size(); i++) {
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         auto functionPointer = addressingModeList[i] == accumulator ? LSRInstruction::sharedActionA : LSRInstruction::sharedAction;
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "LSR", functionPointer, AffectFlags::Negative | AffectFlags::Zero);        
     }    

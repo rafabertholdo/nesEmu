@@ -14,7 +14,7 @@ void STXInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{zeroPage, zeroPageY, absolute};
     vector<uint_least8_t> opcodeList{             0x86,      0x96,     0x8E};
 
-    for(int i=0; i < opcodeList.size(); i++) {
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "STX", STXInstruction::sharedAction);
     }    
 }

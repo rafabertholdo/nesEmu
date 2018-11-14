@@ -14,7 +14,7 @@ void ROLInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{accumulator, zeroPage, zeroPageX, absolute, absoluteX};
     vector<uint_least8_t> opcodeList{                0x2A,     0x26,      0x36,     0x2E,      0x3E};
 
-    for(int i=0; i < opcodeList.size(); i++) {
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         auto functionPointer = addressingModeList[i] == accumulator ? ROLInstruction::sharedActionA : ROLInstruction::sharedAction;
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "ROL", functionPointer, AffectFlags::Negative | AffectFlags::Zero);        
     }    

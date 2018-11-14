@@ -136,37 +136,37 @@ void Instruction::changeFlags(CPU& cpu,  const u16 &value, const u16 &actionValu
     }
 }
 
-void Instruction::updateCarry(CPU& cpu, const u16 &value, const u16 &actionValue) {
+void Instruction::updateCarry(CPU& cpu, const u16 &, const u16 &actionValue) {
     cpu.Flags.Carry = actionValue > 0;
 }
 
-void Instruction::updateZero(CPU& cpu, const u16 &value, const u16 &actionValue) {
+void Instruction::updateZero(CPU& cpu, const u16 &, const u16 &actionValue) {
     cpu.Flags.Zero = !actionValue;
 }
 
-void Instruction::updateInterruptDisabled(CPU& cpu, const u16 &value, const u16 &actionValue) {
+void Instruction::updateInterruptDisabled(CPU& cpu, const u16 &, const u16 &actionValue) {
 	cpu.Flags.InterruptDisabled = actionValue > 0;
 }
 
-void Instruction::updateDecimalMode(CPU& cpu, const u16 &value, const u16 &actionValue) {
+void Instruction::updateDecimalMode(CPU& cpu, const u16 &, const u16 &actionValue) {
     cpu.Flags.DecimalMode = actionValue > 0;
 }
 
-void Instruction::updateOverflow(CPU& cpu, const u16 &value, const u16 &actionValue) {	
+void Instruction::updateOverflow(CPU& cpu, const u16 &, const u16 &actionValue) {
 	cpu.Flags.Overflow = actionValue > 0;
 }
 
-void Instruction::updateNegative(CPU& cpu, const u16 &value, const u16 &actionValue) {
+void Instruction::updateNegative(CPU& cpu, const u16 &, const u16 &actionValue) {
     bitset<8> set(actionValue);
     cpu.Flags.Negative = set.test(7);
 }
 
-u16 ClearInstruction::sharedAction(CPU& cpu, const u16 &value) {    
+u16 ClearInstruction::sharedAction(CPU& cpu, const u16 &) {
     cpu.tick();
     return 0;
 }
 
-u16 SetInstruction::sharedAction(CPU& cpu, const u16 &value) {
+u16 SetInstruction::sharedAction(CPU& cpu, const u16 &) {
     cpu.tick();
     return 1;
 }

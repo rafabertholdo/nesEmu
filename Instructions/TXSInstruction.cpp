@@ -14,7 +14,7 @@ void TXSInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "TXS", TXSInstruction::sharedAction);
 }
 
-uint_least16_t TXSInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
+uint_least16_t TXSInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {    
     cpu.SP = cpu.X;
     cpu.tick();
     return cpu.SP;

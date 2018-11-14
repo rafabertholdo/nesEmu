@@ -15,7 +15,7 @@ void BRKInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "BRK", BRKInstruction::sharedAction);
 }
 
-uint_least16_t BRKInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {        
+uint_least16_t BRKInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {        
     cpu.tick();
     
     cpu.PC -= 1; //side effect of an interrupt be an instruction

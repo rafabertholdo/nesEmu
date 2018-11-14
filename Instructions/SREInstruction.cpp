@@ -16,7 +16,7 @@ void SREInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{zeroPage, zeroPageX, absolute, absoluteX, absoluteY, indirectX, indirectY};
     vector<uint_least8_t> opcodeList{             0x47,      0x57,     0x4F,      0x5F,      0x5B,      0x43,      0x53};
 
-    for(int i=0; i < opcodeList.size(); i++) {        
+    for(unsigned long i=0; i < opcodeList.size(); i++) {        
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "SRE", SREInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
     }    
 }

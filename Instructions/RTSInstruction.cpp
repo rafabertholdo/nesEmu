@@ -14,7 +14,7 @@ void RTSInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "RTS", RTSInstruction::sharedAction);
 }
 
-uint_least16_t RTSInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {        
+uint_least16_t RTSInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {        
     cpu.tick();
     cpu.tick();
 	auto first = cpu.pop();

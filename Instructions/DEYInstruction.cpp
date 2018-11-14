@@ -14,7 +14,7 @@ void DEYInstruction::createInstructions(InstructionArray &insctructions) {
     insctructions[opcode] = Instruction(implict, opcode, "DEY", DEYInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);
 }
 
-uint_least16_t DEYInstruction::sharedAction(CPU& cpu, const uint_least16_t &value) {    
+uint_least16_t DEYInstruction::sharedAction(CPU& cpu, const uint_least16_t &) {    
     cpu.Y--;
     cpu.tick();
     return cpu.Y;

@@ -14,7 +14,7 @@ void DECInstruction::createInstructions(InstructionArray &instructions) {
     vector<AddressingMode> addressingModeList{zeroPage, zeroPageX, absolute, absoluteX};
     vector<uint_least8_t> opcodeList{             0xC6,      0xD6,     0xCE,      0xDE};
 
-    for(int i=0; i < opcodeList.size(); i++) {
+    for(unsigned long i=0; i < opcodeList.size(); i++) {
         instructions[opcodeList[i]] = Instruction(addressingModeList[i], opcodeList[i], "DEC", DECInstruction::sharedAction, AffectFlags::Negative | AffectFlags::Zero);        
     }    
 }
